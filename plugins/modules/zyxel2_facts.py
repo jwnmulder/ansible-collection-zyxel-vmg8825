@@ -78,8 +78,8 @@ See the respective resource module parameters for the tree.
 """
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.jwnmulder.zyxel_vmg825.plugins.module_utils.network.zyxel_vmg8825.argspec.facts.facts import FactsArgs
-from ansible_collections.jwnmulder.zyxel_vmg825.plugins.module_utils.network.zyxel_vmg8825.facts.facts import Facts
+from ..module_utils.network.zyxel_vmg8825.argspec.facts.facts import FactsArgs
+from ..module_utils.network.zyxel_vmg8825.facts.facts import Facts
 
 
 def main():

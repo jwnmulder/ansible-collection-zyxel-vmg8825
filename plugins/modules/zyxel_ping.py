@@ -51,9 +51,9 @@ from ansible.module_utils.connection import Connection
 
 ZYXEL_LIB_ERR = None
 try:
-    from ansible.module_utils.zyxel.zyxel import (
+    from ..module_utils.network.zyxel_vmg8825.utils.zyxel import (
         ZYXEL_LIB_ERR,
-        # zyxel_ansible_api,
+        zyxel_ansible_api,
         zyxel_common_argument_spec,
         ansible_return,
     )
@@ -61,7 +61,7 @@ except ImportError:
     ZYXEL_LIB_ERR = traceback.format_exc()
 
 try:
-    from ansible.module_utils.zyxel_api.client import ZyxelResponse
+    from zyxel_api_vmg8825.client import ZyxelResponse
 
     # from ansible.module_utils.zyxel_api.client_factory import ClientFactory
 except ImportError:
@@ -80,7 +80,7 @@ def main():
             msg=missing_required_lib("zyxel"), exception=ZYXEL_LIB_ERR
         )
 
-    # return zyxel_ansible_api(module, "PINGTEST", "get")
+    return zyxel_ansible_api(module, "PINGTEST", "get")
 
     # module is your AnsibleModule instance.
     connection = Connection(module._socket_path)

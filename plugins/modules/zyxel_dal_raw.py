@@ -40,7 +40,7 @@ from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 
 ZYXEL_LIB_ERR = None
 try:
-    from ansible.module_utils.zyxel.zyxel import (
+    from ..module_utils.network.zyxel_vmg8825.utils.zyxel import (
         ZYXEL_LIB_ERR,
         zyxel_ansible_api,
         zyxel_common_argument_spec,

@@ -8,8 +8,8 @@ from ansible.module_utils.basic import env_fallback
 
 ZYXEL_LIB_ERR = None
 try:
-    from ansible.module_utils.zyxel_api.client import ZyxelResponse
-    from ansible.module_utils.zyxel_api.client_factory import ClientFactory
+    from zyxel_api_vmg8825.client import ZyxelResponse
+    from zyxel_api_vmg8825.client_factory import ClientFactory
 except ImportError:
     ZYXEL_LIB_ERR = traceback.format_exc()
 

@@ -102,8 +102,8 @@ commands:
 
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.jwnmulder.zyxel_vmg825.plugins.module_utils.network.zyxel_vmg8825.argspec.static_dhcp.static_dhcp import Static_dhcpArgs
-from ansible_collections.jwnmulder.zyxel_vmg825.plugins.module_utils.network.zyxel_vmg8825.config.static_dhcp.static_dhcp import Static_dhcp
+from ..module_utils.network.zyxel_vmg8825.argspec.static_dhcp.static_dhcp import Static_dhcpArgs
+from ..module_utils.network.zyxel_vmg8825.config.static_dhcp.static_dhcp import Static_dhcp
 
 
 def main():
