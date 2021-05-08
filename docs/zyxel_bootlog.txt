@@ -7,7 +7,7 @@ OEM bootlog
 BGA IC
 Xtal:1
 DDR3 init.
-DRAMC init done. 
+DRAMC init done.
 Calculate size.
 DRAM size=512MB
 Set new TRFC.
@@ -25,8 +25,8 @@ Set SPI Clock to 50 Mhz
 spi_nand_probe: mfr_id=0xef, dev_id=0xab
 Using Flash ECC.
 Detected SPI NAND Flash : _SPI_NAND_DEVICE_ID_W25M02G, Flash Size=0x10000000
-bmt pool size: 163 
-BMT & BBT Init Success 
+bmt pool size: 163
+BMT & BBT Init Success
 
 
 
@@ -42,7 +42,7 @@ Not found TC Phy
 
 Not found TC Phy
 
-  GE Rext AnaCal Done! (4)(0x1c)  
+  GE Rext AnaCal Done! (4)(0x1c)
 
 
 Hit any key to stop autoboot:  0
@@ -80,7 +80,7 @@ Primary data cache 32kB, 4-way, PIPT, no aliases, linesize 32 bytes
 MIPS secondary cache 256kB, 8-way, linesize 32 bytes.
 PERCPU: Embedded 9 pages/cpu @81364000 s6272 r8192 d22400 u36864
 Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 109726
-Kernel command line: 
+Kernel command line:
 log_buf_len individual max cpu contribution: 4096 bytes
 log_buf_len total cpu_extra contributions: 12288 bytes
 log_buf_len min size: 16384 bytes
@@ -146,12 +146,12 @@ Synchronize counters for CPU 3: done.
 Brought up 4 CPUs
 devtmpfs: initialized
 NET: Registered protocol family 16
-PCIe 7516 PHY init  
+PCIe 7516 PHY init
 PCIe driver version: 751627.1.20170815
 EN751627 pcie_init
-check pcie link up status: 
-isRC0_LINKUP=1 
-isRC1_LINKUP=1 
+check pcie link up status:
+isRC0_LINKUP=1
+isRC1_LINKUP=1
 registering PCI controller with io_map_base unset
 Initializing Ecnt Event Netlink Socket
 
@@ -186,10 +186,10 @@ UDP hash table entries: 256 (order: 1, 8192 bytes)
 UDP-Lite hash table entries: 256 (order: 1, 8192 bytes)
 NET: Registered protocol family 1
 
- mt7512_pcie_fixup: 0x1438 = 20000014 
+ mt7512_pcie_fixup: 0x1438 = 20000014
  mt7512_pcie_rc0_retrain: 80 = 01408c12 80 = 01608c12
 RC0 Link Traing Result: 10120008
- mt7512_pcie_fixup: 0x3438 = 20100014 
+ mt7512_pcie_fixup: 0x3438 = 20100014
  mt7512_pcie_rc1_retrain: 80 = 01408c12 80 = 01608c12
 RC1 Link Traing Result: 10120008
 TC3162 hardware watchdog module loaded.
@@ -216,14 +216,14 @@ Detected SPI NAND Flash : _SPI_NAND_DEVICE_ID_W25M02G, Flash Size=0x10000000
 spi nand flash
 tc3162: flash device 0x01000000 at 0x1c000000
 EN7512 mtd init: spi nand probe enter
-[spi_nand_setup] : Enter 
+[spi_nand_setup] : Enter
 nand: device found, Manufacturer ID: 0xef, Chip ID: 0xab
 nand: Unknown _SPI_NAND_DEVICE_ID_W25M02G
 nand: 256MiB, SLC, page size: 2048, OOB size: 64
 nand_scan_ident ok
 [spi_nand_setup]: chip size =  0x10000000, erase_shift=0x11
-bmt pool size: 163 
-BMT & BBT Init Success 
+bmt pool size: 163
+BMT & BBT Init Success
 
 parsing <0[bootloader],0[romfile],56M[tclinux],-[tclinux_slave],1M[wwan],4M[data],1M[rom-d],118M[misc]>
 partition 11: name <misc>, offset ffffffff, size 7600000, mask flags 0
@@ -294,7 +294,7 @@ NET: Registered protocol family 17
 NET: Registered protocol family 15
 bridge: automatic filtering via arp/ip/ip6tables has been deprecated. Update your scripts to load br_netfilter if you need this.
 8021q: 802.1Q VLAN Support v1.8
-tc3162ser_startup 
+tc3162ser_startup
 VFS: Mounted root (squashfs filesystem) readonly on device 31:3.
 Freeing unused kernel memory: 240K (805f4000 - 80630000)
 mknod: /dev/ppp: File exists
@@ -322,19 +322,19 @@ TCSUPPORT_IPV6
 Reading MT7615 2.4G EEPROM from flash reservearea
 mtd[readflash]:device=reservearea tclen=1024 tcoffset=0
 Unlocking reservearea ...
-Reading from reservearea to /etc/RT30xxEEPROM.bin ... 
+Reading from reservearea to /etc/RT30xxEEPROM.bin ...
 Reading MT7615 5G EEPROM from flash reservearea
 mtd[readflash]:device=reservearea tclen=1024 tcoffset=131072
 Unlocking reservearea ...
-Reading from reservearea to /etc/Wireless/RT2860AP_AC/RT30xxEEPROM.bin ... 
+Reading from reservearea to /etc/Wireless/RT2860AP_AC/RT30xxEEPROM.bin ...
 Reading MT7615 2.4G CALDATA from flash reservearea
 mtd[readflash]:device=reservearea tclen=36864 tcoffset=4096
 Unlocking reservearea ...
-Reading from reservearea to /etc/CALDATA_default.bin ... 
+Reading from reservearea to /etc/CALDATA_default.bin ...
 Reading MT7615 5G CALDATA from flash reservearea
 mtd[readflash]:device=reservearea tclen=36864 tcoffset=135168
 Unlocking reservearea ...
-Reading from reservearea to /etc/Wireless/RT2860AP_AC/CALDATA_default.bin ... 
+Reading from reservearea to /etc/Wireless/RT2860AP_AC/CALDATA_default.bin ...
 insmod ETH_LAN driver
 Exec. Successful
 Exec. Successful
@@ -831,7 +831,7 @@ hotplug:beUsbPortSet: USB Port Alias is cpe-
 hotplug:beUsbPortSet: USB Port Type is Device
 db_init() Open database: not an error
 APP Agent UDP socket ready!
-l3fwdGetDfGwByRtTable: ifname =  
+l3fwdGetDfGwByRtTable: ifname =
 l3fwdGetDfGwByRtTable: No find default gateway interface!!
 Restarting ZyIMS VoIP
 
@@ -871,7 +871,7 @@ InternetGatewayDevice.Layer3Forwarding                                      : ur
 l3fwdObjGet : Enter
 l3fwdGetDfGwByRtTable: enter, 4
 /bin/sh: zy1905App: not found
-l3fwdGetDfGwByRtTable: ifname =  
+l3fwdGetDfGwByRtTable: ifname =
 l3fwdGetDfGwByRtTable: No find default gateway interface!!
 [/sbin/usb-hotplug.sh] add /var/usb/usb2
 json_object_from_file: error opening file /tmp/zy1905.json: No such file or directory
@@ -893,24 +893,24 @@ main(): getpid = 1881
 
 [ENTERED]:ICF_ES
 
-INFO: AUTO_SCALE: 1 
+INFO: AUTO_SCALE: 1
 
-INFO: MODE_OF_OPERATION: 0 
+INFO: MODE_OF_OPERATION: 0
 
-INFO: SIP_COMPACT_HDRS: NO 
+INFO: SIP_COMPACT_HDRS: NO
 
-INFO: NW_TRACE_ENABLED: YES 
-INFO: ICF_DEF_SIP_SERVER_PORT: 6062 
-INFO: ICF_DEF_SIP_PROXY_PORT: 6061 
-INFO: TRANSPORT_MODE: 0 
-INFO: ICF_SYS_RESOURCE_LIMIT: 1 
+INFO: NW_TRACE_ENABLED: YES
+INFO: ICF_DEF_SIP_SERVER_PORT: 6062
+INFO: ICF_DEF_SIP_PROXY_PORT: 6061
+INFO: TRANSPORT_MODE: 0
+INFO: ICF_SYS_RESOURCE_LIMIT: 1
 
 [ENTERING]:icf_es_init
 [ICF_ES]:PORT initalized succesfully
 icf_port_open_ipc_channel path = /var/iptk_es.chanl
 
-the open channel succeded 
-exit from the es init 
+the open channel succeded
+exit from the es init
 icf_register_signal(): icf.exe pid = 1881
 json_object_from_file: error opening file /tmp/zy1905.json: No such file or directory
 json_object_from_file: error opening file /tmp/zy1905.json: No such file or directory
@@ -956,7 +956,7 @@ count =3 1=/userfs/bin/mapd_cli 2=/tmp/mapd_ctrl
 mapd_interface_ctrl_open failed
 Can't connect to /tmp/mapd_ctrl
 json_object_from_file: error opening file /tmp/dump.txt: No such file or directory
-[initALTable] second chance - dump information is not ready. 
+[initALTable] second chance - dump information is not ready.
 Update 1905 information Error!!
 tr104ConvertCWStatus(): <<Error>> INVALID parameter value : '' !!
 tr104ConvertRegType(): <<Error>> INVALID parameter value : '' !!
@@ -994,8 +994,8 @@ DSP activated success
 taskCreate()...
 voiceDspInit(): Leaving with return 0...
  phonePortVMWISet enters (for 'FXS' phone, phid=8 (8:All 'Ports' of the type), vmwiSigType=2 (1:SigOn,2:SigOff,0:SigNone))...
-in PhoneEventCb , the event 18 is not support ! 
-in PhoneEventCb , the event 18 is not support ! 
+in PhoneEventCb , the event 18 is not support !
+in PhoneEventCb , the event 18 is not support !
 zywifid> [ERROR] push_wifidReqProcess:590: Ignore request handler[ZCFG_MSG_WLAN_GET_CMD(4017)].
 Internal Error ~!
 zywifid> [ERROR] push_wifidReqProcess:590: Ignore request handler[ZCFG_MSG_WLAN_GET_CMD(4017)].
@@ -1089,7 +1089,7 @@ ppe cmd done!
 
 ppe cmd done!
 MAC: 0x7fa8dc2c, len = 6
-0x0000 : 08 26 97 da dd 81 
+0x0000 : 08 26 97 da dd 81
 bind_arp: ifindex=20
 Binding to ifindex 20
 done
@@ -1204,7 +1204,7 @@ MAC Address = 0a:26:97:fa:dd:82
 route: SIOCADDRT: File exists
 killall: mapd: no process killed
 daemon mapd attached \x00/tmp/wapp_ctrl
-[1;32mctrler_found 
+[1;32mctrler_found
 [0m[WAPP]map_send_wirelss_inf_info
 send info ra0, role: wiap, dev type = 1
 MAC Address = 08:26:97:da:dd:81
