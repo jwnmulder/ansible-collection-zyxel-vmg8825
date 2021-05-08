@@ -12,4 +12,3 @@ for the collection that was generated if the collection is distributed independe
 ```bash
 pip3 install pycryptodome
 ```
-
