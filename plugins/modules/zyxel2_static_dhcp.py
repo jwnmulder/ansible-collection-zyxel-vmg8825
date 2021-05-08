@@ -26,9 +26,9 @@ The module file for zyxel_static_dhcp
 """
 
 ANSIBLE_METADATA = {
-    'metadata_version': '1.1',
-    'status': ['preview'],
-    'supported_by': '<support_group>'
+    "metadata_version": "1.1",
+    "status": ["preview"],
+    "supported_by": "<support_group>",
 }
 
 DOCUMENTATION = """
@@ -102,8 +102,12 @@ commands:
 
 
 from ansible.module_utils.basic import AnsibleModule
-from ..module_utils.network.zyxel_vmg8825.argspec.static_dhcp.static_dhcp import Static_dhcpArgs
-from ..module_utils.network.zyxel_vmg8825.config.static_dhcp.static_dhcp import Static_dhcp
+from ..module_utils.network.zyxel_vmg8825.argspec.static_dhcp.static_dhcp import (
+    Static_dhcpArgs,
+)
+from ..module_utils.network.zyxel_vmg8825.config.static_dhcp.static_dhcp import (
+    Static_dhcp,
+)
 
 
 def main():
@@ -112,12 +116,13 @@ def main():
 
     :returns: the result form module invocation
     """
-    module = AnsibleModule(argument_spec=Static_dhcpArgs.argument_spec,
-                           supports_check_mode=True)
+    module = AnsibleModule(
+        argument_spec=Static_dhcpArgs.argument_spec, supports_check_mode=True
+    )
 
     result = Static_dhcp(module).execute_module()
     module.exit_json(**result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

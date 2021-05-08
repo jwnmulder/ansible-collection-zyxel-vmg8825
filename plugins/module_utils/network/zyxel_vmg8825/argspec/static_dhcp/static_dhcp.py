@@ -27,19 +27,26 @@ The arg spec for the zyxel_static_dhcp module
 
 
 class Static_dhcpArgs:  # pylint: disable=R0903
-    """The arg spec for the zyxel_static_dhcp module
-    """
+    """The arg spec for the zyxel_static_dhcp module"""
 
     def __init__(self, **kwargs):
         pass
 
-    argument_spec = {'config': {'elements': 'dict',
-            'options': {'br_wan': {'default': 'Default', 'type': 'string'},
-                        'enable': {'type': 'bool'},
-                        'index': {'type': 'int'},
-                        'ip_addr': {'type': 'string'},
-                        'mac_addr': {'type': 'string'}},
-            'type': 'list'},
- 'state': {'choices': ['merged', 'replaced', 'overridden', 'deleted'],
-           'default': 'merged',
-           'type': 'str'}}  # pylint: disable=C0301
+    argument_spec = {
+        "config": {
+            "elements": "dict",
+            "options": {
+                "br_wan": {"default": "Default", "type": "string"},
+                "enable": {"type": "bool"},
+                "index": {"type": "int"},
+                "ip_addr": {"type": "string"},
+                "mac_addr": {"type": "string"},
+            },
+            "type": "list",
+        },
+        "state": {
+            "choices": ["merged", "replaced", "overridden", "deleted"],
+            "default": "merged",
+            "type": "str",
+        },
+    }  # pylint: disable=C0301

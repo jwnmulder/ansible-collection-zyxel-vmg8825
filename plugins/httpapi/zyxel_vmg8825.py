@@ -25,15 +25,12 @@ import json
 import time
 import q
 import base64
-import json
 import traceback
 
 from datetime import datetime
 
 from ansible.module_utils._text import to_text
 from ansible.module_utils.connection import ConnectionError
-from ansible.errors import AnsibleError, AnsibleAuthenticationFailure
-from ansible.module_utils.six.moves.urllib.error import HTTPError
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
     to_list,
 )
@@ -51,27 +48,27 @@ OPTIONS = {
 class HttpApi(HttpApiBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        #self._device_info = None
-        #self._session_support = None
+        # self._device_info = None
+        # self._session_support = None
         self._conn = args[0]
         self._log = None
         self._sessionkey = None
 
     def log(self, msg):
-        #log_enabled = self._conn.get_option('enable_log')
-        #if not log_enabled:
+        # log_enabled = self._conn.get_option('enable_log')
+        # if not log_enabled:
         #    return
         if not self._log:
             self._log = open("/tmp/fortios.ansible.log", "a")
         log_message = str(datetime.now())
-        log_message += ": " + str(msg) + '\n'
+        log_message += ": " + str(msg) + "\n"
         self._log.write(log_message)
         self._log.flush()
 
     def update_auth(self, response, response_text):
-        cookie = response.info().get('Set-Cookie')
+        cookie = response.info().get("Set-Cookie")
         if cookie:
-            return {'Cookie': cookie}
+            return {"Cookie": cookie}
 
         return None
 
@@ -79,51 +76,52 @@ class HttpApi(HttpApiBase):
 
         """Call a defined login endpoint to receive an authentication token."""
         if username is None or password is None:
-            raise Exception('Please provide username/password to login')
+            raise Exception("Please provide username/password to login")
 
-        self.log('login with username and password')
-        q('login')
+        self.log("login with username and password")
+        q("login")
 
-        login_path = '/UserLogin'
+        login_path = "/UserLogin"
         data = {
             "Input_Account": username,
-            "Input_Passwd": base64.b64encode(password.encode("ascii")).decode(
-                "ascii"
-            ),
+            "Input_Passwd": base64.b64encode(password.encode("ascii")).decode("ascii"),
             "RememberPassword": 0,
             "SHA512_password": False,
         }
 
-        #http_response = self.r.post(f"{self.url}/UserLogin", data=json.dumps(request))
-        #zyxel_response = self._process_http_response(http_response)
+        # http_response = self.r.post(f"{self.url}/UserLogin", data=json.dumps(request))
+        # zyxel_response = self._process_http_response(http_response)
 
-        #response = self.send_request(data, path=login_path)
+        # response = self.send_request(data, path=login_path)
         q(f"data: {data}")
         response = self.send_request(data=data, path=login_path, method="POST")
-
+        return response
         # try:
-            # This is still sent as an HTTP header, so we can set our connection's _auth
-            # variable manually. If the token is returned to the device in another way,
-            # you will have to keep track of it another way and make sure that it is sent
-            # with the rest of the request from send_request()
+        # This is still sent as an HTTP header, so we can set our connection's _auth
+        # variable manually. If the token is returned to the device in another way,
+        # you will have to keep track of it another way and make sure that it is sent
+        # with the rest of the request from send_request()
 
-            #self.connection._auth = {'X-api-token': response['token']}
+        # self.connection._auth = {'X-api-token': response['token']}
         # except KeyError:
         #     raise AnsibleAuthenticationFailure(message="Failed to acquire login token.")
-        #return response
+        # return response
 
     def logout(self):
-        self.log('logout')
-        q('logout')
+        self.log("logout")
+        q("logout")
 
         try:
-            self.send_request(data=None, path="/cgi-bin/UserLogout?sessionkey={self.sessionkey}", method="POST")
+            self.send_request(
+                data=None,
+                path="/cgi-bin/UserLogout?sessionkey={self.sessionkey}",
+                method="POST",
+            )
         except Exception as e:
             q(f"logout error: {e}")
             pass
 
         self.connection._auth = None
-
 
     # def supports_sessions(self):
     #     use_session = self.get_option("eos_use_sessions")
@@ -144,13 +142,13 @@ class HttpApi(HttpApiBase):
     #     return self._session_support
 
     def send_request(self, data, **message_kwargs):
-    #def send_request(self, path=None, data=None, method='GET', output=json):
-    #def send_request(self, **message_kwargs):
+        # def send_request(self, path=None, data=None, method='GET', output=json):
+        # def send_request(self, **message_kwargs):
         # Fixed headers for requests
-        headers = {'Content-Type': 'application/json'}
-        path = message_kwargs.get('path', '/')
-        method = message_kwargs.get('method', 'GET')
-        #data = message_kwargs.get('data', None)
+        headers = {"Content-Type": "application/json"}
+        path = message_kwargs.get("path", "/")
+        method = message_kwargs.get("method", "GET")
+        # data = message_kwargs.get('data', None)
 
         if isinstance(data, dict):
             data = json.dumps(data)
@@ -158,14 +156,16 @@ class HttpApi(HttpApiBase):
         q(f"send_request: {path}")
         try:
             # https://github.com/ansible-collections/ansible.netcommon/blob/main/plugins/connection/httpapi.py
-            response, response_content = self.connection.send(path, data, method=method, headers=headers)
+            response, response_content = self.connection.send(
+                path, data, method=method, headers=headers
+            )
             q(f"2a, {response}")
             q(f"2b, {response_content}")
         # except HTTPError as exc:
         #     q(f"3, {exc.headers}")
         #     return exc.code, exc.read()
 
-            # return response.status, to_text(response_data.getvalue())
+        # return response.status, to_text(response_data.getvalue())
         except Exception as err:
             q(f"3, {err}")
             q(traceback.format_exc())
@@ -221,22 +221,22 @@ class HttpApi(HttpApiBase):
 
     def get_device_info(self):
         # if self._device_info:
-            # return self._device_info
+        # return self._device_info
 
         device_info = {}
 
         device_info["network_os"] = "zyxel"
         data = self.send_request(data=None, path="/getBasicInformation")
-        #data = json.loads(reply)
+        # data = json.loads(reply)
 
-        #device_info["network_os_version"] = data["version"]
+        # device_info["network_os_version"] = data["version"]
         device_info["network_os_model"] = data["ModelName"]
 
         return device_info
-        #data = self.send_request("show hostname", output="json")
-        #data = json.loads(reply)
+        # data = self.send_request("show hostname", output="json")
+        # data = json.loads(reply)
 
-        #device_info["network_os_hostname"] = data["hostname"]
+        # device_info["network_os_hostname"] = data["hostname"]
 
         # self._device_info = device_info
         # return self._device_info
@@ -258,7 +258,7 @@ class HttpApi(HttpApiBase):
 
     def get_capabilities(self):
         result = {}
-        #result["rpc"] = []
+        # result["rpc"] = []
         result["device_info"] = self.get_device_info()
         result["device_operations"] = self.get_device_operations()
         result.update(OPTIONS)

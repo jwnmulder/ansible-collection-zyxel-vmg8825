@@ -7,9 +7,11 @@ The module file for zyxel_facts
 """
 
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['preview'],
-                    'supported_by': '<support_group>'}
+ANSIBLE_METADATA = {
+    "metadata_version": "1.1",
+    "status": ["preview"],
+    "supported_by": "<support_group>",
+}
 
 
 DOCUMENTATION = """
@@ -88,10 +90,13 @@ def main():
 
     :returns: ansible_facts
     """
-    module = AnsibleModule(argument_spec=FactsArgs.argument_spec,
-                           supports_check_mode=True)
-    warnings = ['default value for `gather_subset` '
-                'will be changed to `min` from `!config` v2.11 onwards']
+    module = AnsibleModule(
+        argument_spec=FactsArgs.argument_spec, supports_check_mode=True
+    )
+    warnings = [
+        "default value for `gather_subset` "
+        "will be changed to `min` from `!config` v2.11 onwards"
+    ]
 
     result = Facts(module).get_facts()
 
@@ -101,5 +106,5 @@ def main():
     module.exit_json(ansible_facts=ansible_facts, warnings=warnings)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

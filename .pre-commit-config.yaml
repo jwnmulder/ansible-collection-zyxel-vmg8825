@@ -1,0 +1,58 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.4.0
+    hooks:
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: check-json
+        exclude: .devcontainer/|.vscode/
+      - id: check-yaml
+        files: .*\.(yaml|yml)$
+        args:
+          - --unsafe
+      - id: detect-private-key
+      - id: end-of-file-fixer
+        exclude: ^library/
+      - id: trailing-whitespace
+        exclude: ^library/
+
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v2.14.0
+    hooks:
+      - id: pyupgrade
+        args: [--py38-plus]
+
+  - repo: https://github.com/hadialqattan/pycln
+    rev: 0.0.2 # Possible releases: https://github.com/hadialqattan/pycln/tags
+    hooks:
+      - id: pycln
+        args:
+          - plugins
+
+  - repo: https://github.com/psf/black
+    rev: 20.8b1
+    hooks:
+      - id: black
+        args:
+          - --safe
+          - --quiet
+          - --experimental-string-processing
+        files: ^plugins/.+\.py$
+
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 3.9.1
+    hooks:
+      - id: flake8
+        additional_dependencies:
+          # https://github.com/DmytroLitvinov/awesome-flake8-extensions
+          - pycodestyle==2.7.0
+          - pyflakes==2.3.1
+          # - flake8-docstrings==1.6.0
+          - pydocstyle==6.0.0
+          # - flake8-comprehensions==3.4.0
+          - flake8-noqa==1.1.0
+        args:
+          - --max-line-length=88
+          - --ignore=E501,E402
+        files: ^plugins/.+\.py$

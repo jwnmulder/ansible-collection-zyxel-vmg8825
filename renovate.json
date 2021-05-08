@@ -1,0 +1,26 @@
+{
+  "extends": [
+    "config:base",
+    ":dependencyDashboard",
+    "docker:enableMajor",
+    "github>whitesource/merge-confidence:beta"
+  ],
+
+  "vulnerabilityAlerts": {
+    "labels": ["security"]
+  },
+
+  "major": {
+    "dependencyDashboardApproval": true
+  },
+
+  "regexManagers": [
+    {
+      "fileMatch": ["(^|/)\\.pre-commit-config\\.yaml$"],
+      "matchStrings": [
+        "\\s*language:\\sdocker_image\n\\s*entry:\\s(?<depName>.*?):(?<currentValue>.*?)\\s.*"
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ]
+}

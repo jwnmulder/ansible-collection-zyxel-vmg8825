@@ -13,14 +13,15 @@ from copy import deepcopy
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
     utils,
 )
-from ..module_utils.network.zyxel_vmg8825.argspec.static_dhcp.static_dhcp import Static_dhcpArgs
+from ..module_utils.network.zyxel_vmg8825.argspec.static_dhcp.static_dhcp import (
+    Static_dhcpArgs,
+)
 
 
 class Static_dhcpFacts:
-    """ The zyxel static_dhcp fact class
-    """
+    """The zyxel static_dhcp fact class"""
 
-    def __init__(self, module, subspec='config', options='options'):
+    def __init__(self, module, subspec="config", options="options"):
         self._module = module
         self.argument_spec = Static_dhcpArgs.argument_spec
         spec = deepcopy(self.argument_spec)
@@ -35,7 +36,7 @@ class Static_dhcpFacts:
         self.generated_spec = utils.generate_dict(facts_argument_spec)
 
     def populate_facts(self, connection, ansible_facts, data=None):
-        """ Populate the facts for static_dhcp
+        """Populate the facts for static_dhcp
         :param connection: the device connection
         :param ansible_facts: Facts dictionary
         :param data: previously collected conf
@@ -49,10 +50,9 @@ class Static_dhcpFacts:
             # using mock data instead
             data = connection.get_device_info()
 
-
-        ansible_facts['ansible_network_resources'].pop('static_dhcp', None)
+        ansible_facts["ansible_network_resources"].pop("static_dhcp", None)
         facts = {}
-        facts['static_dhcp'] = data
+        facts["static_dhcp"] = data
 
-        ansible_facts['ansible_network_resources'].update(facts)
+        ansible_facts["ansible_network_resources"].update(facts)
         return ansible_facts
