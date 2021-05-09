@@ -14,6 +14,15 @@
     "dependencyDashboardApproval": true
   },
 
+  "packageRules": [
+    {
+      "matchPaths": [".pre-commit-config.yaml"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "addLabels": ["automerge"]
+    }
+  ],
+  
   "regexManagers": [
     {
       "fileMatch": ["(^|/)\\.pre-commit-config\\.yaml$"],
