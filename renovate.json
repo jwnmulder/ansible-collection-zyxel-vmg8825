@@ -7,7 +7,7 @@
   ],
 
   "vulnerabilityAlerts": {
-    "labels": ["security"]
+    "addLabels": ["security"]
   },
 
   "major": {
