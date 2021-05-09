@@ -22,7 +22,7 @@
       "addLabels": ["automerge"]
     }
   ],
-  
+
   "regexManagers": [
     {
       "fileMatch": ["(^|/)\\.pre-commit-config\\.yaml$"],
