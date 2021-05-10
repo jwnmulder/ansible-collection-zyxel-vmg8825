@@ -20,7 +20,9 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.c
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
     to_list,
 )
-from ..module_utils.network.zyxel_vmg8825.facts.facts import Facts
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.facts.facts import (
+    Facts,
+)
 
 
 class Static_dhcp(ConfigBase):

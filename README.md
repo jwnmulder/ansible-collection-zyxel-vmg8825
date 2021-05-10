@@ -7,7 +7,9 @@
 
 ```bash
 pip install wheel
-ansible-test sanity -v --color --venv --python 3.8
+
+cd collections && ansible-galaxy collection install ansible.netcommon -p .
+ansible-test sanity -v --color --docker --python 3.8
 ```
 
 ## Ansible network resource module: zyxel_static_dhcp

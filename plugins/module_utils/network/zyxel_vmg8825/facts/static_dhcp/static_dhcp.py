@@ -18,7 +18,7 @@ from copy import deepcopy
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
     utils,
 )
-from ..module_utils.network.zyxel_vmg8825.argspec.static_dhcp.static_dhcp import (
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.static_dhcp.static_dhcp import (
     Static_dhcpArgs,
 )
 
