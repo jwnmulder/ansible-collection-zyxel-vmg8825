@@ -1,7 +1,13 @@
 #!/usr/bin/python
-# Copyright 2019 Red Hat
-# GNU General Public License v3.0+
-# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# -*- coding: utf-8 -*-
+
+# (c) 2021, Jan-Willem Mulder (@jwnmulder)
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+from __future__ import absolute_import, division, print_function
+
+__metaclass__ = type
+
 
 #############################################
 #                WARNING                    #
@@ -37,7 +43,7 @@ module: zyxel_static_dhcp
 version_added: 2.9
 short_description: 'Manages <xxxx> attributes of <network_os> <resource>.'
 description: 'Manages <xxxx> attributes of <network_os> <resource>'
-author: Ansible Network Engineer
+author: Jan-Willem Mulder (@jwnmulder)
 notes:
   - 'Tested against <network_os> <version>'
 options:

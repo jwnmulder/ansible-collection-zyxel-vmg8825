@@ -1,18 +1,22 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
-# (c) 2014, Vedit Firat Arig <firatarig@gmail.com>
-# Outline and parts are reused from Mark Theunissen's mysql_db module
+# (c) 2021, Jan-Willem Mulder (@jwnmulder)
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+from __future__ import absolute_import, division, print_function
+
+__metaclass__ = type
 
 
 DOCUMENTATION = """
 ---
 module: zyxel_dal_raw
-author: Jan-WIllem Mulder (@jwnmulder) <jwnmulder@gmail.com>
+author: Jan-Willem Mulder (@jwnmulder) (@jwnmulder)
 short_description: Zyxel Module
 description:
-    - This module can be used to send dal commands to the Zyxel modem
-requirements: [ cryptodome ]
+    - This module can be used to send dal commands to the Zyxel router
+requirements: [ zyxelclient_vmg8825 ]
 options: {}
 """
 

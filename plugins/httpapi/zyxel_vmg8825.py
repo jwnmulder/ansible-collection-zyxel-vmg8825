@@ -1,5 +1,8 @@
-# (c) 2018 Red Hat Inc.
+# (c) 2021, Jan-Willem Mulder (@jwnmulder)
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import absolute_import, division, print_function
+
+__metaclass__ = type
 
 
 DOCUMENTATION = """
@@ -177,7 +180,7 @@ class HttpApi(HttpApiBase):
             q("5")
         except ValueError:
             raise ConnectionError(
-                "Response was not valid JSON, got {}".format(
+                "Response was not valid JSON, got {0}".format(
                     to_text(response_content.getvalue())
                 )
             )

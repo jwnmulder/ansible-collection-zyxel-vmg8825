@@ -1,4 +1,8 @@
 # https://github.com/ansible-collections/community.network/blob/main/plugins/module_utils/network/avi/ansible_utils.py
+from __future__ import absolute_import, division, print_function
+
+__metaclass__ = type
+
 
 import logging
 import traceback

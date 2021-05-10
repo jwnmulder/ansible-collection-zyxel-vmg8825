@@ -24,6 +24,9 @@
 """
 The arg spec for the zyxel_static_dhcp module
 """
+from __future__ import absolute_import, division, print_function
+
+__metaclass__ = type
 
 
 class Static_dhcpArgs:  # pylint: disable=R0903
