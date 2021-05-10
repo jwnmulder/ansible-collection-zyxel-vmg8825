@@ -47,7 +47,8 @@ obj:
 import traceback
 
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-from ansible.module_utils.connection import Connection
+
+# from ansible.module_utils.connection import Connection
 
 ZYXEL_LIB_ERR = None
 try:
@@ -55,17 +56,17 @@ try:
         ZYXEL_LIB_ERR,
         zyxel_ansible_api,
         zyxel_common_argument_spec,
-        ansible_return,
+        #        ansible_return,
     )
 except ImportError:
     ZYXEL_LIB_ERR = traceback.format_exc()
 
-try:
-    from zyxel_api_vmg8825.client import ZyxelResponse
+# try:
+#     from zyxel_api_vmg8825.client import ZyxelResponse
 
-    # from ansible.module_utils.zyxel_api.client_factory import ClientFactory
-except ImportError:
-    ZYXEL_LIB_ERR = traceback.format_exc()
+#     # from ansible.module_utils.zyxel_api.client_factory import ClientFactory
+# except ImportError:
+#     ZYXEL_LIB_ERR = traceback.format_exc()
 
 
 def main():
@@ -82,17 +83,17 @@ def main():
 
     return zyxel_ansible_api(module, "PINGTEST", "get")
 
-    # module is your AnsibleModule instance.
-    connection = Connection(module._socket_path)
-    print([connection])
-    http_response, response_data = connection.send_request(
-        data=None, path="/cgi-bin/DAL?oid=PINGTEST"
-    )
+    # # module is your AnsibleModule instance.
+    # connection = Connection(module._socket_path)
+    # print([connection])
+    # http_response, response_data = connection.send_request(
+    #     data=None, path="/cgi-bin/DAL?oid=PINGTEST"
+    # )
 
-    print(http_response)
-    response = ZyxelResponse(http_response, response_data)
+    # print(http_response)
+    # response = ZyxelResponse(http_response, response_data)
 
-    return ansible_return(module, response, False, None, existing_obj=None)
+    # return ansible_return(module, response, False, None, existing_obj=None)
 
 
 if __name__ == "__main__":

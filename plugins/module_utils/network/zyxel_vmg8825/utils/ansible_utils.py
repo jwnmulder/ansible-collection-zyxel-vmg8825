@@ -88,7 +88,7 @@ def ansible_return(module, rsp, changed, req=None, existing_obj=None, api_contex
             fact_context = {key: api_context}
 
     obj_val = rsp.json() if rsp else existing_obj
-    print(f"obj_val: {obj_val}")
+    # print(f"obj_val: {obj_val}")
     # if (obj_val and module.params.get("obj_username", None) and
     #        "username" in obj_val):
     #    obj_val["obj_username"] = obj_val["username"]

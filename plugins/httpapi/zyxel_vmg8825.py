@@ -298,24 +298,24 @@ class HttpApi(HttpApiBase):
 def handle_response(response):
 
     return response
-    if "error" in response:
-        error = response["error"]
+    # if "error" in response:
+    #     error = response["error"]
 
-        error_text = []
-        for data in error.get("data", []):
-            error_text.extend(data.get("errors", []))
-        error_text = "\n".join(error_text) or error["message"]
+    #     error_text = []
+    #     for data in error.get("data", []):
+    #         error_text.extend(data.get("errors", []))
+    #     error_text = "\n".join(error_text) or error["message"]
 
-        raise ConnectionError(error_text, code=error["code"])
+    #     raise ConnectionError(error_text, code=error["code"])
 
-    results = []
+    # results = []
 
-    for result in response["result"]:
-        if "messages" in result:
-            results.append(result["messages"][0])
-        elif "output" in result:
-            results.append(result["output"].strip())
-        else:
-            results.append(json.dumps(result))
+    # for result in response["result"]:
+    #     if "messages" in result:
+    #         results.append(result["messages"][0])
+    #     elif "output" in result:
+    #         results.append(result["output"].strip())
+    #     else:
+    #         results.append(json.dumps(result))
 
-    return results
+    # return results
