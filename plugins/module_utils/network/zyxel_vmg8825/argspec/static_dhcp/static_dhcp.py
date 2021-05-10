@@ -39,11 +39,11 @@ class Static_dhcpArgs:  # pylint: disable=R0903
         "config": {
             "elements": "dict",
             "options": {
-                "br_wan": {"default": "Default", "type": "string"},
+                "br_wan": {"default": "Default", "type": "str"},
                 "enable": {"type": "bool"},
                 "index": {"type": "int"},
-                "ip_addr": {"type": "string"},
-                "mac_addr": {"type": "string"},
+                "ip_addr": {"type": "str"},
+                "mac_addr": {"type": "str"},
             },
             "type": "list",
         },

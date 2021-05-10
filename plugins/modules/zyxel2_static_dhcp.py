@@ -39,8 +39,8 @@ ANSIBLE_METADATA = {
 
 DOCUMENTATION = """
 ---
-module: zyxel_static_dhcp
-version_added: 2.9
+module: zyxel2_static_dhcp
+# version_added: 2.9
 short_description: 'Manages <xxxx> attributes of <network_os> <resource>.'
 description: 'Manages <xxxx> attributes of <network_os> <resource>'
 author: Jan-Willem Mulder (@jwnmulder)
@@ -59,7 +59,7 @@ options:
       br_wan:
         description:
         - BrWan
-        type: string
+        type: str
         default: Default
       enable:
         description:
@@ -68,11 +68,11 @@ options:
       mac_addr:
         description:
         - MACAddr
-        type: string
+        type: str
       ip_addr:
         description:
         - IPAddr
-        type: string
+        type: str
   state:
     description:
     - The state the configuration should be left in
@@ -90,12 +90,14 @@ RETURN = """
 before:
   description: The configuration prior to the model invocation.
   returned: always
+  type: list
   sample: >
     The configuration returned will always be in the same format
      of the parameters above.
 after:
   description: The resulting configuration model invocation.
   returned: when changed
+  type: list
   sample: >
     The configuration returned will always be in the same format
      of the parameters above.

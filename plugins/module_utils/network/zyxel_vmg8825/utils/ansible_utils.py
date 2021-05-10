@@ -215,15 +215,19 @@ def zyxel_common_argument_spec():
     :return: dict
     """
     credentials_spec = dict(
-        url=dict(fallback=(env_fallback, ["ZYXEL_URL"])),
-        username=dict(fallback=(env_fallback, ["ZYXEL_USERNAME"])),
-        password=dict(fallback=(env_fallback, ["ZYXEL_PASSWORD"]), no_log=True),
+        url=dict(type="str", fallback=(env_fallback, ["ZYXEL_URL"])),
+        username=dict(type="str", fallback=(env_fallback, ["ZYXEL_USERNAME"])),
+        password=dict(
+            type="str", fallback=(env_fallback, ["ZYXEL_PASSWORD"]), no_log=True
+        ),
     )
 
     return dict(
-        url=dict(fallback=(env_fallback, ["ZYXEL_URL"])),
-        username=dict(fallback=(env_fallback, ["ZYXEL_USERNAME"])),
-        password=dict(fallback=(env_fallback, ["ZYXEL_PASSWORD"]), no_log=True),
+        url=dict(type="str", fallback=(env_fallback, ["ZYXEL_URL"])),
+        username=dict(type="str", fallback=(env_fallback, ["ZYXEL_USERNAME"])),
+        password=dict(
+            type="str", fallback=(env_fallback, ["ZYXEL_PASSWORD"]), no_log=True
+        ),
         zyxel_credentials=dict(default=None, type="dict", options=credentials_spec),
         api_context=dict(type="dict"),
         zyxel_disable_session_cache_as_fact=dict(default=False, type="bool"),

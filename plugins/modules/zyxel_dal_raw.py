@@ -12,12 +12,53 @@ __metaclass__ = type
 DOCUMENTATION = """
 ---
 module: zyxel_dal_raw
-author: Jan-Willem Mulder (@jwnmulder) (@jwnmulder)
+author: Jan-Willem Mulder (@jwnmulder)
 short_description: Zyxel Module
 description:
-    - This module can be used to send dal commands to the Zyxel router
-requirements: [ zyxelclient_vmg8825 ]
-options: {}
+  - This module can be used to send dal commands to the Zyxel router
+requirements:
+  - zyxelclient_vmg8825
+options:
+  url:
+    type: str
+    description: url
+  username:
+    type: str
+    description: username
+  password:
+    type: str
+    description: password
+  zyxel_credentials:
+    type: dict
+    description: zyxel credentials
+    suboptions:
+      url:
+        type: str
+        description: url
+      username:
+        type: str
+        description: username
+      password:
+        type: str
+        description: password
+  api_context:
+    type: dict
+    description: api context
+  zyxel_disable_session_cache_as_fact:
+    type: bool
+    description: zyxel_disable_session_cache_as_fact
+    default: False
+  api_oid:
+    type: str
+    description: api_oid
+    required: True
+  api_method:
+    type: str
+    description: api_method
+    required: True
+  data:
+    type: dict
+    description: data
 """
 
 EXAMPLES = """

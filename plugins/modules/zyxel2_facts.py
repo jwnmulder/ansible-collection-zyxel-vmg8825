@@ -18,8 +18,8 @@ ANSIBLE_METADATA = {
 
 DOCUMENTATION = """
 ---
-module: zyxel_facts
-version_added: 2.9
+module: zyxel2_facts
+# version_added: 2.9
 short_description: Get facts about zyxel devices.
 description:
   - Collects facts from network devices running the zyxel operating
@@ -27,7 +27,7 @@ description:
     respective resource name.  The facts module will always collect a
     base set of facts from the device and can enable or disable
     collection of additional facts.
-author: Ansible Network Engineer
+author: Jan-Willem Mulder (@jwnmulder)
 options:
   gather_subset:
     description:
@@ -38,8 +38,10 @@ options:
         with an initial C(M(!)) to specify that a specific subset should
         not be collected.
     required: false
-    default: 'all'
-    version_added: "2.2"
+    type: list
+    elements: str
+    default:
+      - all
   gather_network_resources:
     description:
       - When supplied, this argument will restrict the facts collected
@@ -49,7 +51,11 @@ options:
         can also be used with an initial C(M(!)) to specify that a
         specific subset should not be collected.
     required: false
-    version_added: "2.9"
+    type: list
+    elements: str
+    choices:
+      - all
+      - static_dhcp
 """
 
 EXAMPLES = """
@@ -61,8 +67,8 @@ EXAMPLES = """
 # Collect only the static_dhcp facts
 - zyxel_facts:
     gather_subset:
-      - !all
-      - !min
+      - "!all"
+      - "!min"
     gather_network_resources:
       - static_dhcp
 
@@ -78,7 +84,7 @@ EXAMPLES = """
 """
 
 RETURN = """
-See the respective resource module parameters for the tree.
+# See the respective resource module parameters for the tree.
 """
 
 from ansible.module_utils.basic import AnsibleModule

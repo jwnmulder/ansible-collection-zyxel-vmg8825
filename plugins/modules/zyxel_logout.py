@@ -11,15 +11,43 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 ---
-module: avi_api_version
-author: Vilian Atmadzhov (@vivobg) <vilian.atmadzhov@paddypowerbetfair.com>
-short_description: Avi API Version Module
+module: zyxel_logout
+author: Jan-Willem Mulder (@jwnmulder)
+short_description: Zyxel Module
 description:
-    - This module can be used to obtain the version of the Avi REST API. U(https://avinetworks.com/)
-requirements: [ avisdk ]
-options: {}
-extends_documentation_fragment:
-- community.network.avi
+  - Zyxel module
+requirements:
+  - zyxelclient_vmg8825
+options:
+  url:
+    type: str
+    description: url
+  username:
+    type: str
+    description: username
+  password:
+    type: str
+    description: password
+  zyxel_credentials:
+    type: dict
+    description: zyxel credentials
+    suboptions:
+      url:
+        type: str
+        description: url
+      username:
+        type: str
+        description: username
+      password:
+        type: str
+        description: password
+  api_context:
+    type: dict
+    description: api context
+  zyxel_disable_session_cache_as_fact:
+    type: bool
+    description: zyxel_disable_session_cache_as_fact
+    default: False
 """
 
 EXAMPLES = """
