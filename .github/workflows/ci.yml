@@ -42,6 +42,7 @@ jobs:
         run: |
           pwd
           ls -la
+          ls -la ../../
           find .
           ansible-test sanity -v --color --docker --python ${{ matrix.python }}
         working-directory: >-
