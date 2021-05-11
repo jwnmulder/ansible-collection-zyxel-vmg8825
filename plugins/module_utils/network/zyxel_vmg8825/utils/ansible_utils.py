@@ -13,7 +13,7 @@ from ansible.module_utils.connection import Connection
 ZYXEL_LIB_NAME = "zyxelclient_vmg8825"
 ZYXEL_LIB_ERR = None
 try:
-    from zyxelclient_vmg8825.httpclient import ZyxelResponse
+    from zyxelclient_vmg8825as.httpclient import ZyxelResponse
     from zyxelclient_vmg8825.factory import ZyxelClientFactory
 except ImportError:
     ZYXEL_LIB_ERR = traceback.format_exc()
@@ -179,7 +179,7 @@ def zyxel_ansible_api(
             data=None, path=f"/cgi-bin/DAL?oid={api_oid}", method=api_method
         )
 
-        print(http_response)
+        # print(http_response)
         rsp = ZyxelResponse(http_response, response_data)
 
         # return ansible_return(module, response, False, None, existing_obj=None)

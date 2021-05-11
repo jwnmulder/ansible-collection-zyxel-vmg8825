@@ -68,20 +68,16 @@ obj:
     type: dict
 """
 
-import traceback
 
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 
-ZYXEL_LIB_ERR = None
-try:
-    from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.zyxel import (
-        ZYXEL_LIB_ERR,
-        zyxel_common_argument_spec,
-        zyxel_get_client,
-        ansible_return,
-    )
-except ImportError:
-    ZYXEL_LIB_ERR = traceback.format_exc()
+from ..module_utils.network.zyxel_vmg8825.utils.ansible_utils import (
+    ZYXEL_LIB_NAME,
+    ZYXEL_LIB_ERR,
+    zyxel_common_argument_spec,
+    zyxel_get_client,
+    ansible_return,
+)
 
 
 def main():
@@ -93,7 +89,7 @@ def main():
 
     if ZYXEL_LIB_ERR:
         return module.fail_json(
-            msg=missing_required_lib("zyxel"), exception=ZYXEL_LIB_ERR
+            msg=missing_required_lib(ZYXEL_LIB_NAME), exception=ZYXEL_LIB_ERR
         )
 
     # check_mode = module.check_mode
