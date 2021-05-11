@@ -40,13 +40,9 @@ jobs:
 
       - name: Run ansible-test sanity
         run: |
-          pwd
-          ls -la
-          ls -la ../../
-          find .
           ansible-test sanity -v --color --docker --python ${{ matrix.python }}
         working-directory: >-
-          ./ansible_collections/jwnmulder/zyxl_vmg8825
+          ./ansible_collections/jwnmulder/zyxel_vmg8825
 
       # - name: Run Tox
       #   # Run tox using the version of Python in `PATH`
