@@ -8,12 +8,13 @@ import logging
 import traceback
 
 from ansible.module_utils.basic import env_fallback
+from ansible.module_utils.connection import Connection
 
-
+ZYXEL_LIB_NAME = "zyxelclient_vmg8825"
 ZYXEL_LIB_ERR = None
 try:
-    from zyxel_api_vmg8825.client import ZyxelResponse
-    from zyxel_api_vmg8825.client_factory import ClientFactory
+    from zyxelclient_vmg8825.httpclient import ZyxelResponse
+    from zyxelclient_vmg8825.factory import ZyxelClientFactory
 except ImportError:
     ZYXEL_LIB_ERR = traceback.format_exc()
 
@@ -145,7 +146,7 @@ def zyxel_get_client(module, sensitive_fields=None):
     api_creds = ZyxelCredentials()
     api_creds.update_from_ansible_module(module)
 
-    api = ClientFactory.get_client(
+    api = ZyxelClientFactory.get_client(
         api_creds.url, api_creds.username, api_creds.password
     )
 
@@ -157,6 +158,38 @@ def zyxel_get_client(module, sensitive_fields=None):
 
 
 def zyxel_ansible_api(
+    module, api_oid, api_method, request_data=None, sensitive_fields=None
+):
+
+    if module._socket_path is None:
+
+        # don't use ansible.netcommon.httpapi
+        return zyxel_ansible_classic_api(
+            module=module,
+            api_oid=api_oid,
+            api_method=api_method,
+            request_data=None,
+            sensitive_fields=None,
+        )
+
+    else:
+
+        connection = Connection(module._socket_path)
+        http_response, response_data = connection.sexnd_request(
+            data=None, path=f"/cgi-bin/DAL?oid={api_oid}", method=api_method
+        )
+
+        print(http_response)
+        rsp = ZyxelResponse(http_response, response_data)
+
+        # return ansible_return(module, response, False, None, existing_obj=None)
+
+        return ansible_return(
+            module=module, rsp=rsp, changed=False, req=request_data, existing_obj=None
+        )
+
+
+def zyxel_ansible_classic_api(
     module, api_oid, api_method, request_data=None, sensitive_fields=None
 ):
     """
@@ -192,7 +225,7 @@ def zyxel_ansible_api(
             elif api_method == "post":
                 rsp = api.dal_post(oid=api_oid, data=request_data)
             elif api_method == "delete":
-                rsp = api.dal_delete(oid=api_oid, data=request_data)
+                rsp = api.dal_delete(oid=api_oid)
         except Exception as e:
             if len(e.args) > 1 and isinstance(e.args[1], ZyxelResponse):
                 rsp = e.args[1]
