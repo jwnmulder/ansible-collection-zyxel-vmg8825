@@ -21,7 +21,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           path: >-
-            ansible_collections/jwnmulder/zyxl_vmg8825
+            ansible_collections/jwnmulder/zyxel_vmg8825
 
       - name: Setup Python
         uses: actions/setup-python@v2
