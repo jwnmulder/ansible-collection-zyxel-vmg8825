@@ -26,3 +26,134 @@ for the collection that was generated if the collection is distributed independe
 ```bash
 pip3 install pycryptodome
 ```
+
+## other stuff
+
+# docs
+
+* api_context from https://docs.ansible.com/ansible/latest/collections/community/network/avi_httppolicyset_module.html
+https://docs.ansible.com/ansible/latest/dev_guide/developing_modules_general.html
+
+https://github.com/fortinet-ansible-dev/ansible-galaxy-fortios-collection/blob/fos_v6.0.0/galaxy_2.0.1/plugins/httpapi/fortios.py
+https://openwrt.org/inbox/toh/zyxel/zyxel_vmg8825-t50
+
+zyxel
+pyzyxel
+zyxel-api
+zyxel-vmg8825-api
+zyxelclient-vmg8825
+
+ZyxelApiClient
+
+```json
+DeviceDiscRespPayload={
+   "ApiName": "ZYXEL RESTful API",
+   "ModelName": "VMG8825-T50",
+   "SoftwareVersion": "V5.50(ABPY.1)b11",
+   "DeviceMode": "Router",
+   "SupportedApiVersion": [
+     {
+       "ApiVersion": "1.0",
+       "LoginURI": "\/api\/v1\/UserLogin",
+       "Protocol": "HTTPS",
+       "HttpsPort": 20443
+     }
+   ],
+   "MAC": "08:26:97:DA:DD:80"
+ }
+```
+
+zyxel VMG8825-T50
+
+https://pypi.org/project/fritzconnection/
+
+```bash
+from fritzconnection import FritzConnection
+
+fc = FritzConnection(address='192.168.178.1')
+fc.reconnect()  # get a new external ip from the provider
+print(fc)  # print router model informations
+```
+
+```plain
+
+# file: home_router.yml
+
+- hosts: localhost
+  vars:
+    zyxel_cli:
+      url: "https://192.168.0.1"
+      username: "{{ username }}"
+      password: "{{ password }}"
+  tasks:
+    - name: test zyxel
+      zyxel_ping:
+        name: a
+      connection: local
+
+    - name: Zyxel raw command
+      zyxel_command:
+        provider: "{{ zyxel_cli }}"
+          #host
+          #port
+          controller_baseURL: "https://127.0.0.1:8443"
+          controller_username: "admin"
+          controller_password: "changeme"
+          controller_site: "default"
+        method: get
+        oid: static_dhcp
+      register: result
+
+    - name: debug Zyxel response
+      debug:
+        mag:
+
+    - name: Configure ipv4 dhcp fixed address
+      zyxel_static_dhcp:
+        mac: "90:0C:c8:d9:cf:ef"
+        ipaddr: 192.168.0.86
+        state: present
+        enabled: true
+        #index: 1
+        #brwan: "Default"
+        #provider:
+        #  host: "{{ inventory_hostname_short }}"
+        #  username: admin
+        #  password: admin
+      connection: local
+
+---
+- hosts: localhost
+  roles:
+    - role: avinetworks.avisdk
+  tasks:
+    - name: Get login info
+      uri:
+        url: "https://{{ controller }}/login"
+        method: POST
+        body:
+          username: "{{ username }}"
+          password: "{{ password }}"
+        validate_certs: no
+        body_format: json
+      register: login_info
+    - name: Get cloud inventory
+      avi_api_session:
+        avi_credentials:
+          username: "{{ username }}"
+          password: "{{ password }}"
+        controller: "{{ controller }}"
+        api_context:
+          session_id: "{{ login_info.cookies.sessionid }}"
+          csrftoken: "{{ login_info.cookies.csrftoken }}"
+        http_method: get
+        path: cloud-inventory
+      register: cloud_results
+
+
+      avi_disable_session_cache_as_fact
+https://github.com/ansible-collections/community.network/blob/8f08dae3121ea41cc02f62e372b929e208f1c3a0/plugins/module_utils/network/avi/ansible_utils.py
+https://github.com/ansible-collections/community.network/blob/8f08dae3121ea41cc02f62e372b929e208f1c3a0/plugins/modules/network/avi/avi_api_version.py
+
+
+```
