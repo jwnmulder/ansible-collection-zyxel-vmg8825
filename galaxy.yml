@@ -1,7 +1,7 @@
 # See https://docs.ansible.com/ansible/latest/dev_guide/collections_galaxy_meta.html
 
 namespace: jwnmulder
-name: zyxel-vmg8825
+name: zyxel_vmg8825
 version: 0.1.0
 readme: README.md
 authors:
