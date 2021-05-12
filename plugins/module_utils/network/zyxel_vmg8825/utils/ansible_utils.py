@@ -13,7 +13,7 @@ from ansible.module_utils.connection import Connection
 ZYXEL_LIB_NAME = "zyxelclient_vmg8825"
 ZYXEL_LIB_ERR = None
 try:
-    from zyxelclient_vmg8825as.httpclient import ZyxelResponse
+    from zyxelclient_vmg8825.httpclient import ZyxelResponse
     from zyxelclient_vmg8825.factory import ZyxelClientFactory
 except ImportError:
     ZYXEL_LIB_ERR = traceback.format_exc()
@@ -53,7 +53,7 @@ class ZyxelCredentials:
                 if hasattr(self, k):
                     setattr(self, k, v)
         if m.params["url"]:
-            self.controller = m.params["url"]
+            self.url = m.params["url"]
         if m.params["username"]:
             self.username = m.params["username"]
         if m.params["password"]:
@@ -204,6 +204,16 @@ def zyxel_ansible_classic_api(
     """
     # api_oid = api_oid or module.params.get('api_oid', 'none')
     # api_method = api_method or module.params.get('api_method', 'get')
+
+    api_creds = ZyxelCredentials()
+    api_creds.update_from_ansible_module(module)
+
+    if not api_creds.url:
+        return module.fail_json(msg="Missing value for 'url' (classic)")
+    if not api_creds.username:
+        return module.fail_json(msg="Missing value for 'username' (classic)")
+    if not api_creds.password:
+        return module.fail_json(msg="Missing value for 'password' (classic)")
 
     api = zyxel_get_client(module, sensitive_fields)
 

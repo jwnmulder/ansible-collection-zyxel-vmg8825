@@ -29,6 +29,7 @@ repos:
       - id: pycln
         args:
           - plugins
+          - tests
 
   - repo: https://github.com/psf/black
     rev: 20.8b1
@@ -38,7 +39,7 @@ repos:
           - --safe
           - --quiet
           - --experimental-string-processing
-        files: ^plugins/.+\.py$
+        files: ^(plugins|tests)/.+\.py$
 
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.9.2
@@ -55,4 +56,4 @@ repos:
         args:
           - --max-line-length=88
           - --ignore=E501,E402
-        files: ^plugins/.+\.py$
+        files: ^(plugins|tests)/.+\.py$
