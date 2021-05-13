@@ -17,12 +17,12 @@ from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     ModuleTestCase,
     set_module_args,
 )
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import zyxel_ping
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import zyxel_dal_raw
 
 
 class TestZyxelModule(ModuleTestCase):
 
-    module = zyxel_ping
+    module = zyxel_dal_raw
 
     def setUp(self):
         super().setUp()
@@ -56,6 +56,8 @@ class TestZyxelModule(ModuleTestCase):
                     "url": "https://127.0.0.1",
                     "username": "username",
                     "password": "password",
+                    "api_oid": "PINGTEST",
+                    "api_method": "get",
                 }
             )
 

@@ -89,7 +89,7 @@ def main():
             msg=missing_required_lib(ZYXEL_LIB_NAME), exception=ZYXEL_LIB_ERR
         )
 
-    return zyxel_ansible_api(module, "PINGTEST", "get")
+    return zyxel_ansible_api(module, "static_dhcp", "get")
 
 
 if __name__ == "__main__":
