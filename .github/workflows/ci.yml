@@ -28,11 +28,15 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
-      - name: Cache pip
+      - name: Cache packages
         uses: actions/cache@v2
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.python }}-${{ hashFiles('./ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
+          #path: ~/.cache/pip
+          path: |
+            ~/.cache/pip
+            ~/.local/lib/python${{ matrix.python }}
+            ~/.ansible/collection
+          key: ${{ runner.os }}-packages-${{ matrix.python }}-${{ hashFiles('./ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-${{ matrix.python }}-
             ${{ runner.os }}-pip-
@@ -73,11 +77,15 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
-      - name: Cache pip
+      - name: Cache packages
         uses: actions/cache@v2
         with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.python }}-${{ hashFiles('ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
+          #path: ~/.cache/pip
+          path: |
+            ~/.cache/pip
+            ~/.local/lib/python${{ matrix.python }}
+            ~/.ansible/collection
+          key: ${{ runner.os }}-packages-${{ matrix.python }}-${{ hashFiles('ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-pip-${{ matrix.python }}-
             ${{ runner.os }}-pip-
