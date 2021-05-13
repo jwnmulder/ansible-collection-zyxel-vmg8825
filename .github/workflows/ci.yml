@@ -50,6 +50,8 @@ jobs:
 
       - name: Install dependencies
         run: |
+          which python
+          which pip
           python -m pip install --upgrade pip wheel
           python -m pip install -r ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt --user
           python -m pip install -r ansible_collections/jwnmulder/zyxel_vmg8825/tests/unit/requirements.txt --user
@@ -63,6 +65,8 @@ jobs:
 
       - name: Run ansible-test units
         run: |
+          which python
+          which pip
           ansible-test units -vvv --color --local --python ${{ matrix.python }}
         working-directory: >-
           ./ansible_collections/jwnmulder/zyxel_vmg8825
