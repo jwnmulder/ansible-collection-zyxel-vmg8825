@@ -30,11 +30,11 @@ jobs:
         with:
           path: |
             ~/.cache/pip
-            ~/.local/lib/python${{ matrix.python }}
+            ~/.local/lib/python3.8
             ~/.ansible/collection
-          key: ${{ runner.os }}-packages-${{ matrix.python }}-${{ hashFiles('ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
+          key: ${{ runner.os }}-packages-3.8-${{ hashFiles('ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-packages-${{ matrix.python }}-
+            ${{ runner.os }}-packages-3.8-
             ${{ runner.os }}-packages-
             ${{ runner.os }}-
 
