@@ -68,7 +68,9 @@ jobs:
         run: |
           which python
           which pip
-          env
+          #env
+          echo $pythonLocation/bin/python
+          $pythonLocation/bin/python --version
           ansible-test units -vvv --color --local --python ${{ matrix.python }} --python-interpreter $pythonLocation/bin/python
         working-directory: >-
           ./ansible_collections/jwnmulder/zyxel_vmg8825
