@@ -32,9 +32,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('./ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ matrix.python }}-${{ hashFiles('./ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-${{ matrix.python }}-
             ${{ runner.os }}-pip-
             ${{ runner.os }}-
 
@@ -77,9 +77,9 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ matrix.python }}-${{ hashFiles('ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
           restore-keys: |
-            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-${{ matrix.python }}-
             ${{ runner.os }}-pip-
             ${{ runner.os }}-
 
