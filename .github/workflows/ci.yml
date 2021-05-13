@@ -23,13 +23,6 @@ jobs:
           path: >-
             ansible_collections/jwnmulder/zyxel_vmg8825
 
-      # - uses: actions/checkout@v2
-      #   with:
-      #     repository: jwnmulder/python-zyxelclient-vmg8825
-      #     ssh-key: ${{ secrets.DEPLOY_KEY_PYTHON_ZYXELCLIENT_VMG8825 }}
-      #     persist-credentials: false
-      #     path: python-zyxelclient-vmg8825
-
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
@@ -58,16 +51,13 @@ jobs:
           python -m pip install -r ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt --user
           python -m pip install -r ansible_collections/jwnmulder/zyxel_vmg8825/tests/unit/requirements.txt --user
 
-          # install zyxcelclient_vmg8825 from git which is needed for unit testing
-          # python -m pip install -e python-zyxelclient-vmg8825 --user
-
       - name: Install collection dependencies
         run: |
-          ansible-galaxy collection install ansible.netcommon -p .
+          ansible-galaxy collection install ansible.netcommon
 
       - name: Run ansible-test units
         run: |
-          ansible-test units -vvv --color --venv --python ${{ matrix.python }}
+          ansible-test units -v --color --venv --python ${{ matrix.python }}
         working-directory: >-
           ./ansible_collections/jwnmulder/zyxel_vmg8825
 
@@ -111,11 +101,11 @@ jobs:
 
       - name: Install collection dependencies
         run: |
-          ansible-galaxy collection install ansible.netcommon -p .
+          ansible-galaxy collection install ansible.netcommon
 
       - name: Run ansible-test sanity
         run: |
-          ansible-test sanity -v --color --docker --python ${{ matrix.python }}
+          ansible-test sanity -v --color --venv --python ${{ matrix.python }}
         working-directory: >-
           ansible_collections/jwnmulder/zyxel_vmg8825
 
