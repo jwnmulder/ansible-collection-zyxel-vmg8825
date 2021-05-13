@@ -50,15 +50,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          which python
-          which pip
-          env
           python -m pip install --upgrade pip wheel
           python -m pip install -r ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt --user
           python -m pip install -r ansible_collections/jwnmulder/zyxel_vmg8825/tests/unit/requirements.txt --user
 
           # install zyxcelclient_vmg8825 from git which is needed for unit testing
-          python -m pip install -e python-zyxelclient-vmg8825 --user
+          # python -m pip install -e python-zyxelclient-vmg8825 --user
 
       - name: Install collection dependencies
         run: |
@@ -66,12 +63,7 @@ jobs:
 
       - name: Run ansible-test units
         run: |
-          which python
-          which pip
-          #env
-          echo $pythonLocation/bin/python
-          $pythonLocation/bin/python --version
-          ansible-test units -vvv --color --local --python ${{ matrix.python }} --python-interpreter $pythonLocation/bin/python
+          ansible-test units -vvv --color --venv --python ${{ matrix.python }}
         working-directory: >-
           ./ansible_collections/jwnmulder/zyxel_vmg8825
 
