@@ -53,7 +53,7 @@ jobs:
 
       - name: Install collection dependencies
         run: |
-          ansible-galaxy collection install ansible.netcommon
+          ansible-galaxy collection install ansible.netcommon -p .
 
       - name: Run ansible-test units
         run: |
@@ -101,7 +101,7 @@ jobs:
 
       - name: Install collection dependencies
         run: |
-          ansible-galaxy collection install ansible.netcommon
+          ansible-galaxy collection install ansible.netcommon -p .
 
       - name: Run ansible-test sanity
         run: |
