@@ -23,12 +23,12 @@ jobs:
           path: >-
             ansible_collections/jwnmulder/zyxel_vmg8825
 
-      - uses: actions/checkout@v2
-        with:
-          repository: jwnmulder/python-zyxelclient-vmg8825
-          ssh-key: ${{ secrets.DEPLOY_KEY_PYTHON_ZYXELCLIENT_VMG8825 }}
-          persist-credentials: false
-          path: python-zyxelclient-vmg8825
+      # - uses: actions/checkout@v2
+      #   with:
+      #     repository: jwnmulder/python-zyxelclient-vmg8825
+      #     ssh-key: ${{ secrets.DEPLOY_KEY_PYTHON_ZYXELCLIENT_VMG8825 }}
+      #     persist-credentials: false
+      #     path: python-zyxelclient-vmg8825
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -47,6 +47,10 @@ jobs:
             ${{ runner.os }}-packages-${{ matrix.python }}-
             ${{ runner.os }}-packages-
             ${{ runner.os }}-
+
+      - uses: webfactory/ssh-agent@v0.5.2
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY_PYTHON_ZYXELCLIENT_VMG8825 }}
 
       - name: Install dependencies
         run: |
