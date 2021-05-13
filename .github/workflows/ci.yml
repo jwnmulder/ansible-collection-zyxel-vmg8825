@@ -63,7 +63,7 @@ jobs:
 
       - name: Run ansible-test units
         run: |
-          ansible-test units -v --color --local --python ${{ matrix.python }}
+          ansible-test units -vvv --color --local --python ${{ matrix.python }}
         working-directory: >-
           ./ansible_collections/jwnmulder/zyxel_vmg8825
 
