@@ -74,6 +74,7 @@ from ansible.module_utils.basic import AnsibleModule, missing_required_lib
 from ..module_utils.network.zyxel_vmg8825.utils.ansible_utils import (
     ZYXEL_LIB_NAME,
     ZYXEL_LIB_ERR,
+    ZyxelCredentials,
     zyxel_common_argument_spec,
     zyxel_get_client,
     ansible_return,
@@ -91,6 +92,16 @@ def main():
         return module.fail_json(
             msg=missing_required_lib(ZYXEL_LIB_NAME), exception=ZYXEL_LIB_ERR
         )
+
+    api_creds = ZyxelCredentials()
+    api_creds.update_from_ansible_module(module)
+
+    if not api_creds.url:
+        return module.fail_json(msg="Missing value for 'url' (classic)")
+    if not api_creds.username:
+        return module.fail_json(msg="Missing value for 'username' (classic)")
+    if not api_creds.password:
+        return module.fail_json(msg="Missing value for 'password' (classic)")
 
     check_mode = module.check_mode
 

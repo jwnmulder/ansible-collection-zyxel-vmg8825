@@ -38,6 +38,7 @@ class TestZyxelModule(ModuleTestCase):
             self.module.main()
 
     @responses.activate
+    # @pytest.mark.skipif("sys.version_info >= (3,0)")
     def test_ensure_command_called_local(self):
 
         with responses.RequestsMock(assert_all_requests_are_fired=True) as rsps:
@@ -57,7 +58,7 @@ class TestZyxelModule(ModuleTestCase):
                 {
                     "url": "https://127.0.0.1",
                     "username": "username",
-                    "password": "password",
+                    "password": "fakepassword",
                 }
             )
 

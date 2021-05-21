@@ -17,12 +17,12 @@ from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     ModuleTestCase,
     set_module_args,
 )
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import zyxel_dal_raw
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import zyxel_logout
 
 
 class TestZyxelModule(ModuleTestCase):
 
-    module = zyxel_dal_raw
+    module = zyxel_logout
 
     def setUp(self):
         super().setUp()
@@ -40,14 +40,11 @@ class TestZyxelModule(ModuleTestCase):
 
         with responses.RequestsMock(assert_all_requests_are_fired=True) as rsps:
             rsps.add(
-                responses.GET,
-                "https://127.0.0.1/cgi-bin/DAL?oid=PINGTEST",
+                responses.POST,
+                "https://127.0.0.1/cgi-bin/UserLogout?sessionkey=None",
                 status=200,
                 json={
                     "result": "ZCFG_SUCCESS",
-                    "ReplyMsg": "DNSServer",
-                    "ReplyMsgMultiLang": "",
-                    "Object": [{"DiagnosticsState": "None"}],
                 },
             )
 
@@ -55,12 +52,9 @@ class TestZyxelModule(ModuleTestCase):
                 {
                     "url": "https://127.0.0.1",
                     "username": "username",
-                    "password": "fakepassword",
-                    "api_oid": "PINGTEST",
-                    "api_method": "get",
+                    "password": "password",
                 }
             )
-
             with self.assertRaises(AnsibleExitJson) as result:
                 self.module.main()
 
