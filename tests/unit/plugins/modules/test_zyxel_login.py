@@ -17,12 +17,12 @@ from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     ModuleTestCase,
     set_module_args,
 )
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import zyxel_dal_raw
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import zyxel_login
 
 
 class TestZyxelModule(ModuleTestCase):
 
-    module = zyxel_dal_raw
+    module = zyxel_login
 
     def setUp(self):
         super().setUp()
@@ -40,14 +40,12 @@ class TestZyxelModule(ModuleTestCase):
 
         with responses.RequestsMock(assert_all_requests_are_fired=True) as rsps:
             rsps.add(
-                responses.GET,
-                "https://127.0.0.1/cgi-bin/DAL?oid=PINGTEST",
+                responses.POST,
+                "https://127.0.0.1/UserLogin",
                 status=200,
                 json={
                     "result": "ZCFG_SUCCESS",
-                    "ReplyMsg": "DNSServer",
-                    "ReplyMsgMultiLang": "",
-                    "Object": [{"DiagnosticsState": "None"}],
+                    "sessionkey": "ABC",
                 },
             )
 
@@ -55,9 +53,7 @@ class TestZyxelModule(ModuleTestCase):
                 {
                     "url": "https://127.0.0.1",
                     "username": "username",
-                    "password": "fakepassword",
-                    "api_oid": "PINGTEST",
-                    "api_method": "get",
+                    "password": "password",
                 }
             )
 
