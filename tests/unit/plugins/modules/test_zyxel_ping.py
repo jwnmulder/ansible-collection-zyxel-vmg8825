@@ -2,8 +2,6 @@
 
 from __future__ import absolute_import, division, print_function
 
-# from ansible.playbook.play_context import PlayContext
-
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825 import (
     HttpApi,
 )
@@ -14,18 +12,14 @@ import json
 import responses
 import pytest
 
-from ansible.module_utils.six import BytesIO, PY3, StringIO
-
+from ansible.module_utils.six import BytesIO
 from ansible.module_utils import basic
-from ansible_collections.ansible.netcommon.tests.unit.compat.mock import (
-    Mock,
-    patch,
-    MagicMock,
+from ansible_collections.ansible.netcommon.tests.unit.compat import (
+    mock,
 )
 from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     AnsibleExitJson,
     AnsibleFailJson,
-    ModuleTestCase,
     set_module_args,
 )
 from ansible_collections.community.network.tests.unit.compat.mock import PropertyMock
@@ -34,8 +28,6 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.test_utils imp
     ZyxelModuleTestCase,
     mocked_response,
 )
-
-from callee import Attrs, Any
 
 
 class TestZyxelModuleLocal(ZyxelModuleTestCase):
@@ -109,7 +101,7 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
 
     def setUp(self):
         super().setUp()
-        self.connection_mock = Mock()
+        self.connection_mock = mock.Mock()
         self.zyxelhttp_plugin = FakeZyxelHttpApi(self.connection_mock)
         self.zyxelhttp_plugin._load_name = "httpapi"
 
@@ -136,7 +128,7 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
 
     @staticmethod
     def _connection_response(response, status=200):
-        response_mock = Mock()
+        response_mock = mock.Mock()
         response_mock.getcode.return_value = status
         response_text = json.dumps(response) if type(response) is dict else response
         response_data = BytesIO(
