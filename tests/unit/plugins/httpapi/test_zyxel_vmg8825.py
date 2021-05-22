@@ -2,19 +2,17 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
-from unittest.mock import ANY
 
 __metaclass__ = type
 
 import pytest
 
-from ansible.module_utils.six.moves.urllib.error import HTTPError
+# from ansible.module_utils.six.moves.urllib.error import HTTPError
 
 from ansible_collections.ansible.netcommon.tests.unit.compat import mock, unittest
 
 from ansible.errors import AnsibleConnectionFailure
 from ansible.module_utils.connection import ConnectionError
-from ansible.module_utils.six import BytesIO, StringIO
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825 import (
     HttpApi,
 )
@@ -40,8 +38,6 @@ class FakeZyxelHttpApiPlugin(HttpApi):
 
 class TestZyxelHttpApi(unittest.TestCase):
     def setUp(self):
-        from ansible.module_utils.urls import open_url
-
         self.connection = fake_httpapi.Connection()
         self.zyxel_plugin = FakeZyxelHttpApiPlugin(self.connection)
         self.zyxel_plugin._load_name = "httpapi"
