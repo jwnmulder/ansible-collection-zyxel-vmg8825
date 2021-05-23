@@ -48,8 +48,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip wheel
-          python -m pip install -r ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt --user
-          python -m pip install -r ansible_collections/jwnmulder/zyxel_vmg8825/tests/unit/requirements.txt --user
+          python -m pip install -r .github/requirements.txt --user
+          python -m pip install -r tests/unit/requirements.txt --user
+        working-directory: >-
+          ansible_collections/jwnmulder/zyxel_vmg8825
 
       - name: Install collection dependencies
         run: |
@@ -96,6 +98,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip wheel
           python -m pip install -r .github/requirements.txt --user
+          python -m pip install -r tests/unit/requirements.txt --user
         working-directory: >-
           ansible_collections/jwnmulder/zyxel_vmg8825
 
