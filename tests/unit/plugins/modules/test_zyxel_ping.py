@@ -71,7 +71,6 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
     def tearDown(self):
         super().tearDown()
 
-    # @pytest.mark.skip(reason="not working yet")
     @httpretty.activate(verbose=True, allow_net_connect=False)
     def test_ensure_command_called_httpapi(self):
 
