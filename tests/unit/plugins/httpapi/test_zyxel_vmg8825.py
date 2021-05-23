@@ -21,8 +21,6 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.test_utils imp
     mocked_response,
 )
 
-from callee import Attrs, Any
-
 
 class FakeZyxelHttpApiPlugin(HttpApi):
     def __init__(self, conn):
@@ -43,8 +41,13 @@ class TestZyxelHttpApi(unittest.TestCase):
         self.zyxel_plugin._load_name = "httpapi"
         self.connection.httpapi = self.zyxel_plugin
 
-        # self.request_mock = mock.patch('ansible.module_utils.urls.Request.open').start()
-        self.request_mock = mock.patch("urllib.request.urlopen").start()
+        self.request_patch = mock.patch("ansible.module_utils.urls.Request.open")
+        self.request_mock = self.request_patch.start()
+        # self.request_patch = mock.patch("urllib.request.urlopen") # use the above instead?
+        # self.request_mock = self.request_patch.start()
+
+    def tearDown(self):
+        self.request_patch.stop()
 
     def test_login_raises_exception_when_username_and_password_are_not_provided(self):
 
@@ -75,17 +78,15 @@ class TestZyxelHttpApi(unittest.TestCase):
             mocked_response({"errorMessage": "ERROR"}, status=500)
         ]
 
-        resp = self.zyxel_plugin.send_request(None, path="/test")
+        response_data = self.zyxel_plugin.send_request(None, path="/test")
 
-        # assert resp == (500, {'errorMessage': 'ERROR'})
-        assert resp == {"errorMessage": "ERROR"}
+        assert response_data[0] == {"errorMessage": "ERROR"}
 
     def test_login(self):
         self.request_mock.side_effect = [mocked_response({"sid": "SID", "uid": "UID"})]
 
         self.zyxel_plugin.login("USERNAME", "PASSWORD")
 
-        self.request_mock.assert_called_once_with(
-            Attrs(selector="/UserLogin"), Any(), Any()
-        )
-        # self.request_mock.assert_called_once_with(Attrs(full_url=Glob('*serLogin')), Any(), Any())
+        args = self.request_mock.mock_calls[0].args
+        self.assertEqual(args[0], "POST")
+        self.assertRegex(args[1], "/UserLogin")

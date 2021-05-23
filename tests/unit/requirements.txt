@@ -1,4 +1,5 @@
 responses==0.13.3
+httpretty
 urllib3>=1.25.10,<1.26
 pytest-mock==3.6.1
 mock==4.0.3

@@ -42,7 +42,6 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.u
 )
 from ansible.plugins.httpapi import HttpApiBase
 
-
 OPTIONS = {
     "format": ["text", "json"],
     "diff_match": ["line", "strict", "exact", "none"],
@@ -369,4 +368,4 @@ def handle_response(response, response_data):
             raise ConnectionError(error_text, code=response.code)
         raise ConnectionError(to_text(response), code=response.code)
 
-    return response_data
+    return response_data, response
