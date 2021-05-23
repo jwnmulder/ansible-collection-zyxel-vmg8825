@@ -90,3 +90,10 @@ class TestZyxelHttpApi(unittest.TestCase):
         args = self.request_mock.mock_calls[0].args
         self.assertEqual(args[0], "POST")
         self.assertRegex(args[1], "/UserLogin")
+
+        self.assertTrue(
+            any(
+                x.args[0] == "POST" and x.args[1].find("/UserLogin")
+                for x in self.request_mock.mock_calls
+            )
+        )
