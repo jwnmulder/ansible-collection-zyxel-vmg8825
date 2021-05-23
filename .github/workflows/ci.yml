@@ -94,6 +94,10 @@ jobs:
             ${{ runner.os }}-packages-
             ${{ runner.os }}-
 
+      - uses: webfactory/ssh-agent@v0.5.2
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY_PYTHON_ZYXELCLIENT_VMG8825 }}
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip wheel
