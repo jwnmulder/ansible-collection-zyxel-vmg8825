@@ -180,12 +180,12 @@ def zyxel_ansible_api(
     else:
 
         connection = get_connection(module)
-        http_response, response_data = connection.send_request(
+        response_data, http_response = connection.send_request(
             data=None, path=f"/cgi-bin/DAL?oid={api_oid}", method=api_method
         )
 
         # print(http_response)
-        rsp = ZyxelResponse(http_response, response_data)
+        rsp = ZyxelResponse(http_response.code, response_data)
 
         # return ansible_return(module, response, False, None, existing_obj=None)
 
