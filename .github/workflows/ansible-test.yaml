@@ -15,6 +15,7 @@ jobs:
   sanity:
     name: Sanity (Ⓐ${{ matrix.ansible }})
     strategy:
+      fail-fast: false
       matrix:
         python:
           - 3.8
@@ -67,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Units (Ⓐ${{ matrix.ansible }})
     strategy:
-      #fail-fast: true
+      fail-fast: false
       matrix:
         python:
           - 3.8
