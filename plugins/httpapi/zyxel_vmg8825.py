@@ -26,10 +26,11 @@ options:
     vars:
     - name: ansible_eos_use_sessions
 """
-import json
-import time
-import q
 import base64
+import json
+
+# import logging
+import time
 
 from ansible.errors import AnsibleConnectionFailure
 from ansible.module_utils._text import to_text
@@ -40,6 +41,13 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.u
 )
 from ansible.plugins.httpapi import HttpApiBase
 
+try:
+    import q
+except ImportError:
+    HASS_Q_LIB = False
+else:
+    HASS_Q_LIB = True
+
 OPTIONS = {
     "format": ["text", "json"],
     "diff_match": ["line", "strict", "exact", "none"],
@@ -48,9 +56,14 @@ OPTIONS = {
 }
 
 
-def log(msg):
+def log_debug(msg):
     print(msg)
-    q(msg)
+
+    if HASS_Q_LIB:
+        q(msg)
+
+    # log = logging.getLogger(__name__)
+    # log.info(msg)
     # log_enabled = self._conn.get_option('enable_log')
     # if not log_enabled:
     #    return
@@ -92,7 +105,7 @@ class HttpApi(HttpApiBase):
         if username is None or password is None:
             raise AnsibleConnectionFailure("Please provide username/password to login")
 
-        log(f"login with username '{ username }' and password")
+        log_debug(f"login with username '{ username }' and password")
 
         login_path = "/UserLogin"
         data = {
@@ -106,7 +119,7 @@ class HttpApi(HttpApiBase):
         # zyxel_response = self._process_http_response(http_response)
 
         # response = self.send_request(data, path=login_path)
-        log(f"data: {data}")
+        log_debug(f"data: {data}")
         response = self.send_request(data=data, path=login_path, method="POST")
         return response
 
@@ -129,7 +142,7 @@ class HttpApi(HttpApiBase):
         #         'Server returned response without token info during connection authentication: %s' % response)
 
     def logout(self):
-        log("logout")
+        log_debug("logout")
 
         try:
             self.send_request(
@@ -138,7 +151,7 @@ class HttpApi(HttpApiBase):
                 method="POST",
             )
         except Exception as e:
-            log(f"logout error: {e}")
+            log_debug(f"logout error: {e}")
 
         self.connection._auth = None
 
@@ -176,7 +189,7 @@ class HttpApi(HttpApiBase):
         if oid:
             path = f"/cgi-bin/DAL?oid={oid}&sessionkey={self.sessionkey}"
 
-        log(f"send_requestB: {path, data}")
+        log_debug(f"send_requestB: {path, data}")
 
         self._display(method, "send_request/oid")
 
@@ -185,11 +198,11 @@ class HttpApi(HttpApiBase):
             response, response_data = self.connection.send(
                 path, data, method=method, headers=headers
             )
-            log(f"2a, {response}")
-            log(f"2b, {response_data}")
+            log_debug(f"2a, {response}")
+            log_debug(f"2b, {response_data}")
         except HTTPError as exc:
-            log(f"3a, {exc.read()}")
-            log(f"3b, {exc.read()}")
+            log_debug(f"3a, {exc.read()}")
+            log_debug(f"3b, {exc.read()}")
             # return exc.code, exc.read()
             return handle_response(exc, exc)
 
