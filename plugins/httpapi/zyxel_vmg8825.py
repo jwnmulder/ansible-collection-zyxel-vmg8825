@@ -280,11 +280,13 @@ class HttpApi(HttpApiBase):
         device_info = {}
 
         device_info["network_os"] = "zyxel"
-        data = self.send_request(data=None, path="/getBasicInformation")
+        response_data, response = self.send_request(
+            data=None, path="/getBasicInformation"
+        )
         # data = json.loads(reply)
 
         # device_info["network_os_version"] = data["version"]
-        device_info["network_os_model"] = data["ModelName"]
+        device_info["network_os_model"] = response_data["ModelName"]
 
         return device_info
         # data = self.send_request("show hostname", output="json")
