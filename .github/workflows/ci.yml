@@ -82,6 +82,9 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
+      - name: add /root/.local/bin to PATH
+        run: echo "${HOME}/.local/bin" >> $GITHUB_PATH
+
       - name: Cache packages
         uses: actions/cache@v2
         with:
