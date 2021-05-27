@@ -39,10 +39,10 @@ jobs:
             ~/.local/lib/python${{ matrix.python }}
             ~/.ansible/collection
           key: ${{ runner.os }}-packages-${{ matrix.python }}-${{ hashFiles('./ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-packages-${{ matrix.python }}-
-            ${{ runner.os }}-packages-
-            ${{ runner.os }}-
+#          restore-keys: |
+#            ${{ runner.os }}-packages-${{ matrix.python }}-
+#            ${{ runner.os }}-packages-
+#            ${{ runner.os }}-
 
       - uses: webfactory/ssh-agent@v0.5.2
         with:
@@ -93,10 +93,10 @@ jobs:
             ~/.local/lib/python${{ matrix.python }}
             ~/.ansible/collection
           key: ${{ runner.os }}-packages-${{ matrix.python }}-${{ hashFiles('ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-packages-${{ matrix.python }}-
-            ${{ runner.os }}-packages-
-            ${{ runner.os }}-
+#          restore-keys: |
+#            ${{ runner.os }}-packages-${{ matrix.python }}-
+#            ${{ runner.os }}-packages-
+#            ${{ runner.os }}-
 
       - name: Install dependencies
         run: |
