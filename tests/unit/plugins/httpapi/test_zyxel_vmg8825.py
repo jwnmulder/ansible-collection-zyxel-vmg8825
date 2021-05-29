@@ -17,7 +17,7 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825 i
     HttpApi,
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.mock import fake_httpapi
-from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.test_utils import (
+from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.controller_test_utils import (
     mocked_response,
 )
 

@@ -6,6 +6,7 @@ __metaclass__ = type
 
 # TODO check restconf.py
 # TODO check checkpoint.py / HttpApi
+# TODO check BaseConfigurationResource
 
 DOCUMENTATION = """
 author: Ansible Networking Team
