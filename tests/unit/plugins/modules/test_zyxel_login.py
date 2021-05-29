@@ -12,14 +12,12 @@ from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     ModuleTestCase,
     set_module_args,
 )
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import (
-    zyxel_static_dhcp,
-)
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import zyxel_login
 
 
 class TestZyxelModule(ModuleTestCase):
 
-    module = zyxel_static_dhcp
+    module = zyxel_login
 
     def setUp(self):
         super().setUp()
@@ -33,19 +31,16 @@ class TestZyxelModule(ModuleTestCase):
             self.module.main()
 
     @responses.activate
-    # @pytest.mark.skipif("sys.version_info >= (3,0)")
     def test_ensure_command_called_local(self):
 
         with responses.RequestsMock(assert_all_requests_are_fired=True) as rsps:
             rsps.add(
-                responses.GET,
-                "https://127.0.0.1/cgi-bin/DAL?oid=static_dhcp",
+                responses.POST,
+                "https://127.0.0.1/UserLogin",
                 status=200,
                 json={
                     "result": "ZCFG_SUCCESS",
-                    "ReplyMsg": "DNSServer",
-                    "ReplyMsgMultiLang": "",
-                    "Object": [{"DiagnosticsState": "None"}],
+                    "sessionkey": "ABC",
                 },
             )
 
@@ -53,7 +48,7 @@ class TestZyxelModule(ModuleTestCase):
                 {
                     "url": "https://127.0.0.1",
                     "username": "username",
-                    "password": "fakepassword",
+                    "password": "password",
                 }
             )
 

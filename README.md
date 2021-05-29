@@ -157,3 +157,8 @@ https://github.com/ansible-collections/community.network/blob/8f08dae3121ea41cc0
 
 
 ```
+
+## TODO's for unit testing
+
+check test framework files in https://github.com/ansible-collections/ansible.netcommon
+check github workflow https://github.com/ansible-collections/collection_template/blob/main/.github/workflows/ansible-test.yml
