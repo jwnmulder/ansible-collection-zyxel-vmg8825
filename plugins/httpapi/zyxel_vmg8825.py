@@ -4,6 +4,9 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
+# TODO check restconf.py
+# TODO check checkpoint.py / HttpApi
+# TODO check BaseConfigurationResource
 
 DOCUMENTATION = """
 author: Ansible Networking Team
@@ -24,21 +27,27 @@ options:
     vars:
     - name: ansible_eos_use_sessions
 """
-import json
-import time
-import q
 import base64
-import traceback
+import json
 
-from datetime import datetime
+# import logging
+import time
 
+from ansible.errors import AnsibleConnectionFailure
 from ansible.module_utils._text import to_text
 from ansible.module_utils.connection import ConnectionError
+from ansible.module_utils.six.moves.urllib.error import HTTPError
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
     to_list,
 )
 from ansible.plugins.httpapi import HttpApiBase
 
+try:
+    import q
+except ImportError:
+    HASS_Q_LIB = False
+else:
+    HASS_Q_LIB = True
 
 OPTIONS = {
     "format": ["text", "json"],
@@ -46,6 +55,25 @@ OPTIONS = {
     "diff_replace": ["line", "block", "config"],
     "output": ["text", "json"],
 }
+
+
+def log_debug(msg):
+    print(msg)
+
+    if HASS_Q_LIB:
+        q(msg)
+
+    # log = logging.getLogger(__name__)
+    # log.info(msg)
+    # log_enabled = self._conn.get_option('enable_log')
+    # if not log_enabled:
+    #    return
+    # if not self._log:
+    #     self._log = open("/tmp/fortios.ansible.log", "a")
+    # log_message = str(datetime.now())
+    # log_message += ": " + str(msg) + "\n"
+    # self._log.write(log_message)
+    # self._log.flush()
 
 
 class HttpApi(HttpApiBase):
@@ -57,18 +85,15 @@ class HttpApi(HttpApiBase):
         self._log = None
         self._sessionkey = None
 
-    def log(self, msg):
-        # log_enabled = self._conn.get_option('enable_log')
-        # if not log_enabled:
-        #    return
-        if not self._log:
-            self._log = open("/tmp/fortios.ansible.log", "a")
-        log_message = str(datetime.now())
-        log_message += ": " + str(msg) + "\n"
-        self._log.write(log_message)
-        self._log.flush()
-
     def update_auth(self, response, response_text):
+
+        # update_auth is not invoked when an HTTPError occurs
+        response_data = json.loads(response_text.getvalue())
+
+        # if 'result' in response and response['result'] == 'ZCFG_SUCCESS':
+        if "sessionkey" in response_data:
+            self.sessionkey = response_data["sessionkey"]
+
         cookie = response.info().get("Set-Cookie")
         if cookie:
             return {"Cookie": cookie}
@@ -79,10 +104,9 @@ class HttpApi(HttpApiBase):
 
         """Call a defined login endpoint to receive an authentication token."""
         if username is None or password is None:
-            raise Exception("Please provide username/password to login")
+            raise AnsibleConnectionFailure("Please provide username/password to login")
 
-        self.log("login with username and password")
-        q("login")
+        log_debug(f"login with username '{ username }' and password")
 
         login_path = "/UserLogin"
         data = {
@@ -96,9 +120,10 @@ class HttpApi(HttpApiBase):
         # zyxel_response = self._process_http_response(http_response)
 
         # response = self.send_request(data, path=login_path)
-        q(f"data: {data}")
+        log_debug(f"data: {data}")
         response = self.send_request(data=data, path=login_path, method="POST")
         return response
+
         # try:
         # This is still sent as an HTTP header, so we can set our connection's _auth
         # variable manually. If the token is returned to the device in another way,
@@ -110,9 +135,15 @@ class HttpApi(HttpApiBase):
         #     raise AnsibleAuthenticationFailure(message="Failed to acquire login token.")
         # return response
 
+        # try:
+        #     self.connection._auth = {'X-chkp-sid': response_data['sid']}
+        #     self.connection._session_uid = response_data['uid']
+        # except KeyError:
+        #     raise ConnectionError(
+        #         'Server returned response without token info during connection authentication: %s' % response)
+
     def logout(self):
-        self.log("logout")
-        q("logout")
+        log_debug("logout")
 
         try:
             self.send_request(
@@ -121,8 +152,7 @@ class HttpApi(HttpApiBase):
                 method="POST",
             )
         except Exception as e:
-            q(f"logout error: {e}")
-            pass
+            log_debug(f"logout error: {e}")
 
         self.connection._auth = None
 
@@ -151,44 +181,42 @@ class HttpApi(HttpApiBase):
         headers = {"Content-Type": "application/json"}
         path = message_kwargs.get("path", "/")
         method = message_kwargs.get("method", "GET")
+        oid = message_kwargs.get("oid")
         # data = message_kwargs.get('data', None)
 
         if isinstance(data, dict):
             data = json.dumps(data)
 
-        q(f"send_request: {path}")
+        if oid:
+            path = f"/cgi-bin/DAL?oid={oid}&sessionkey={self.sessionkey}"
+
+        log_debug(f"send_requestB: {path, data}")
+
+        self._display(method, "send_request/oid")
+
         try:
             # https://github.com/ansible-collections/ansible.netcommon/blob/main/plugins/connection/httpapi.py
-            response, response_content = self.connection.send(
+            response, response_data = self.connection.send(
                 path, data, method=method, headers=headers
             )
-            q(f"2a, {response}")
-            q(f"2b, {response_content}")
-        # except HTTPError as exc:
-        #     q(f"3, {exc.headers}")
-        #     return exc.code, exc.read()
+            log_debug(f"2a, {response}")
+            log_debug(f"2b, {response_data}")
+        except HTTPError as exc:
+            log_debug(f"3a, {exc.read()}")
+            log_debug(f"3b, {exc.read()}")
+            # return exc.code, exc.read()
+            return handle_response(exc, exc)
 
-        # return response.status, to_text(response_data.getvalue())
-        except Exception as err:
-            q(f"3, {err}")
-            q(traceback.format_exc())
-            raise Exception(err)
-
-        q("4")
-        try:
-            response_content = json.loads(to_text(response_content.getvalue()))
-            q("5")
-        except ValueError:
-            raise ConnectionError(
-                "Response was not valid JSON, got {0}".format(
-                    to_text(response_content.getvalue())
-                )
-            )
+        # # return response.status, to_text(response_data.getvalue())
+        # except Exception as err:
+        #     log(f"3, {err}")
+        #     log(traceback.format_exc())
+        #     raise Exception(err)
 
         # handle_response (defined separately) will take the format returned by the device
         # and transform it into something more suitable for use by modules.
         # This may be JSON text to Python dictionaries, for example.
-        return response, handle_response(response_content)
+        return handle_response(response, response_data)
 
         # data = to_list(data)
         # become = self._become
@@ -222,6 +250,30 @@ class HttpApi(HttpApiBase):
 
         # return results
 
+    def handle_httperror(self, exc):
+
+        # Delegate to super().handle_httperror() for 401?
+
+        # is_auth_related_code = exc.code == TOKEN_EXPIRATION_STATUS_CODE or exc.code == UNAUTHORIZED_STATUS_CODE
+        # if not self._ignore_http_errors and is_auth_related_code:
+        #     self.connection._auth = None
+        #     self.login(self.connection.get_option('remote_user'), self.connection.get_option('password'))
+        #     return True
+        # False means that the exception will be passed further to the caller
+
+        print(exc)
+
+        # just ignore HTTPErrors if they contain json data
+        content_type = exc.headers.get("Content-Type")
+        if content_type != "application/json":
+            return exc
+
+        return False
+
+    def _display(self, http_method, title, msg=""):
+        pass
+        # self.connection.queue_message('vvvv', 'REST:%s:%s:%s\n%s' % (http_method, self.connection._url, title, msg))
+
     def get_device_info(self):
         # if self._device_info:
         # return self._device_info
@@ -229,11 +281,13 @@ class HttpApi(HttpApiBase):
         device_info = {}
 
         device_info["network_os"] = "zyxel"
-        data = self.send_request(data=None, path="/getBasicInformation")
+        response_data, response = self.send_request(
+            data=None, path="/getBasicInformation"
+        )
         # data = json.loads(reply)
 
         # device_info["network_os_version"] = data["version"]
-        device_info["network_os_model"] = data["ModelName"]
+        device_info["network_os_model"] = response_data["ModelName"]
 
         return device_info
         # data = self.send_request("show hostname", output="json")
@@ -298,27 +352,34 @@ class HttpApi(HttpApiBase):
         return [resp for resp in to_list(responses) if resp != "{}"]
 
 
-def handle_response(response):
+def handle_response(response, response_data):
 
-    return response
-    # if "error" in response:
-    #     error = response["error"]
+    content_type = response.headers.get("Content-Type")
+    if content_type != "application/json":
+        raise ValueError(f"Expected application/json content-type, got {content_type}")
 
-    #     error_text = []
-    #     for data in error.get("data", []):
-    #         error_text.extend(data.get("errors", []))
-    #     error_text = "\n".join(error_text) or error["message"]
+    # log("4")
+    # try:
+    #     response_content = json.loads(to_text(response_data.read()))
+    #     log("5")
+    # except ValueError:
+    #     raise ConnectionError(
+    #         "Response was not valid JSON, got {0}".format(
+    #             to_text(response_content.getvalue())
+    #         )
+    #     )
+    response_data = response_data.read()
+    response_data = json.loads(response_data)
 
-    #     raise ConnectionError(error_text, code=error["code"])
+    if isinstance(response, HTTPError):
+        if response_data:
+            if "errors" in response_data:
+                errors = response_data["errors"]["error"]
+                error_text = "\n".join((error["error-message"] for error in errors))
+            else:
+                error_text = response_data
 
-    # results = []
+            raise ConnectionError(error_text, code=response.code)
+        raise ConnectionError(to_text(response), code=response.code)
 
-    # for result in response["result"]:
-    #     if "messages" in result:
-    #         results.append(result["messages"][0])
-    #     elif "output" in result:
-    #         results.append(result["output"].strip())
-    #     else:
-    #         results.append(json.dumps(result))
-
-    # return results
+    return response_data, response

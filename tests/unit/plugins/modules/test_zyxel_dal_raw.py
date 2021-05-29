@@ -6,11 +6,6 @@ __metaclass__ = type
 
 import responses
 
-# from ansible.module_utils import basic
-# from ansible_collections.ansible.netcommon.tests.unit.compat.mock import (
-#     patch,
-#     MagicMock,
-# )
 from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     AnsibleExitJson,
     AnsibleFailJson,
@@ -55,7 +50,7 @@ class TestZyxelModule(ModuleTestCase):
                 {
                     "url": "https://127.0.0.1",
                     "username": "username",
-                    "password": "password",
+                    "password": "fakepassword",
                     "api_oid": "PINGTEST",
                     "api_method": "get",
                 }

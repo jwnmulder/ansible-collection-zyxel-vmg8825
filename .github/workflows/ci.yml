@@ -40,10 +40,10 @@ jobs:
             ~/.local/bin
             ~/.ansible/collection
           key: ${{ runner.os }}-packages-${{ matrix.python }}-${{ hashFiles('./ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
-#          restore-keys: |
-#            ${{ runner.os }}-packages-${{ matrix.python }}-
-#            ${{ runner.os }}-packages-
-#            ${{ runner.os }}-
+          #restore-keys: |
+          #  ${{ runner.os }}-packages-${{ matrix.python }}-
+          #  ${{ runner.os }}-packages-
+          #  ${{ runner.os }}-
 
       - uses: webfactory/ssh-agent@v0.5.2
         with:
@@ -52,8 +52,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip wheel
-          python -m pip install -r ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt --user
-          python -m pip install -r ansible_collections/jwnmulder/zyxel_vmg8825/tests/unit/requirements.txt --user
+          python -m pip install -r .github/requirements.txt --user
+        working-directory: >-
+          ansible_collections/jwnmulder/zyxel_vmg8825
 
       - name: Install collection dependencies
         run: |
@@ -95,10 +96,14 @@ jobs:
             ~/.local/bin
             ~/.ansible/collection
           key: ${{ runner.os }}-packages-${{ matrix.python }}-${{ hashFiles('ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
-#          restore-keys: |
-#            ${{ runner.os }}-packages-${{ matrix.python }}-
-#            ${{ runner.os }}-packages-
-#            ${{ runner.os }}-
+          #restore-keys: |
+          #  ${{ runner.os }}-packages-${{ matrix.python }}-
+          #  ${{ runner.os }}-packages-
+          #  ${{ runner.os }}-
+
+      - uses: webfactory/ssh-agent@v0.5.2
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY_PYTHON_ZYXELCLIENT_VMG8825 }}
 
       - name: Install dependencies
         run: |
@@ -113,7 +118,7 @@ jobs:
 
       - name: Run ansible-test sanity
         run: |
-          ansible-test sanity -v --color --venv --python ${{ matrix.python }}
+          ansible-test sanity -v --color --docker --python ${{ matrix.python }}
         working-directory: >-
           ansible_collections/jwnmulder/zyxel_vmg8825
 

@@ -157,11 +157,16 @@ def zyxel_get_client(module, sensitive_fields=None):
     return api
 
 
+def get_connection(module):
+    return Connection(module._socket_path)
+
+
 def zyxel_ansible_api(
     module, api_oid, api_method, request_data=None, sensitive_fields=None
 ):
 
-    if module._socket_path is None:
+    use_local_connection = module._socket_path is None
+    if use_local_connection:
 
         # don't use ansible.netcommon.httpapi
         return zyxel_ansible_classic_api(
@@ -174,13 +179,13 @@ def zyxel_ansible_api(
 
     else:
 
-        connection = Connection(module._socket_path)
-        http_response, response_data = connection.sexnd_request(
+        connection = get_connection(module)
+        response_data, http_response = connection.send_request(
             data=None, path=f"/cgi-bin/DAL?oid={api_oid}", method=api_method
         )
 
         # print(http_response)
-        rsp = ZyxelResponse(http_response, response_data)
+        rsp = ZyxelResponse(http_response.code, response_data)
 
         # return ansible_return(module, response, False, None, existing_obj=None)
 
