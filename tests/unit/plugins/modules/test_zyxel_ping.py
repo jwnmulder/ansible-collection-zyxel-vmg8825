@@ -13,7 +13,7 @@ from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     set_module_args,
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import zyxel_ping
-from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.test_utils import (
+from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.module_test_utils import (
     ZyxelModuleTestCase,
 )
 
@@ -21,6 +21,7 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.test_utils imp
 class TestZyxelModuleLocal(ZyxelModuleTestCase):
 
     module = zyxel_ping
+    mock_http_url = "https://router.test"
 
     def test_module_fail_when_required_args_missing(self):
         with self.assertRaises(AnsibleFailJson):
@@ -71,10 +72,10 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
     def tearDown(self):
         super().tearDown()
 
-    @httpretty.activate(verbose=True, allow_net_connect=False)
+    # @httpretty.activate(verbose=True, allow_net_connect=False)
     def test_ensure_command_called_httpapi(self):
 
-        self.register_uri(
+        self.register_connection_call(
             method="GET",
             uri="/cgi-bin/DAL?oid=PINGTEST",
             body={
@@ -88,3 +89,29 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         result = self._run_module(self.module, {})
 
         self.assertFalse(result["changed"])
+
+        # def request_handler(url_path=None, http_method=None, body_params=None, path_params=None, query_params=None):
+        #     if http_method == HTTPMethod.POST:
+        #         assert url_path == url
+        #         assert body_params == params['data']
+        #         assert query_params == {}
+        #         assert path_params == {}
+        #         return {
+        #             ResponseParams.SUCCESS: False,
+        #             ResponseParams.RESPONSE: DUPLICATE_NAME_ERROR_MESSAGE,
+        #             ResponseParams.STATUS_CODE: UNPROCESSABLE_ENTITY_STATUS
+        #         }
+        #     elif http_method == HTTPMethod.GET:
+        #         assert url_path == url
+        #         assert body_params == {}
+        #         assert query_params == {QueryParams.FILTER: 'name:testObject', 'limit': 10, 'offset': 0}
+        #         assert path_params == {}
+
+        #         return {
+        #             ResponseParams.SUCCESS: True,
+        #             ResponseParams.RESPONSE: {
+        #                 'items': [expected_val]
+        #             }
+        #         }
+        #     else:
+        #         assert False
