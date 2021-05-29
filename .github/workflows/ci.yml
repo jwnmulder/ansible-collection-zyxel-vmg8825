@@ -28,12 +28,16 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
+      - name: add /root/.local/bin to PATH
+        run: echo "${HOME}/.local/bin" >> $GITHUB_PATH
+
       - name: Cache packages
         uses: actions/cache@v2
         with:
           path: |
             ~/.cache/pip
             ~/.local/lib/python${{ matrix.python }}
+            ~/.local/bin
             ~/.ansible/collection
           key: ${{ runner.os }}-packages-${{ matrix.python }}-${{ hashFiles('./ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
           #restore-keys: |
@@ -80,12 +84,16 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
+      - name: add /root/.local/bin to PATH
+        run: echo "${HOME}/.local/bin" >> $GITHUB_PATH
+
       - name: Cache packages
         uses: actions/cache@v2
         with:
           path: |
             ~/.cache/pip
             ~/.local/lib/python${{ matrix.python }}
+            ~/.local/bin
             ~/.ansible/collection
           key: ${{ runner.os }}-packages-${{ matrix.python }}-${{ hashFiles('ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
           #restore-keys: |
