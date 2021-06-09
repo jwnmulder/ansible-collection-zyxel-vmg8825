@@ -40,8 +40,8 @@ options:
     required: false
     type: list
     elements: str
-    default:
-      - all
+    # default:
+    #   - all
   gather_network_resources:
     description:
       - When supplied, this argument will restrict the facts collected

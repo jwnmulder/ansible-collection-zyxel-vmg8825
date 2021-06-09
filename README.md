@@ -162,3 +162,33 @@ https://github.com/ansible-collections/community.network/blob/8f08dae3121ea41cc0
 
 check test framework files in https://github.com/ansible-collections/ansible.netcommon
 check github workflow https://github.com/ansible-collections/collection_template/blob/main/.github/workflows/ansible-test.yml
+
+<!--start requires_ansible-->
+## Ansible version compatibility
+
+This collection has been tested against following Ansible versions: **>=2.9.10**.
+
+Plugins and modules within a collection may be tested with only specific Ansible versions.
+A collection may contain metadata that identifies these versions.
+PEP440 is the schema used to describe the versions of Ansible.
+<!--end requires_ansible-->
+
+## Included content
+<!--start collection content-->
+### Httpapi plugins
+Name | Description
+--- | ---
+[jwnmulder.zyxel_vmg8825.zyxel_vmg8825](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_vmg8825_httpapi.rst)|Zyxel Web REST interface
+
+### Modules
+Name | Description
+--- | ---
+[jwnmulder.zyxel_vmg8825.zyxel2_facts](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel2_facts_module.rst)|Get facts about zyxel devices.
+[jwnmulder.zyxel_vmg8825.zyxel2_static_dhcp](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel2_static_dhcp_module.rst)|Manages <xxxx> attributes of <network_os> <resource>.
+[jwnmulder.zyxel_vmg8825.zyxel_dal_raw](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_dal_raw_module.rst)|Zyxel Module
+[jwnmulder.zyxel_vmg8825.zyxel_login](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_login_module.rst)|Zyxel Module
+[jwnmulder.zyxel_vmg8825.zyxel_logout](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_logout_module.rst)|Zyxel Module
+[jwnmulder.zyxel_vmg8825.zyxel_ping](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_ping_module.rst)|Zyxel Module
+[jwnmulder.zyxel_vmg8825.zyxel_static_dhcp](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_static_dhcp_module.rst)|Zyxel Module
+
+<!--end collection content-->

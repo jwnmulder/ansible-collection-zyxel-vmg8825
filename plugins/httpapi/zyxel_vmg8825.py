@@ -10,16 +10,16 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 author: Ansible Networking Team
-httpapi: eos
-short_description: Use eAPI to run command on eos platform
+httpapi: zyxel_vmg8825
+short_description: Zyxel Web REST interface
 description:
-- This eos plugin provides low level abstraction api's for sending and receiving CLI
-  commands with eos network devices.
+- plugin that uses the Zyxel Web REST interface to manage the router.
+  Main usecase is to send commands on the /DAL interface
 version_added: 1.0.0
 options:
   eos_use_sessions:
     type: int
-    default: 1
+    # default: 1
     description:
     - Specifies if sessions should be used on remote host or not
     env:
