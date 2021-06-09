@@ -37,6 +37,15 @@ https://docs.ansible.com/ansible/latest/dev_guide/developing_modules_general.htm
 https://github.com/fortinet-ansible-dev/ansible-galaxy-fortios-collection/blob/fos_v6.0.0/galaxy_2.0.1/plugins/httpapi/fortios.py
 https://openwrt.org/inbox/toh/zyxel/zyxel_vmg8825-t50
 
+
+Integration test examples
+* https://www.ansible.com/blog/adding-integration-tests-to-ansible-content-collections
+* https://docs.ansible.com/ansible/devel/dev_guide/developing_collections_testing.html
+* https://github.com/ansible-collections/cisco.nxos (didn't check it really yet but update-doc was useful)
+
+Resource modules
+* https://docs.ansible.com/ansible/latest/network/dev_guide/developing_resource_modules_network.html
+
 zyxel
 pyzyxel
 zyxel-api
