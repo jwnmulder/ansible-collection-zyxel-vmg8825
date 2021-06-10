@@ -1,0 +1,15 @@
+---
+- debug: msg="START common/multiple.yaml on connection={{ ansible_connection }}"
+
+- name: test static_dhcp
+  zyxel_dal_raw:
+    api_oid: static_dhcp
+    api_method: get
+  register: result
+
+- assert:
+    that:
+      - "result.changed == false"
+      - "result.stdout is defined"
+
+- debug: msg="END common/multiple.yaml on connection={{ ansible_connection }}"

@@ -1,0 +1,11 @@
+[zyxel]
+zyxel_https ansible_httpapi_use_ssl=yes ansible_httpapi_port=443
+#zyxel_http  ansible_httpapi_use_ssl=no  ansible_httpapi_port=80
+
+[zyxel:vars]
+# ansible_connection: httpapi
+ansible_network_os=jwnmulder.zyxel_vmg8825.zyxel_vmg8825
+ansible_host=192.168.0.1
+ansible_httpapi_validate_certs=no
+ansible_user=admin
+ansible_password=password

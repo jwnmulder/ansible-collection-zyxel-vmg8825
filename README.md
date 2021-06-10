@@ -10,6 +10,8 @@ pip install wheel
 
 cd collections && ansible-galaxy collection install ansible.netcommon -p .
 ansible-test sanity -v --color --docker --python 3.8
+
+ansible-test network-integration --venv -v
 ```
 
 ## Ansible network resource module: zyxel_static_dhcp
