@@ -1,0 +1,1 @@
+-e git+ssh://git@github.com/jwnmulder/python-zyxelclient-vmg8825.git@main#egg=zyxelclient_vmg8825
