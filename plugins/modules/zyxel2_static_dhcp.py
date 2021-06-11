@@ -60,7 +60,7 @@ options:
         description:
         - BrWan
         type: str
-        # default: Default
+        default: Default
       enable:
         description:
         - Enable
