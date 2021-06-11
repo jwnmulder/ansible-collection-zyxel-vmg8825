@@ -50,7 +50,7 @@ jobs:
       #     #  ${{ runner.os }}-packages-
       #     #  ${{ runner.os }}-
 
-      - uses: webfactory/ssh-agent@v0.5.2
+      - uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.DEPLOY_KEY_PYTHON_ZYXELCLIENT_VMG8825 }}
 
@@ -104,7 +104,7 @@ jobs:
       #     #  ${{ runner.os }}-packages-
       #     #  ${{ runner.os }}-
 
-      - uses: webfactory/ssh-agent@v0.5.2
+      - uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.DEPLOY_KEY_PYTHON_ZYXELCLIENT_VMG8825 }}
 
