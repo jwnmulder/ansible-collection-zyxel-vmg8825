@@ -5,7 +5,6 @@ __metaclass__ = type
 
 
 import logging
-import q
 import traceback
 
 from ansible.module_utils._text import to_text
@@ -22,6 +21,20 @@ except ImportError:
     ZYXEL_LIB_ERR = traceback.format_exc()
 
 log = logging.getLogger(__name__)
+
+try:
+    import q
+except ImportError:
+    HASS_Q_LIB = False
+else:
+    HASS_Q_LIB = True
+
+
+def log_debug(msg):
+    # print(msg)
+
+    if HASS_Q_LIB:
+        q(msg)
 
 
 class ZyxelCheckModeResponse:
@@ -183,7 +196,9 @@ def zyxel_ansible_api(
     else:
 
         connection = get_connection(module)
-        q(f"1. connection={connection}, api_oid={api_oid}, api_method={api_method}")
+        log_debug(
+            f"1. connection={connection}, api_oid={api_oid}, api_method={api_method}"
+        )
         try:
             response_data, http_response = connection.send_request(
                 data=None, path=f"/cgi-bin/DAL?oid={api_oid}", method=api_method
@@ -193,7 +208,10 @@ def zyxel_ansible_api(
 
             # return ansible_return(module, response, False, None, existing_obj=None)
 
-            q(f"2. connection={connection}, api_oid={api_oid}, api_method={api_method}")
+            log_debug(
+                f"2. connection={connection}, api_oid={api_oid},"
+                f" api_method={api_method}"
+            )
             return ansible_return(
                 module=module,
                 rsp=rsp,
