@@ -9,12 +9,14 @@ from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     set_module_args,
 )
 from ansible.module_utils import basic
+from ansible.module_utils.six.moves.urllib.error import HTTPError
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825 import (
     HttpApi,
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.mock import fake_httpapi
 
 import httpretty
+import io
 import json
 import pytest
 
@@ -127,13 +129,26 @@ class PropertyMock(mock.Mock):
         self(val)
 
 
-def mocked_response(response, status=200):
+def mocked_response(response, status=200, raise_for_status=True, url=None):
+
     response_text = json.dumps(response) if type(response) is dict else response
     response_bytes = response_text.encode() if response_text else "".encode()
 
-    response_mock = mock.Mock()
-    response_mock.status.return_value = status
-    response_mock.read.return_value = response_bytes
-    response_mock.headers = {"Content-Type": "application/json"}
+    headers = {"Content-Type": "application/json"}
 
-    return response_mock
+    if raise_for_status and status >= 400:
+
+        response_buffer = io.BytesIO(response_bytes)
+
+        return HTTPError(
+            url=url, code=status, msg=None, hdrs=headers, fp=response_buffer
+        )
+
+    else:
+
+        response_mock = mock.Mock()
+        response_mock.status.return_value = status
+        response_mock.read.return_value = response_bytes
+        response_mock.headers = headers
+
+        return response_mock

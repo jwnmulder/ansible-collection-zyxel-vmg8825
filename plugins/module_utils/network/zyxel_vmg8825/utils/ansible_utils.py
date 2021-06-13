@@ -5,10 +5,13 @@ __metaclass__ = type
 
 
 import logging
+import q
 import traceback
 
+from ansible.module_utils._text import to_text
 from ansible.module_utils.basic import env_fallback
 from ansible.module_utils.connection import Connection
+from ansible.module_utils.connection import ConnectionError
 
 ZYXEL_LIB_NAME = "zyxelclient_vmg8825"
 ZYXEL_LIB_ERR = None
@@ -180,18 +183,27 @@ def zyxel_ansible_api(
     else:
 
         connection = get_connection(module)
-        response_data, http_response = connection.send_request(
-            data=None, path=f"/cgi-bin/DAL?oid={api_oid}", method=api_method
-        )
+        q(f"1. connection={connection}, api_oid={api_oid}, api_method={api_method}")
+        try:
+            response_data, http_response = connection.send_request(
+                data=None, path=f"/cgi-bin/DAL?oid={api_oid}", method=api_method
+            )
+            # print(http_response)
+            rsp = ZyxelResponse(http_response.code, response_data)
 
-        # print(http_response)
-        rsp = ZyxelResponse(http_response.code, response_data)
+            # return ansible_return(module, response, False, None, existing_obj=None)
 
-        # return ansible_return(module, response, False, None, existing_obj=None)
-
-        return ansible_return(
-            module=module, rsp=rsp, changed=False, req=request_data, existing_obj=None
-        )
+            q(f"2. connection={connection}, api_oid={api_oid}, api_method={api_method}")
+            return ansible_return(
+                module=module,
+                rsp=rsp,
+                changed=False,
+                req=request_data,
+                existing_obj=None,
+            )
+        except ConnectionError as exc:
+            # TODO, CoonectionError is not caught somehow. Maybe due to the httpapi proxy stuff?
+            return module.fail_json(msg=to_text(exc, errors="surrogate_then_replace"))
 
 
 def zyxel_ansible_classic_api(

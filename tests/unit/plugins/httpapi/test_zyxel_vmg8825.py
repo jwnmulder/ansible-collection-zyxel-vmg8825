@@ -7,10 +7,7 @@ __metaclass__ = type
 
 import pytest
 
-# from ansible.module_utils.six.moves.urllib.error import HTTPError
-
 from ansible_collections.ansible.netcommon.tests.unit.compat import mock, unittest
-
 from ansible.errors import AnsibleConnectionFailure
 from ansible.module_utils.connection import ConnectionError
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825 import (
@@ -18,6 +15,7 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825 i
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.mock import fake_httpapi
 from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.controller_test_utils import (
+    # mocked_httperror,
     mocked_response,
 )
 
@@ -72,6 +70,12 @@ class TestZyxelHttpApi(unittest.TestCase):
             in str(res.exception)
         )
 
+    @pytest.mark.skip(
+        reason=(
+            "We don't align with ftd.py here. Not sure what is recommended for"
+            " json-rpc?"
+        )
+    )
     def test_send_request_should_return_error_info_when_http_error_raises(self):
 
         self.request_mock.side_effect = [
@@ -97,3 +101,19 @@ class TestZyxelHttpApi(unittest.TestCase):
                 for x in self.request_mock.mock_calls
             )
         )
+
+    def test_login_max_nr_reached(self):
+
+        self.request_mock.side_effect = [
+            mocked_response(
+                response={"result": "Maxium number of login account has reached"},
+                status=401,
+                # msg="Unauthorized",
+                # url="/UserLogin",
+            )
+        ]
+
+        with self.assertRaises(ConnectionError) as res:
+            self.zyxel_plugin.login("USERNAME", "PASSWORD")
+
+        assert "Maxium number of login account has reached" in str(res.exception)
