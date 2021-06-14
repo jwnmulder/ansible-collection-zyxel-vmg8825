@@ -20,7 +20,7 @@ try:
 except ImportError:
     ZYXEL_LIB_ERR = traceback.format_exc()
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 try:
     import q
@@ -30,11 +30,15 @@ else:
     HASS_Q_LIB = True
 
 
-def log_debug(msg):
-    # print(msg)
+class RequestsHandler(logging.Handler):
+    def emit(self, record):
+        if HASS_Q_LIB:
+            msg = record.getMessage()
+            # pylint: disable=not-callable
+            q(msg)
 
-    if HASS_Q_LIB:
-        q(msg)
+
+logger.addHandler(RequestsHandler())
 
 
 class ZyxelCheckModeResponse:
@@ -196,8 +200,11 @@ def zyxel_ansible_api(
     else:
 
         connection = get_connection(module)
-        log_debug(
-            f"1. connection={connection}, api_oid={api_oid}, api_method={api_method}"
+        logger.debug(
+            "1. connection=%s, api_oid=%s, api_method=%s",
+            connection,
+            api_oid,
+            api_method,
         )
         try:
             response_data, http_response = connection.send_request(
@@ -208,9 +215,11 @@ def zyxel_ansible_api(
 
             # return ansible_return(module, response, False, None, existing_obj=None)
 
-            log_debug(
-                f"2. connection={connection}, api_oid={api_oid},"
-                f" api_method={api_method}"
+            logger.debug(
+                "2. connection=%s, api_oid=%s, api_method=%s",
+                connection,
+                api_oid,
+                api_method,
             )
             return ansible_return(
                 module=module,
