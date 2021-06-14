@@ -9,7 +9,11 @@ from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     set_module_args,
 )
 from ansible.module_utils import basic
+
+# pylint: disable-all
+# pyright: reportMissingImports=false
 from ansible.module_utils.six.moves.urllib.error import HTTPError
+
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825 import (
     HttpApi,
 )

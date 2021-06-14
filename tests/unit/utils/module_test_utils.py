@@ -12,6 +12,9 @@ from ansible.module_utils import basic
 
 import httpretty
 import json
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ZyxelModuleTestCase(ModuleTestCase):
@@ -55,7 +58,7 @@ class ZyxelModuleTestCase(ModuleTestCase):
 
     def request_handler(self, data, **kwargs):
         # data = args[0]
-        print(f"kwargs: {kwargs}")
+        logger.debug("request_handler, preparing mock data for: kwargs=%s", kwargs)
 
         mocked_call = self.connection_calls[0]
         response_data = mocked_call.get("body")

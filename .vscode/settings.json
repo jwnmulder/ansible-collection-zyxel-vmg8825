@@ -1,6 +1,9 @@
 {
     "python.testing.pytestArgs": [
-        "./tests/unit"
+        "-s",
+        "--log-cli-level=DEBUG",
+        "--log-cli-format=%(asctime)s %(levelname)s [%(filename)s:%(lineno)d]: %(message)s",
+        "./collections/ansible_collections/jwnmulder/zyxel_vmg8825/tests/unit"
     ],
     "python.testing.pytestEnabled": true
 }
