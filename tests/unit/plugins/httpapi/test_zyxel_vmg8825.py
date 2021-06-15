@@ -117,3 +117,7 @@ class TestZyxelHttpApi(unittest.TestCase):
             self.zyxel_plugin.login("USERNAME", "PASSWORD")
 
         assert "Maxium number of login account has reached" in str(res.exception)
+
+
+# Tests needed for:
+# - got an error while closing persistent connection: 'HttpApi' object has no attribute 'sessionkey'
