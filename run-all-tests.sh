@@ -6,4 +6,4 @@ set -x
 pre-commit run --all-files
 ansible-test units -v --color --venv --python 3.8 --debug --requirements
 ansible-test sanity -v --color --docker --python 3.8
-ansible-test network-integration -v
+ansible-test network-integration --venv -v

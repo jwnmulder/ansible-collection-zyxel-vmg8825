@@ -7,6 +7,9 @@ __metaclass__ = type
 from io import BytesIO
 
 from ansible.errors import AnsibleConnectionFailure
+
+# pylint: disable-all
+# pyright: reportMissingImports=false
 from ansible.module_utils.six.moves.urllib.error import HTTPError, URLError
 from ansible.module_utils.urls import open_url
 
