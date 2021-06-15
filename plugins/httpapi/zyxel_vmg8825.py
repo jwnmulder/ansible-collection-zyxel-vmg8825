@@ -29,25 +29,21 @@ options:
 """
 import base64
 import json
-
-# import logging
+import logging
 import time
+import os
 
 from ansible.errors import AnsibleConnectionFailure
 from ansible.module_utils._text import to_text
 from ansible.module_utils.connection import ConnectionError
+
+# pylint: disable-all
+# pyright: reportMissingImports=false
 from ansible.module_utils.six.moves.urllib.error import HTTPError
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
     to_list,
 )
 from ansible.plugins.httpapi import HttpApiBase
-
-try:
-    import q
-except ImportError:
-    HASS_Q_LIB = False
-else:
-    HASS_Q_LIB = True
 
 OPTIONS = {
     "format": ["text", "json"],
@@ -57,23 +53,27 @@ OPTIONS = {
 }
 
 
-def log_debug(msg):
-    print(msg)
+logger = logging.getLogger(__name__)
+if os.environ.get("ANSIBLE_DEBUG") is not None:
+    logger.setLevel(logging.DEBUG)
 
-    if HASS_Q_LIB:
-        q(msg)
+try:
+    import q
+except ImportError:
+    HASS_Q_LIB = False
+else:
+    HASS_Q_LIB = True
 
-    # log = logging.getLogger(__name__)
-    # log.info(msg)
-    # log_enabled = self._conn.get_option('enable_log')
-    # if not log_enabled:
-    #    return
-    # if not self._log:
-    #     self._log = open("/tmp/fortios.ansible.log", "a")
-    # log_message = str(datetime.now())
-    # log_message += ": " + str(msg) + "\n"
-    # self._log.write(log_message)
-    # self._log.flush()
+
+class RequestsHandler(logging.Handler):
+    def emit(self, record):
+        if HASS_Q_LIB:
+            msg = record.getMessage()
+            # pylint: disable=not-callable
+            q(msg)
+
+
+logger.addHandler(RequestsHandler())
 
 
 class HttpApi(HttpApiBase):
@@ -87,7 +87,7 @@ class HttpApi(HttpApiBase):
 
     def update_auth(self, response, response_text):
 
-        log_debug("update_auth")
+        logger.debug("update_auth")
 
         # update_auth is not invoked when an HTTPError occurs
         response_data = json.loads(response_text.getvalue())
@@ -108,7 +108,7 @@ class HttpApi(HttpApiBase):
         if username is None or password is None:
             raise AnsibleConnectionFailure("Please provide username/password to login")
 
-        log_debug(f"login with username '{ username }' and password")
+        logger.debug(f"login with username '{ username }' and password")
 
         login_path = "/UserLogin"
         data = {
@@ -122,11 +122,11 @@ class HttpApi(HttpApiBase):
         # zyxel_response = self._process_http_response(http_response)
 
         # response = self.send_request(data, path=login_path)
-        log_debug(f"login/data: {data}")
+        logger.debug(f"login/data: {data}")
         response_data, response = self.send_request(
             data=data, path=login_path, method="POST"
         )
-        log_debug(f"login/response: {response}")
+        logger.debug(f"login/response: {response}")
         return response
 
         # try:
@@ -148,7 +148,7 @@ class HttpApi(HttpApiBase):
         #         'Server returned response without token info during connection authentication: %s' % response)
 
     def logout(self):
-        log_debug(
+        logger.debug(
             f"logout: sessionkey={self.sessionkey},"
             f" connecion._auth={self.connection._auth}"
         )
@@ -161,7 +161,7 @@ class HttpApi(HttpApiBase):
                     method="POST",
                 )
             except Exception as e:
-                log_debug(f"logout error: {e}")
+                logger.debug(f"logout error: {e}")
 
         self.connection._auth = None
 
@@ -199,7 +199,7 @@ class HttpApi(HttpApiBase):
         if oid:
             path = f"/cgi-bin/DAL?oid={oid}&sessionkey={self.sessionkey}"
 
-        log_debug(f"send_requestB: {path, data}")
+        logger.debug(f"send_requestB: {path, data}")
 
         self._display(method, "send_request/oid")
 
@@ -208,8 +208,8 @@ class HttpApi(HttpApiBase):
             response, response_data = self.connection.send(
                 path, data, method=method, headers=headers
             )
-            log_debug(f"2a, {response}")
-            log_debug(f"2b, {response_data}")
+            logger.debug(f"2a, {response}")
+            logger.debug(f"2b, {response_data}")
         except HTTPError as exc:
             response = exc
             response_data = exc
@@ -387,9 +387,9 @@ def handle_response(response, response_data):
             else:
                 error_text = response_data
 
-            q(f"A: {response_data}")
+            logger.debug("A: %s", response_data)
             raise ConnectionError(error_text, code=response.code)
-        q("B")
+        logger.debug("B")
         raise ConnectionError(to_text(response), code=response.code)
 
     return response_data, response

@@ -5,6 +5,7 @@ __metaclass__ = type
 
 
 import logging
+import os
 import traceback
 
 from ansible.module_utils._text import to_text
@@ -21,6 +22,8 @@ except ImportError:
     ZYXEL_LIB_ERR = traceback.format_exc()
 
 logger = logging.getLogger(__name__)
+if os.environ.get("ANSIBLE_DEBUG") is not None:
+    logger.setLevel(logging.DEBUG)
 
 try:
     import q

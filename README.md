@@ -12,7 +12,14 @@ pip install wheel
 cd collections && ansible-galaxy collection install ansible.netcommon -p .
 ansible-test sanity -v --color --docker --python 3.8
 
-ansible-test network-integration --venv -v
+# This does not work for ansible-test network-integration...
+# Specify the location for the log file
+export ANSIBLE_LOG_PATH=$(pwd)/tests/output/ansible.log
+export ANSIBLE_DEBUG=True
+export ANSIBLE_PERSISTENT_LOG_MESSAGES=True
+
+# --debug will trigger logging to /tmp/q
+ansible-test network-integration -v --debug
 ```
 
 ## Ansible network resource module: zyxel_static_dhcp
