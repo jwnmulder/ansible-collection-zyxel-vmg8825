@@ -5,6 +5,7 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
+import logging
 import pytest
 
 from ansible_collections.ansible.netcommon.tests.unit.compat import mock, unittest
@@ -18,6 +19,8 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.controller_tes
     # mocked_httperror,
     mocked_response,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class FakeZyxelHttpApiPlugin(HttpApi):
@@ -102,7 +105,7 @@ class TestZyxelHttpApi(unittest.TestCase):
             )
         )
 
-    def test_login_max_nr_reached(self):
+    def test_login_max_nr_reached_error(self):
 
         self.request_mock.side_effect = [
             mocked_response(
@@ -118,6 +121,53 @@ class TestZyxelHttpApi(unittest.TestCase):
 
         assert "Maxium number of login account has reached" in str(res.exception)
 
+    def test_logout_after_successful_login(self):
 
-# Tests needed for:
-# - got an error while closing persistent connection: 'HttpApi' object has no attribute 'sessionkey'
+        self.request_mock.side_effect = [
+            mocked_response(
+                url="/UserLogin",
+                status=200,
+                response={"result": "Maxium number of login account has reached"},
+            ),
+            mocked_response(
+                url="/cgi-bin/UserLogout",
+                status=200,
+                response={"result": "logout successful"},
+            ),
+        ]
+
+        # no session should exist yet
+        self.assertIsNone(self.zyxel_plugin.connection._auth)
+        self.assertIsNone(self.zyxel_plugin._sessionkey)
+
+        # login
+        self.zyxel_plugin.login("USERNAME", "PASSWORD")
+
+        # TODO remove this line, it should be set as a result from login()
+        self.zyxel_plugin._sessionkey = "asdasdasd"
+
+        # assert that a login session exists
+        self.assertIsNotNone(self.zyxel_plugin.connection._auth)
+        self.assertIsNotNone(self.zyxel_plugin._sessionkey)
+
+        # logout
+        self.zyxel_plugin.logout()
+
+        # assert that no session exist after logout
+        self.assertIsNone(self.zyxel_plugin.connection._auth)
+        self.assertIsNone(self.zyxel_plugin._sessionkey)
+
+        # assert that UserLogout was invoked
+        args = self.request_mock.mock_calls[1].args
+        self.assertEqual(args[0], "POST")
+        self.assertRegex(args[1], "/cgi-bin/UserLogout")
+
+    def test_logout_without_login(self):
+
+        self.assertIsNone(self.zyxel_plugin.connection._auth)
+        self.assertIsNone(self.zyxel_plugin._sessionkey)
+
+        # logout
+        self.zyxel_plugin.logout()
+
+        self.assertEqual(len(self.request_mock.mock_calls), 0)

@@ -149,20 +149,22 @@ class HttpApi(HttpApiBase):
 
     def logout(self):
         logger.debug(
-            f"logout: sessionkey={self.sessionkey},"
-            f" connecion._auth={self.connection._auth}"
+            "logout: _sessionkey=%s, connecion._auth=%s",
+            self._sessionkey,
+            self.connection._auth,
         )
 
-        if self.sessionkey:
+        if self._sessionkey:
             try:
                 self.send_request(
                     data=None,
-                    path="/cgi-bin/UserLogout?sessionkey={self.sessionkey}",
+                    path="/cgi-bin/UserLogout?sessionkey={self._sessionkey}",
                     method="POST",
                 )
             except Exception as e:
                 logger.debug(f"logout error: {e}")
 
+        self._sessionkey = None
         self.connection._auth = None
 
     # def supports_sessions(self):
