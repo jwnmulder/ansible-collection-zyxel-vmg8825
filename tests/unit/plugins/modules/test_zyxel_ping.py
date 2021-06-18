@@ -115,3 +115,7 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         #         }
         #     else:
         #         assert False
+
+
+# TODO Test that Zyxel reponses with a non SUCCESS result get logge in the module output
+# For example a failing logout
