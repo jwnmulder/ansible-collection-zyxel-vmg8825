@@ -89,22 +89,6 @@ class TestZyxelHttpApi(unittest.TestCase):
 
         assert response_data[0] == {"errorMessage": "ERROR"}
 
-    def test_login(self):
-        self.request_mock.side_effect = [mocked_response({"sid": "SID", "uid": "UID"})]
-
-        self.zyxel_plugin.login("USERNAME", "PASSWORD")
-
-        args = self.request_mock.mock_calls[0].args
-        self.assertEqual(args[0], "POST")
-        self.assertRegex(args[1], "/UserLogin")
-
-        self.assertTrue(
-            any(
-                x.args[0] == "POST" and x.args[1].find("/UserLogin")
-                for x in self.request_mock.mock_calls
-            )
-        )
-
     def test_login_max_nr_reached_error(self):
 
         self.request_mock.side_effect = [
@@ -121,30 +105,75 @@ class TestZyxelHttpApi(unittest.TestCase):
 
         assert "Maxium number of login account has reached" in str(res.exception)
 
-    def test_logout_after_successful_login(self):
+    def test_login(self):
+
+        username = "admin"
+        sessionkey = "358987652"
 
         self.request_mock.side_effect = [
             mocked_response(
                 url="/UserLogin",
                 status=200,
-                response={"result": "Maxium number of login account has reached"},
-            ),
-            mocked_response(
-                url="/cgi-bin/UserLogout",
-                status=200,
-                response={"result": "logout successful"},
+                response={
+                    "sessionkey": sessionkey,
+                    "ThemeColor": "blue",
+                    "changePw": False,
+                    "showSkipBtn": False,
+                    "quickStart": True,
+                    "loginAccount": username,
+                    "loginLevel": "medium",
+                    "result": "ZCFG_SUCCESS",
+                },
             ),
         ]
 
         # no session should exist yet
         self.assertIsNone(self.zyxel_plugin.connection._auth)
-        self.assertIsNone(self.zyxel_plugin._sessionkey)
+        self.assertIsNone(self.zyxel_plugin._sessionkey, sessionkey)
 
         # login
-        self.zyxel_plugin.login("USERNAME", "PASSWORD")
+        self.zyxel_plugin.login(username, "PASSWORD")
 
-        # TODO remove this line, it should be set as a result from login()
-        self.zyxel_plugin._sessionkey = "asdasdasd"
+        # assert that a login session exists
+        self.assertIsNotNone(self.zyxel_plugin.connection._auth)
+        self.assertEquals(self.zyxel_plugin._sessionkey, sessionkey)
+
+        self.assertTrue(
+            any(
+                x.args[0] == "POST" and x.args[1].find("/UserLogin")
+                for x in self.request_mock.mock_calls
+            )
+        )
+
+    def test_logout_after_successful_login(self):
+
+        username = "admin"
+        sessionkey = "358987652"
+
+        self.request_mock.side_effect = [
+            mocked_response(
+                url="/UserLogin",
+                status=200,
+                response={
+                    "sessionkey": sessionkey,
+                    "ThemeColor": "blue",
+                    "changePw": False,
+                    "showSkipBtn": False,
+                    "quickStart": True,
+                    "loginAccount": username,
+                    "loginLevel": "medium",
+                    "result": "ZCFG_SUCCESS",
+                },
+            ),
+            mocked_response(
+                url="cgi-bin/UserLogout",  # ?sessionkey=358987652",
+                status=200,
+                response={"result": "ZCFG_SUCCESS"},
+            ),
+        ]
+
+        # login
+        self.zyxel_plugin.login(username, "PASSWORD")
 
         # assert that a login session exists
         self.assertIsNotNone(self.zyxel_plugin.connection._auth)
@@ -161,6 +190,7 @@ class TestZyxelHttpApi(unittest.TestCase):
         args = self.request_mock.mock_calls[1].args
         self.assertEqual(args[0], "POST")
         self.assertRegex(args[1], "/cgi-bin/UserLogout")
+        self.assertRegex(args[1], f"sessionkey={sessionkey}")
 
     def test_logout_without_login(self):
 

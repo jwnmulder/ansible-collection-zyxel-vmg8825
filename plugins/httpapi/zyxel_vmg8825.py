@@ -94,7 +94,7 @@ class HttpApi(HttpApiBase):
 
         # if 'result' in response and response['result'] == 'ZCFG_SUCCESS':
         if "sessionkey" in response_data:
-            self.sessionkey = response_data["sessionkey"]
+            self._sessionkey = response_data["sessionkey"]
 
         cookie = response.info().get("Set-Cookie")
         if cookie:
@@ -158,7 +158,7 @@ class HttpApi(HttpApiBase):
             try:
                 self.send_request(
                     data=None,
-                    path="/cgi-bin/UserLogout?sessionkey={self._sessionkey}",
+                    path=f"/cgi-bin/UserLogout?sessionkey={self._sessionkey}",
                     method="POST",
                 )
             except Exception as e:
@@ -199,7 +199,7 @@ class HttpApi(HttpApiBase):
             data = json.dumps(data)
 
         if oid:
-            path = f"/cgi-bin/DAL?oid={oid}&sessionkey={self.sessionkey}"
+            path = f"/cgi-bin/DAL?oid={oid}&sessionkey={self._sessionkey}"
 
         logger.debug(f"send_requestB: {path, data}")
 
