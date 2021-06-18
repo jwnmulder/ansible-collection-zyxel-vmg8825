@@ -92,12 +92,16 @@ class HttpApi(HttpApiBase):
         # update_auth is not invoked when an HTTPError occurs
         response_data = json.loads(response_text.getvalue())
 
+        logger.debug(f"update_auth - response_data={response_data}")
+
         # if 'result' in response and response['result'] == 'ZCFG_SUCCESS':
         if "sessionkey" in response_data:
             self._sessionkey = response_data["sessionkey"]
+            logger.debug(f"update_auth - sessiokey={self._sessionkey}")
 
         cookie = response.info().get("Set-Cookie")
         if cookie:
+            logger.debug(f"update_auth - cookie={cookie}")
             return {"Cookie": cookie}
 
         return None
@@ -201,7 +205,7 @@ class HttpApi(HttpApiBase):
         if oid:
             path = f"/cgi-bin/DAL?oid={oid}&sessionkey={self._sessionkey}"
 
-        logger.debug(f"send_requestB: {path, data}")
+        logger.debug(f"send_request: {path, data}")
 
         self._display(method, "send_request/oid")
 
@@ -210,8 +214,8 @@ class HttpApi(HttpApiBase):
             response, response_data = self.connection.send(
                 path, data, method=method, headers=headers
             )
-            logger.debug(f"2a, {response}")
-            logger.debug(f"2b, {response_data}")
+            # logger.debug(f"2a, {response}")
+            # logger.debug(f"2b, {response_data}")
         except HTTPError as exc:
             response = exc
             response_data = exc
@@ -380,6 +384,8 @@ def handle_response(response, response_data):
     #     )
     response_data = response_data.read()
     response_data = json.loads(response_data)
+
+    logger.debug(f"handle_response: {response_data}")
 
     if isinstance(response, HTTPError):
         if response_data:
