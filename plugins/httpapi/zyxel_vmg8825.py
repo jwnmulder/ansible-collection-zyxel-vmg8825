@@ -205,7 +205,7 @@ class HttpApi(HttpApiBase):
         if oid:
             path = f"/cgi-bin/DAL?oid={oid}&sessionkey={self._sessionkey}"
 
-        logger.debug(f"send_request: {path, data}")
+        logger.debug(f"send_request: {method, path, data}")
 
         self._display(method, "send_request/oid")
 
@@ -214,12 +214,10 @@ class HttpApi(HttpApiBase):
             response, response_data = self.connection.send(
                 path, data, method=method, headers=headers
             )
-            # logger.debug(f"2a, {response}")
-            # logger.debug(f"2b, {response_data}")
         except HTTPError as exc:
             response = exc
             response_data = exc
-            return handle_response(response, response_data)
+            return handle_response(method, path, response, response_data)
 
         # # return response.status, to_text(response_data.getvalue())
         # except Exception as err:
@@ -230,7 +228,7 @@ class HttpApi(HttpApiBase):
         # handle_response (defined separately) will take the format returned by the device
         # and transform it into something more suitable for use by modules.
         # This may be JSON text to Python dictionaries, for example.
-        return handle_response(response, response_data)
+        return handle_response(method, path, response, response_data)
 
         # data = to_list(data)
         # become = self._become
@@ -275,7 +273,7 @@ class HttpApi(HttpApiBase):
         #     return True
         # False means that the exception will be passed further to the caller
 
-        print(exc)
+        logger.warning(exc)
 
         # just ignore HTTPErrors if they contain json data
         content_type = exc.headers.get("Content-Type")
@@ -366,7 +364,7 @@ class HttpApi(HttpApiBase):
         return [resp for resp in to_list(responses) if resp != "{}"]
 
 
-def handle_response(response, response_data):
+def handle_response(method, path, response, response_data):
 
     content_type = response.headers.get("Content-Type")
     if content_type != "application/json":
@@ -385,7 +383,7 @@ def handle_response(response, response_data):
     response_data = response_data.read()
     response_data = json.loads(response_data)
 
-    logger.debug(f"handle_response: {response_data}")
+    logger.debug(f"handle_response: {method, path, response_data}")
 
     if isinstance(response, HTTPError):
         if response_data:

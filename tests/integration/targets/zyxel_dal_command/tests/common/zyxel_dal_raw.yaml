@@ -1,5 +1,5 @@
 ---
-- debug: msg="START common/multiple.yaml on connection={{ ansible_connection }}"
+- debug: msg="START common/zyxel_dal_raw.yaml on connection={{ ansible_connection }}"
 
 - name: test static_dhcp
   zyxel_dal_raw:
@@ -12,4 +12,4 @@
       - "result.changed == false"
       - "result.stdout is defined"
 
-- debug: msg="END common/multiple.yaml on connection={{ ansible_connection }}"
+- debug: msg="END common/zyxel_dal_raw.yaml on connection={{ ansible_connection }}"
