@@ -127,11 +127,10 @@ class HttpApi(HttpApiBase):
 
         # response = self.send_request(data, path=login_path)
         logger.debug(f"login/data: {data}")
-        response_data, response = self.send_request(
+        response_data, response_code = self.send_request(
             data=data, path=login_path, method="POST"
         )
-        logger.debug(f"login/response: {response}")
-        return response
+        logger.debug(f"login/response: {response_code, response_data}")
 
         # try:
         # This is still sent as an HTTP header, so we can set our connection's _auth
@@ -190,8 +189,6 @@ class HttpApi(HttpApiBase):
     #     return self._session_support
 
     def send_request(self, data, **message_kwargs):
-        # def send_request(self, path=None, data=None, method='GET', output=json):
-        # def send_request(self, **message_kwargs):
         # Fixed headers for requests
         headers = {"Content-Type": "application/json"}
         path = message_kwargs.get("path", "/")
@@ -293,7 +290,7 @@ class HttpApi(HttpApiBase):
         device_info = {}
 
         device_info["network_os"] = "zyxel"
-        response_data, response = self.send_request(
+        response_data, response_code = self.send_request(
             data=None, path="/getBasicInformation"
         )
         # data = json.loads(reply)
@@ -398,4 +395,4 @@ def handle_response(method, path, response, response_data):
         logger.debug("B")
         raise ConnectionError(to_text(response), code=response.code)
 
-    return response_data, response
+    return response_data, response.code

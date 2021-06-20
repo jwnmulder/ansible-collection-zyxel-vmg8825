@@ -210,20 +210,18 @@ def zyxel_ansible_api(
             api_method,
         )
         try:
-            response_data, http_response = connection.send_request(
+            response_data, response_code = connection.send_request(
                 data=None, path=f"/cgi-bin/DAL?oid={api_oid}", method=api_method
             )
-            # print(http_response)
-            rsp = ZyxelResponse(http_response.code, response_data)
-
-            # return ansible_return(module, response, False, None, existing_obj=None)
-
             logger.debug(
                 "2. connection=%s, api_oid=%s, api_method=%s",
                 connection,
                 api_oid,
                 api_method,
             )
+
+            rsp = ZyxelResponse(response_code, response_data)
+
             return ansible_return(
                 module=module,
                 rsp=rsp,
@@ -232,7 +230,6 @@ def zyxel_ansible_api(
                 existing_obj=None,
             )
         except ConnectionError as exc:
-            # TODO, CoonectionError is not caught somehow. Maybe due to the httpapi proxy stuff?
             return module.fail_json(msg=to_text(exc, errors="surrogate_then_replace"))
 
 

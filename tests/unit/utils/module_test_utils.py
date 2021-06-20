@@ -62,10 +62,14 @@ class ZyxelModuleTestCase(ModuleTestCase):
 
         mocked_call = self.connection_calls[0]
         response_data = mocked_call.get("body")
-        http_response = mocked_response(
-            response=response_data, status=mocked_call.get("status")
-        )
-        return response_data, http_response
+        response_code = mocked_call.get("status")
+        # http_response = mocked_response(
+        #     response=response_data, status=response_code
+        # )
+
+        # should match return spec of <httpapi>zyxel_vmg8825.send_request
+        # return response_data, http_response
+        return response_data, response_code
 
     def register_connection_call(
         self,
