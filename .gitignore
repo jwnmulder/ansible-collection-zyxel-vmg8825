@@ -1,6 +1,8 @@
 tests/output
 tests/integration/inventory.networking
 
+tmp
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

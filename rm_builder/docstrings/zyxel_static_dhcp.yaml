@@ -1,0 +1,44 @@
+module: zyxel_static_dhcp
+short_description: 'Manages <xxxx> attributes of <network_os> <resource>.'
+description: 'Manages <xxxx> attributes of <network_os> <resource>'
+version_added: 2.10
+author: Jan-Willem Mulder (@jwnmulder)
+notes:
+  - 'Tested against <network_os> <version>'
+options:
+  config:
+    description: The provided configuration
+    type: list
+    elements: dict
+    suboptions:
+      index:
+        description:
+        - Index
+        type: int
+      br_wan:
+        description:
+        - BrWan
+        type: str
+        default: Default
+      enable:
+        description:
+        - Enable
+        type: bool
+      mac_addr:
+        description:
+        - MACAddr
+        type: str
+      ip_addr:
+        description:
+        - IPAddr
+        type: str
+  state:
+    description:
+    - The state the configuration should be left in
+    type: str
+    choices:
+    - merged
+    - replaced
+    - overridden
+    - deleted
+    default: merged

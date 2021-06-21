@@ -22,6 +22,35 @@ export ANSIBLE_PERSISTENT_LOG_MESSAGES=True
 ansible-test network-integration -v --debug
 ```
 
+```bash
+# https://github.com/ansible-network/cli_rm_builder
+ansible-galaxy collection install git+https://github.com/ansible-network/cli_rm_builder.git
+
+ansible-playbook -e rm_dest=$(pwd)/tmp \
+                 -e collection_org=jwnmulder \
+                 -e collection_name=zyxel_vmg8825 \
+                 -e docstring=$(pwd)/rm_builder/docstrings/zyxel_interfaces.yaml \
+                 -e examples=$(pwd)/rm_builder/example/zyxel_examples.txt \
+                 -e resource=interfaces \
+                 rm_builder/run.yml
+
+ansible-playbook -e rm_dest=$(pwd)/tmp \
+                 -e collection_org=jwnmulder \
+                 -e collection_name=zyxel_vmg8825 \
+                 -e docstring=$(pwd)/rm_builder/docstrings/zyxel_static_dhcp.yaml \
+                 -e resource=static_dhcp \
+                 rm_builder/run.yml
+
+ansible-playbook -e rm_dest=$(pwd)/tmp \
+                 -e collection_org=jwnmulder \
+                 -e collection_name=zyxel_vmg8825 \
+                 -e network_os=zyxel_vmg8825 \
+                 -e resource=static_dhcp \
+                 rm_builder/run.yml
+
+ansible-playbook -e rm_dest=$(pwd)/tmp rm_builder/update_all.yml
+```
+
 ## Ansible network resource module: zyxel_static_dhcp
 
 This README was auto generated but should be modified.  It should contain information and examples
