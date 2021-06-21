@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  gather_facts: yes
+
+  tasks:
+    - include_role:
+        name: ansible_network.cli_rm_builder.run
+      vars:
+        collection_org: "jwnmulder"
+        collection_name: "zyxel_vmg8825"
+        network_os: "zyxel_vmg8825"
+        transport: "httpapi"
+        resource: "{{ item.resource }}"
+      loop:
+        - { resource: 'static_dhcp' }
+#        - { resource: 'interfaces' }
