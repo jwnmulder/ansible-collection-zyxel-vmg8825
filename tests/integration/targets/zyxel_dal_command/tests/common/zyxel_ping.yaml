@@ -1,0 +1,13 @@
+---
+- debug: msg="START common/zyxel_ping.yaml on connection={{ ansible_connection }}"
+
+- name: test zyxel_ping
+  zyxel_ping:
+  register: result
+
+- assert:
+    that:
+      - "result.changed == false"
+      - "result.obj is defined"
+
+- debug: msg="END common/zyxel_ping.yaml on connection={{ ansible_connection }}"

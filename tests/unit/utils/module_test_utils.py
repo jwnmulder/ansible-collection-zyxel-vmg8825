@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 class ZyxelModuleTestCase(ModuleTestCase):
-    def setUp(self, connection_type="local"):
+    def setUp(self, connection_type="httpapi"):
         super().setUp()
 
         self.connection_type = connection_type

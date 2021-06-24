@@ -1,8 +1,8 @@
-.. _jwnmulder.zyxel_vmg8825.zyxel_dal_raw_module:
+.. _jwnmulder.zyxel_vmg8825.zyxel_dal_rpc_module:
 
 
 *************************************
-jwnmulder.zyxel_vmg8825.zyxel_dal_raw
+jwnmulder.zyxel_vmg8825.zyxel_dal_rpc
 *************************************
 
 **Zyxel Module**
@@ -16,7 +16,7 @@ jwnmulder.zyxel_vmg8825.zyxel_dal_raw
 
 Synopsis
 --------
-- This module can be used to send dal commands to the Zyxel router
+- This module can be used to send dal cfg commands to the Zyxel router
 
 
 
@@ -41,39 +41,7 @@ Parameters
             <tr>
                 <td colspan="1">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>api_method</b>
-                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
-                    <div style="font-size: small">
-                        <span style="color: purple">string</span>
-                         / <span style="color: red">required</span>
-                    </div>
-                </td>
-                <td>
-                </td>
-                <td>
-                        <div>api_method</div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="1">
-                    <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>api_oid</b>
-                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
-                    <div style="font-size: small">
-                        <span style="color: purple">string</span>
-                         / <span style="color: red">required</span>
-                    </div>
-                </td>
-                <td>
-                </td>
-                <td>
-                        <div>api_oid</div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="1">
-                    <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>data</b>
+                    <b>content</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">dictionary</span>
@@ -83,6 +51,44 @@ Parameters
                 </td>
                 <td>
                         <div>data</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>method</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">string</span>
+                    </div>
+                </td>
+                <td>
+                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
+                                    <li><div style="color: blue"><b>get</b>&nbsp;&larr;</div></li>
+                                    <li>post</li>
+                                    <li>put</li>
+                                    <li>patch</li>
+                                    <li>delete</li>
+                        </ul>
+                </td>
+                <td>
+                        <div>HTTP method</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>oid</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">string</span>
+                         / <span style="color: red">required</span>
+                    </div>
+                </td>
+                <td>
+                </td>
+                <td>
+                        <div>oid</div>
                 </td>
             </tr>
     </table>
@@ -121,7 +127,7 @@ Common return values are documented `here <https://docs.ansible.com/ansible/late
             <tr>
                 <td colspan="1">
                     <div class="ansibleOptionAnchor" id="return-"></div>
-                    <b>obj</b>
+                    <b>response</b>
                     <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
                     <div style="font-size: small">
                       <span style="color: purple">dictionary</span>
@@ -130,6 +136,21 @@ Common return values are documented `here <https://docs.ansible.com/ansible/late
                 <td>success, changed</td>
                 <td>
                             <div>Zyxel REST resource</div>
+                    <br/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="return-"></div>
+                    <b>result</b>
+                    <a class="ansibleOptionLink" href="#return-" title="Permalink to this return value"></a>
+                    <div style="font-size: small">
+                      <span style="color: purple">string</span>
+                    </div>
+                </td>
+                <td>ZCFG_SUCCES, ZCFG_FAILURE</td>
+                <td>
+                            <div>Result code</div>
                     <br/>
                 </td>
             </tr>
