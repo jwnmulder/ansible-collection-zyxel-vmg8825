@@ -20,6 +20,10 @@
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true,
       "addLabels": ["automerge"]
+    },
+    {
+      "matchPackageNames": "psf/black"
+      "versioning": "pep440"
     }
   ],
 
