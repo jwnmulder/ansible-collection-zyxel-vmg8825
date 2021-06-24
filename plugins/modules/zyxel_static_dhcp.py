@@ -16,36 +16,6 @@ author: Jan-Willem Mulder (@jwnmulder)
 short_description: Zyxel Module
 description: Zyxel module
 requirements: [ zyxelclient_vmg8825 ]
-options:
-  url:
-    type: str
-    description: url
-  username:
-    type: str
-    description: username
-  password:
-    type: str
-    description: password
-  zyxel_credentials:
-    type: dict
-    description: zyxel credentials
-    suboptions:
-      url:
-        type: str
-        description: url
-      username:
-        type: str
-        description: username
-      password:
-        type: str
-        description: password
-  api_context:
-    type: dict
-    description: api context
-  zyxel_disable_session_cache_as_fact:
-    type: bool
-    description: zyxel_disable_session_cache_as_fact
-    default: False
 """
 
 EXAMPLES = """
@@ -73,14 +43,13 @@ from ..module_utils.network.zyxel_vmg8825.utils.ansible_utils import (
     ZYXEL_LIB_NAME,
     ZYXEL_LIB_ERR,
     zyxel_ansible_api,
-    zyxel_common_argument_spec,
 )
 
 
 def main():
 
     argument_specs = dict()
-    argument_specs.update(zyxel_common_argument_spec())
+    # argument_specs.update(zyxel_common_argument_spec())
 
     module = AnsibleModule(argument_spec=argument_specs, supports_check_mode=False)
 

@@ -11,23 +11,30 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 ---
-module: zyxel_dal_raw
+module: zyxel_dal_rpc
 author: Jan-Willem Mulder (@jwnmulder)
 short_description: Zyxel Module
 description:
-  - This module can be used to send dal commands to the Zyxel router
+  - This module can be used to send dal cfg commands to the Zyxel router
 requirements:
   - zyxelclient_vmg8825
 options:
-  api_oid:
+  oid:
     type: str
-    description: api_oid
+    description: oid
     required: True
-  api_method:
+  method:
+    description: HTTP method
+    required: false
     type: str
-    description: api_method
-    required: True
-  data:
+    default: get
+    choices:
+    - get
+    - post
+    - put
+    - patch
+    - delete
+  content:
     type: dict
     description: data
 """
@@ -44,7 +51,11 @@ EXAMPLES = """
 
 
 RETURN = """
-obj:
+result:
+    description: Result code
+    returned: ZCFG_SUCCES, ZCFG_FAILURE
+    type: str
+response:
     description: Zyxel REST resource
     returned: success, changed
     type: dict
@@ -63,24 +74,39 @@ from ..module_utils.network.zyxel_vmg8825.utils.ansible_utils import (
 def main():
 
     argument_specs = dict(
-        api_oid=dict(type="str", required=True),
-        api_method=dict(type="str", required=True),
-        data=dict(type="dict", required=False),
+        oid=dict(type="str", required=True),
+        method=dict(
+            type="str",
+            required=False,
+            choices=["get", "post", "put", "patch", "delete"],
+            default="get",
+        ),
+        content=dict(type="dict", required=False),
     )
-    # argument_specs.update(zyxel_common_argument_spec())
 
-    module = AnsibleModule(argument_spec=argument_specs, supports_check_mode=False)
+    required_if = [
+        ["method", "post", ["content"]],
+        ["method", "put", ["content"]],
+        ["method", "patch", ["content"]],
+    ]
+
+    # argument_specs.update(zyxel_common_argument_spec())
+    module = AnsibleModule(
+        argument_spec=argument_specs,
+        required_if=required_if,
+        supports_check_mode=False,
+    )
 
     if ZYXEL_LIB_ERR:
         return module.fail_json(
             msg=missing_required_lib(ZYXEL_LIB_NAME), exception=ZYXEL_LIB_ERR
         )
 
-    api_oid = module.params.get("api_oid")
-    api_method = module.params.get("api_method")
-    data = module.params.get("data")
+    rpc_oid = module.params.get("oid")
+    rpc_method = module.params.get("method")
+    rpc_content = module.params.get("content")
 
-    return zyxel_ansible_api(module, api_oid, api_method, request_data=data)
+    return zyxel_ansible_api(module, rpc_oid, rpc_method, request_data=rpc_content)
 
 
 if __name__ == "__main__":

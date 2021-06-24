@@ -12,5 +12,5 @@
         transport: "httpapi"
         resource: "{{ item.resource }}"
       loop:
-        - { resource: 'static_dhcp' }
+        - { resource: 'static_dhcp_table' }
 #        - { resource: 'interfaces' }
