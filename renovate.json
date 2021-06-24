@@ -23,7 +23,7 @@
     },
     {
       "matchPackageNames": "psf/black",
-      "versioning": "pep440"
+      "versioning": "loose"
     }
   ],
 
