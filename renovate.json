@@ -22,7 +22,7 @@
       "addLabels": ["automerge"]
     },
     {
-      "matchPackageNames": "psf/black"
+      "matchPackageNames": "psf/black",
       "versioning": "pep440"
     }
   ],
