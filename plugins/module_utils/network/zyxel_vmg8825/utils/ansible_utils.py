@@ -72,28 +72,50 @@ def ansible_return(module, rsp, changed, req=None, existing_obj=None):
     obj_val = rsp.json() if rsp else existing_obj
     old_obj_val = existing_obj if changed and existing_obj else None
 
-    zyxel_result = None
+    obj = obj_val.get("Object")
+    reply_msg = obj_val.get("ReplyMsg")
+    reply_msg_multi_lang = obj_val.get("ReplyMsgMultiLang")
+    # zyxel_result = None
+
+    result = {}
+    result["changed"] = False
+    result["result"] = rsp.zyxel_zcfg_result
+    result["obj"] = obj
+    if req:
+        result["request_data"] = req
+    if old_obj_val:
+        result["old_obj"] = old_obj_val
+    if reply_msg:
+        result["reply_msg"] = reply_msg
+    if reply_msg_multi_lang:
+        result["reply_msg_multi_lang"] = reply_msg_multi_lang
+
     if isinstance(rsp, ZyxelResponse):
-        zyxel_result = f"{rsp.zyxel_zcfg_result} - {rsp.success()}"
+        # zyxel_result = f"{rsp.zyxel_zcfg_result} - {rsp.success()}"
         # if not rsp.success():
         if rsp.status_code > 299:
-            return module.fail_json(
-                msg="Error %d Msg %s req: %s" % (rsp.status_code, rsp.text, req),
-                obj=obj_val,
-                old_obj=old_obj_val,
-                zyxel_result=zyxel_result,
-            )
+            result["msg"] = "Error %d Msg %s req: %s" % (rsp.status_code, rsp.text, req)
+            return module.fail_json(result)
+            #     #obj=obj_val,
+            #     obj=obj,
+            #     old_obj=old_obj_val,
+            #     result=rsp.zyxel_zcfg_result,
+            #     #zyxel_result=zyxel_result,
+            # )
 
-    return module.exit_json(
-        changed=changed,
-        request_data=req,
-        obj=obj_val,
-        old_obj=old_obj_val,
-        zyxel_result=zyxel_result,
-        result=rsp.zyxel_zcfg_result,
-        response=rsp.response_data,
-        response2=rsp.text,
-    )
+    return module.exit_json(**result)
+    # changed=changed,
+    # request_data=req,
+    # #obj=obj_val,
+    # obj=obj,
+    # old_obj=old_obj_val,
+    # #zyxel_result=zyxel_result,
+    # result=rsp.zyxel_zcfg_result,
+    # #response=rsp.response_data,
+    # #response2=rsp.text,
+    # reply_msg=reply_msg,
+    # reply_msg_multi_lang=reply_msg_multi_lang,
+    # )
 
 
 def get_connection(module):
