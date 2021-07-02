@@ -1,6 +1,9 @@
 ---
 - hosts: localhost
   gather_facts: yes
+  environment:
+    # unset DISPLAY as it causes slow pip commands on Ubuntu 20 with a disconnected X-Server
+    DISPLAY:
 
   tasks:
     - include_role:
@@ -12,5 +15,5 @@
         transport: "httpapi"
         resource: "{{ item.resource }}"
       loop:
-        - { resource: 'static_dhcp_table' }
+        - { resource: 'static_dhcp' }
 #        - { resource: 'interfaces' }

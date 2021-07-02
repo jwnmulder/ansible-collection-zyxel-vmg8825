@@ -1,60 +1,52 @@
 #
-# Copyright 2019 Red Hat
+# -*- coding: utf-8 -*-
+# Copyright 2021 Red Hat
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
-"""
-The zyxel_static_dhcp class
-It is in this file where the current configuration (as dict)
-is compared to the provided configuration (as dict) and the command set
-necessary to bring the current configuration to it's desired end-state is
-created
-"""
+#
+
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
+"""
+The zyxel_vmg8825_static_dhcp config file.
+It is in this file where the current configuration (as dict)
+is compared to the provided configuration (as dict) and the command set
+necessary to bring the current configuration to its desired end-state is
+created.
+"""
 
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.cfg.base import (
-    ConfigBase,
-)
+
+from ansible.module_utils.six import iteritems
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
-    to_list,
+    dict_merge,
+)
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.resource_module import (
+    ResourceModule,
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.facts.facts import (
     Facts,
 )
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.rm_templates.static_dhcp import (
+    Static_dhcpTemplate,
+)
 
 
-class Static_dhcp(ConfigBase):
+class Static_dhcp(ResourceModule):
     """
-    The zyxel_static_dhcp class
+    The zyxel_vmg8825_static_dhcp config class
     """
-
-    gather_subset = [
-        "!all",
-        "!min",
-    ]
-
-    gather_network_resources = [
-        "static_dhcp",
-    ]
 
     def __init__(self, module):
-        super().__init__(module)
-
-    def get_static_dhcp_facts(self):
-        """Get the 'facts' (the current configuration)
-
-        :rtype: A dictionary
-        :returns: The current configuration as a dictionary
-        """
-        facts, _warnings = Facts(self._module).get_facts(
-            self.gather_subset, self.gather_network_resources
+        super(Static_dhcp, self).__init__(
+            empty_fact_val={},
+            facts_module=Facts(module),
+            module=module,
+            resource="static_dhcp",
+            tmplt=Static_dhcpTemplate(),
         )
-        static_dhcp_facts = facts["ansible_network_resources"].get("static_dhcp")
-        if not static_dhcp_facts:
-            return []
-        return static_dhcp_facts
+        self.parsers = []
 
     def execute_module(self):
         """Execute the module
@@ -62,104 +54,40 @@ class Static_dhcp(ConfigBase):
         :rtype: A dictionary
         :returns: The result from module execution
         """
-        result = {"changed": False}
-        warnings = list()
-        commands = list()
+        if self.state not in ["parsed", "gathered"]:
+            self.generate_commands()
+            self.run_commands()
+        return self.result
 
-        existing_static_dhcp_facts = self.get_static_dhcp_facts()
-        commands.extend(self.set_config(existing_static_dhcp_facts))
-        if commands:
-            if not self._module.check_mode:
-                self._connection.edit_config(commands)
-            result["changed"] = True
-        result["commands"] = commands
-
-        changed_static_dhcp_facts = self.get_static_dhcp_facts()
-
-        result["before"] = existing_static_dhcp_facts
-        if result["changed"]:
-            result["after"] = changed_static_dhcp_facts
-
-        result["warnings"] = warnings
-        return result
-
-    def set_config(self, existing_static_dhcp_facts):
-        """Collect the configuration from the args passed to the module,
-            collect the current configuration (as a dict from facts)
-
-        :rtype: A list
-        :returns: the commands necessary to migrate the current configuration
-                  to the desired configuration
+    def generate_commands(self):
+        """Generate configuration commands to send based on
+        want, have and desired state.
         """
-        want = self._module.params["config"]
-        have = existing_static_dhcp_facts
-        resp = self.set_state(want, have)
-        return to_list(resp)
+        wantd = {entry["name"]: entry for entry in self.want}
+        haved = {entry["name"]: entry for entry in self.have}
 
-    def set_state(self, want, have):
-        """Select the appropriate function based on the state provided
+        # if state is merged, merge want onto have and then compare
+        if self.state == "merged":
+            wantd = dict_merge(haved, wantd)
 
-        :param want: the desired configuration as a dictionary
-        :param have: the current configuration as a dictionary
-        :rtype: A list
-        :returns: the commands necessary to migrate the current configuration
-                  to the desired configuration
+        # if state is deleted, empty out wantd and set haved to wantd
+        if self.state == "deleted":
+            haved = {k: v for k, v in iteritems(haved) if k in wantd or not wantd}
+            wantd = {}
+
+        # remove superfluous config for overridden and deleted
+        if self.state in ["overridden", "deleted"]:
+            for k, have in iteritems(haved):
+                if k not in wantd:
+                    self._compare(want={}, have=have)
+
+        for k, want in iteritems(wantd):
+            self._compare(want=want, have=haved.pop(k, {}))
+
+    def _compare(self, want, have):
+        """Leverages the base class `compare()` method and
+        populates the list of commands to be run by comparing
+        the `want` and `have` data with the `parsers` defined
+        for the Static_dhcp network resource.
         """
-        state = self._module.params["state"]
-        if state == "overridden":
-            kwargs = {}
-            commands = self._state_overridden(**kwargs)
-        elif state == "deleted":
-            kwargs = {}
-            commands = self._state_deleted(**kwargs)
-        elif state == "merged":
-            kwargs = {}
-            commands = self._state_merged(**kwargs)
-        elif state == "replaced":
-            kwargs = {}
-            commands = self._state_replaced(**kwargs)
-        return commands
-
-    @staticmethod
-    def _state_replaced(**kwargs):
-        """The command generator when state is replaced
-
-        :rtype: A list
-        :returns: the commands necessary to migrate the current configuration
-                  to the desired configuration
-        """
-        commands = []
-        return commands
-
-    @staticmethod
-    def _state_overridden(**kwargs):
-        """The command generator when state is overridden
-
-        :rtype: A list
-        :returns: the commands necessary to migrate the current configuration
-                  to the desired configuration
-        """
-        commands = []
-        return commands
-
-    @staticmethod
-    def _state_merged(**kwargs):
-        """The command generator when state is merged
-
-        :rtype: A list
-        :returns: the commands necessary to merge the provided into
-                  the current configuration
-        """
-        commands = []
-        return commands
-
-    @staticmethod
-    def _state_deleted(**kwargs):
-        """The command generator when state is deleted
-
-        :rtype: A list
-        :returns: the commands necessary to remove the current configuration
-                  of the provided objects
-        """
-        commands = []
-        return commands
+        self.compare(parsers=self.parsers, want=want, have=have)

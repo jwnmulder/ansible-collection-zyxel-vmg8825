@@ -1,4 +1,4 @@
-module: zyxel_static_dhcp
+module: zyxel_vmg8825_static_dhcp
 short_description: 'Manages <xxxx> attributes of <network_os> <resource>.'
 description: 'Manages <xxxx> attributes of <network_os> <resource>'
 version_added: 2.10
