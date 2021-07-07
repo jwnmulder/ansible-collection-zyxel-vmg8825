@@ -24,7 +24,7 @@ repos:
   #       args: [--py38-plus]
 
   - repo: https://github.com/hadialqattan/pycln
-    rev: 0.0.3
+    rev: 0.0.4
     hooks:
       - id: pycln
         args:
