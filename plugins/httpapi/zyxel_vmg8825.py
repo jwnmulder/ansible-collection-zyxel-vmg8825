@@ -30,7 +30,6 @@ options:
 import base64
 import json
 import logging
-import time
 import os
 
 from ansible.errors import AnsibleConnectionFailure
@@ -79,11 +78,9 @@ logger.addHandler(RequestsHandler())
 class HttpApi(HttpApiBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # self._device_info = None
-        # self._session_support = None
-        self._conn = args[0]
-        self._log = None
+        self._device_info = None
         self._sessionkey = None
+        # self._session_support = None
 
     def update_auth(self, response, response_text):
 
@@ -284,12 +281,12 @@ class HttpApi(HttpApiBase):
         # self.connection.queue_message('vvvv', 'REST:%s:%s:%s\n%s' % (http_method, self.connection._url, title, msg))
 
     def get_device_info(self):
-        # if self._device_info:
-        # return self._device_info
+        if self._device_info:
+            return self._device_info
 
         device_info = {}
 
-        device_info["network_os"] = "zyxel"
+        device_info["network_os"] = "zyxel_vmg8825"
         response_data, response_code = self.send_request(
             data=None, path="/getBasicInformation"
         )
@@ -299,13 +296,6 @@ class HttpApi(HttpApiBase):
         device_info["network_os_model"] = response_data["ModelName"]
 
         return device_info
-        # data = self.send_request("show hostname", output="json")
-        # data = json.loads(reply)
-
-        # device_info["network_os_hostname"] = data["hostname"]
-
-        # self._device_info = device_info
-        # return self._device_info
 
     def get_device_operations(self):
         return {
@@ -322,13 +312,14 @@ class HttpApi(HttpApiBase):
             "supports_replace": False,
         }
 
+    # nxos.py
     def get_capabilities(self):
         result = {}
-        # result["rpc"] = []
+        result["rpc"] = []
         result["device_info"] = self.get_device_info()
         result["device_operations"] = self.get_device_operations()
         result.update(OPTIONS)
-        result["network_api"] = "zyxel"
+        result["network_api"] = "zyxel_vmg8825"
 
         return json.dumps(result)
 
@@ -343,21 +334,7 @@ class HttpApi(HttpApiBase):
         # This method is ONLY here to support resource modules. Therefore most
         # arguments are unsupported and not present.
 
-        session = None
-        if self.supports_sessions():
-            session = "ansible_%d" % int(time.time())
-            candidate = ["configure session %s" % session] + candidate
-        else:
-            candidate = ["configure"] + candidate
-        candidate.append("commit")
-
-        try:
-            responses = self.send_request(candidate)
-        except ConnectionError:
-            if session:
-                self.send_request(["configure session %s" % session, "abort"])
-            raise
-
+        responses = self.send_request(candidate, output="config")
         return [resp for resp in to_list(responses) if resp != "{}"]
 
 

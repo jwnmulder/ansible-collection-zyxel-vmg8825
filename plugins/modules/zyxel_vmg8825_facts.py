@@ -16,8 +16,8 @@ DOCUMENTATION = """
 ---
 module: zyxel_vmg8825_facts
 author: Jan-Willem Mulder (@jwnmulder)
-short_description: Get facts about zyxel_vmg8825 devices.
-version_added: "1.0.0"
+version_added: '1.0.0'
+short_description: Get facts about Zyxel VMG8825 devices.
 description:
   - Collects facts from network devices running the zyxel_vmg8825 operating
     system. This module places the facts gathered in the fact tree keyed by the
@@ -34,8 +34,9 @@ options:
         with an initial C(M(!)) to specify that a specific subset should
         not be collected.
     required: false
-    default: 'all'
-    version_added: "2.2"
+    default: '!config'
+    type: list
+    elements: str
   gather_network_resources:
     description:
       - When supplied, this argument will restrict the facts collected
@@ -45,30 +46,34 @@ options:
         can also be used with an initial C(M(!)) to specify that a
         specific subset should not be collected.
     required: false
-    version_added: "2.9"
+    type: list
+    elements: str
+    choices:
+      - all
+      - static_dhcp
 """
 
 EXAMPLES = """
-# Gather all facts
-- zyxel_vmg8825_facts:
+- name: Gather all facts
+  zyxel_vmg8825_facts:
     gather_subset: all
     gather_network_resources: all
 
-# Collect only the static_dhcp facts
-- zyxel_vmg8825_facts:
+- name: Collect only the static_dhcp facts
+  zyxel_vmg8825_facts:
     gather_subset:
-      - !all
-      - !min
+      - '!all'
+      - '!min'
     gather_network_resources:
       - static_dhcp
 
-# Do not collect static_dhcp facts
-- zyxel_vmg8825_facts:
+- name: Do not collect static_dhcp facts
+  zyxel_vmg8825_facts:
     gather_network_resources:
-      - "!static_dhcp"
+      - '!static_dhcp'
 
-# Collect static_dhcp and minimal default facts
-- zyxel_vmg8825_facts:
+- name: Collect static_dhcp and minimal default facts
+  zyxel_vmg8825_facts:
     gather_subset: min
     gather_network_resources: static_dhcp
 """

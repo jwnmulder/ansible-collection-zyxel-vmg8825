@@ -27,28 +27,10 @@ ansible-test network-integration -v --debug
 # install / update
 ansible-galaxy collection install git+https://github.com/ansible-network/cli_rm_builder.git
 
-ansible-playbook -e rm_dest=$(pwd)/tmp \
-                 -e collection_org=jwnmulder \
-                 -e collection_name=zyxel_vmg8825 \
-                 -e docstring=$(pwd)/rm_builder/docstrings/zyxel_interfaces.yaml \
-                 -e examples=$(pwd)/rm_builder/example/zyxel_examples.txt \
-                 -e resource=interfaces \
-                 rm_builder/run.yml
+# generate based on external docstring files
+ansible-playbook -e rm_dest=$(pwd)/tmp rm_builder/run_all.yml
 
-ansible-playbook -e rm_dest=$(pwd)/tmp \
-                 -e collection_org=jwnmulder \
-                 -e collection_name=zyxel_vmg8825 \
-                 -e docstring=$(pwd)/rm_builder/docstrings/zyxel_vmg8825_static_dhcp.yaml \
-                 -e resource=static_dhcp \
-                 rm_builder/run.yml
-
-ansible-playbook -e rm_dest=$(pwd)/tmp \
-                 -e collection_org=jwnmulder \
-                 -e collection_name=zyxel_vmg8825 \
-                 -e network_os=zyxel_vmg8825 \
-                 -e resource=static_dhcp \
-                 rm_builder/run.yml
-
+# update based on inline module documentation
 ansible-playbook -e rm_dest=$(pwd)/tmp rm_builder/update_all.yml
 ```
 
@@ -226,13 +208,11 @@ Name | Description
 ### Modules
 Name | Description
 --- | ---
-[jwnmulder.zyxel_vmg8825.zyxel2_facts](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel2_facts_module.rst)|Get facts about zyxel devices.
-[jwnmulder.zyxel_vmg8825.zyxel2_static_dhcp](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel2_static_dhcp_module.rst)|Manages <xxxx> attributes of <network_os> <resource>.
 [jwnmulder.zyxel_vmg8825.zyxel_dal_raw](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_dal_raw_module.rst)|Zyxel Module
 [jwnmulder.zyxel_vmg8825.zyxel_dal_rpc](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_dal_rpc_module.rst)|Zyxel Module
 [jwnmulder.zyxel_vmg8825.zyxel_ping](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_ping_module.rst)|Zyxel Module
 [jwnmulder.zyxel_vmg8825.zyxel_static_dhcp](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_static_dhcp_module.rst)|Zyxel Module
-[jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts_module.rst)|Get facts about zyxel_vmg8825 devices.
-[jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_module.rst)|Manages <xxxx> attributes of <network_os> <resource>.
+[jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts_module.rst)|Get facts about Zyxel VMG8825 devices.
+[jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_module.rst)|This module configures and manages static_dhcp entries on Zyxel VMG8825 routers
 
 <!--end collection content-->

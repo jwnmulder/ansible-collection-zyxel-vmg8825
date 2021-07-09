@@ -47,7 +47,8 @@ class Static_dhcpFacts(object):
         objs = []
 
         if not data:
-            data = connection.get()
+            # data = connection.get()
+            data = connection.get_device_info()
 
         # parse native config using the Static_dhcp template
         static_dhcp_parser = Static_dhcpTemplate(

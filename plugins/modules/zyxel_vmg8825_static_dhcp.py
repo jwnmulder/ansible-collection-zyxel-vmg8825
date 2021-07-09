@@ -14,10 +14,10 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 module: zyxel_vmg8825_static_dhcp
-short_description: 'Manages <xxxx> attributes of <network_os> <resource>.'
-description: 'Manages <xxxx> attributes of <network_os> <resource>'
-version_added: 2.10
 author: Jan-Willem Mulder (@jwnmulder)
+version_added: '1.0.0'
+short_description: 'This module configures and manages static_dhcp entries on Zyxel VMG8825 routers'
+description: 'This module configures and manages static_dhcp entries on Zyxel VMG8825 routers'
 notes:
   - 'Tested against <network_os> <version>'
 options:
@@ -56,6 +56,9 @@ options:
     - replaced
     - overridden
     - deleted
+    - gathered
+    - rendered
+    - parsed
     default: merged
 """
 
@@ -127,13 +130,13 @@ def main():
     """
     module = AnsibleModule(
         argument_spec=Static_dhcpArgs.argument_spec,
-        mutually_exclusive=[["config", "running_config"]],
+        # mutually_exclusive=[["config", "running_config"]],
         required_if=[
             ["state", "merged", ["config"]],
             ["state", "replaced", ["config"]],
             ["state", "overridden", ["config"]],
             ["state", "rendered", ["config"]],
-            ["state", "parsed", ["running_config"]],
+            # ["state", "parsed", ["running_config"]],
         ],
         supports_check_mode=True,
     )

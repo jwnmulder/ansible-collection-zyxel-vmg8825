@@ -5,10 +5,10 @@
 jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp
 *************************************************
 
-**Manages <xxxx> attributes of <network_os> <resource>.**
+**This module configures and manages static_dhcp entries on Zyxel VMG8825 routers**
 
 
-Version added: 2.1
+Version added: 1.0.0
 
 .. contents::
    :local:
@@ -17,7 +17,7 @@ Version added: 2.1
 
 Synopsis
 --------
-- Manages <xxxx> attributes of <network_os> <resource>
+- This module configures and manages static_dhcp entries on Zyxel VMG8825 routers
 
 
 
@@ -150,6 +150,9 @@ Parameters
                                     <li>replaced</li>
                                     <li>overridden</li>
                                     <li>deleted</li>
+                                    <li>gathered</li>
+                                    <li>rendered</li>
+                                    <li>parsed</li>
                         </ul>
                 </td>
                 <td>

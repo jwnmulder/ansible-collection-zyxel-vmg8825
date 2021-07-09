@@ -5,7 +5,7 @@
 jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts
 *******************************************
 
-**Get facts about zyxel_vmg8825 devices.**
+**Get facts about Zyxel VMG8825 devices.**
 
 
 Version added: 1.0.0
@@ -39,11 +39,15 @@ Parameters
                     <b>gather_network_resources</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">-</span>
+                        <span style="color: purple">list</span>
+                         / <span style="color: purple">elements=string</span>
                     </div>
-                    <div style="font-style: italic; font-size: small; color: darkgreen">added in 2.9</div>
                 </td>
                 <td>
+                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
+                                    <li>all</li>
+                                    <li>static_dhcp</li>
+                        </ul>
                 </td>
                 <td>
                         <div>When supplied, this argument will restrict the facts collected to a given subset. Possible values for this argument include all and the resources like interfaces, vlans etc. Can specify a list of values to include a larger subset. Values can also be used with an initial <code><span class='module'>!</span></code> to specify that a specific subset should not be collected.</div>
@@ -55,12 +59,12 @@ Parameters
                     <b>gather_subset</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">-</span>
+                        <span style="color: purple">list</span>
+                         / <span style="color: purple">elements=string</span>
                     </div>
-                    <div style="font-style: italic; font-size: small; color: darkgreen">added in 2.2</div>
                 </td>
                 <td>
-                        <b>Default:</b><br/><div style="color: blue">"all"</div>
+                        <b>Default:</b><br/><div style="color: blue">"!config"</div>
                 </td>
                 <td>
                         <div>When supplied, this argument will restrict the facts collected to a given subset. Possible values for this argument include all, min, hardware, config, legacy, and interfaces. Can specify a list of values to include a larger subset. Values can also be used with an initial <code><span class='module'>!</span></code> to specify that a specific subset should not be collected.</div>
@@ -77,26 +81,26 @@ Examples
 
 .. code-block:: yaml
 
-    # Gather all facts
-    - zyxel_vmg8825_facts:
+    - name: Gather all facts
+      zyxel_vmg8825_facts:
         gather_subset: all
         gather_network_resources: all
 
-    # Collect only the static_dhcp facts
-    - zyxel_vmg8825_facts:
+    - name: Collect only the static_dhcp facts
+      zyxel_vmg8825_facts:
         gather_subset:
-          - !all
-          - !min
+          - '!all'
+          - '!min'
         gather_network_resources:
           - static_dhcp
 
-    # Do not collect static_dhcp facts
-    - zyxel_vmg8825_facts:
+    - name: Do not collect static_dhcp facts
+      zyxel_vmg8825_facts:
         gather_network_resources:
-          - "!static_dhcp"
+          - '!static_dhcp'
 
-    # Collect static_dhcp and minimal default facts
-    - zyxel_vmg8825_facts:
+    - name: Collect static_dhcp and minimal default facts
+      zyxel_vmg8825_facts:
         gather_subset: min
         gather_network_resources: static_dhcp
 

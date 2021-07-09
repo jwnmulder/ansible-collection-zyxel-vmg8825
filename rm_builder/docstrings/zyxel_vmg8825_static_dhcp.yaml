@@ -1,7 +1,7 @@
 module: zyxel_vmg8825_static_dhcp
-short_description: 'Manages <xxxx> attributes of <network_os> <resource>.'
-description: 'Manages <xxxx> attributes of <network_os> <resource>'
-version_added: 2.10
+short_description: 'This module configures and manages static_dhcp entries on Zyxel VMG8825 routers'
+description: 'This module configures and manages static_dhcp entries on Zyxel VMG8825 routers'
+version_added: '1.0.0'
 author: Jan-Willem Mulder (@jwnmulder)
 notes:
   - 'Tested against <network_os> <version>'
@@ -41,4 +41,7 @@ options:
     - replaced
     - overridden
     - deleted
+    - gathered
+    - rendered
+    - parsed
     default: merged

@@ -2,6 +2,10 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825 import (
+    HttpApi,
+)
+from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.mock import fake_httpapi
 from ansible_collections.ansible.netcommon.tests.unit.compat import mock
 from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     AnsibleExitJson,
@@ -29,14 +33,43 @@ class ZyxelModuleTestCase(ModuleTestCase):
         elif self.connection_type == "httpapi":
             self.mock_http_url = "https://router.test:443"
 
+            conn = fake_httpapi.Connection()
+            self.connection = HttpApi(conn)
+            self.connection.send_request = mock.Mock()
+            self.connection.send_request.side_effect = self.request_handler
+
             self.mock_get_connection = mock.patch(
                 "ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.ansible_utils.get_connection"
             )
-            self.get_connection = self.mock_get_connection.start()
-            self.connection = self.get_connection()
+            get_connection = self.mock_get_connection.start()
+            get_connection.return_value = self.connection
+            # self.connection = self.get_connection()
 
-            self.connection.send_request = mock.Mock()
-            self.connection.send_request.side_effect = self.request_handler
+            # self.mock_get_resource_connection_config = mock.patch(
+            #     "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.cfg.base.get_resource_connection"
+            # )
+            # get_resource_connection_config = self.mock_get_resource_connection_config.start()
+            # get_resource_connection_config.return_value = self.connection
+
+            self.mock_get_resource_connection_facts = mock.patch(
+                "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.facts.facts.get_resource_connection"
+            )
+            get_resource_connection_facts = (
+                self.mock_get_resource_connection_facts.start()
+            )
+            get_resource_connection_facts.return_value = self.connection
+
+            # self.conn = self.get_connection()
+            # self.conn.get_capabilities.return_value = "{}"
+
+            # self.connection = fake_httpapi.Connection()
+            # self.zyxel_plugin = FakeZyxelHttpApiPlugin(self.connection)
+            # self.zyxel_plugin._load_name = "httpapi"
+            # self.connection.httpapi = self.zyxel_plugin
+
+            # zyxel_vmg8825_connection = HttpApi()
+            # self.connection.get_capabilities = mock.Mock()
+            # self.connection.get_capabilities.side_effect
 
             self.connection_calls = []
 
@@ -54,6 +87,8 @@ class ZyxelModuleTestCase(ModuleTestCase):
 
         if self.connection_type == "httpapi":
             self.mock_get_connection.stop()
+            self.mock_get_resource_connection_facts.stop()
+            self.mock_get_resource_connection_facts.stop()
             self.mock_socket_path.stop()
 
     def request_handler(self, data, **kwargs):

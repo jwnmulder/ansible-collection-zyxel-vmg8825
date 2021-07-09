@@ -2,6 +2,8 @@
 
 from __future__ import absolute_import, division, print_function
 
+import pytest
+
 from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.module_test_utils import (
     ZyxelModuleTestCase,
 )
@@ -21,33 +23,31 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
 
     module = zyxel_vmg8825_facts
 
-    def test_module_fail_when_required_args_missing(self):
+    def test_module_fail_when_invalid_args(self):
         with self.assertRaises(AnsibleFailJson):
-            set_module_args({})
+            set_module_args({"gather_network_resources": ["invalid"]})
             self.module.main()
 
+    @pytest.mark.skip(reason="wip")
     def test_ensure_command_called_httpapi(self):
 
         self.register_connection_call(
             method="GET",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
+            uri="/getBasicInformation",
             body={
                 "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "Object": [
-                    {
-                        "Index": 1,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:01",
-                        "IPAddr": "192.168.0.1",
-                    }
-                ],
+                "ModelName": "VMG8825-T50",
+                "SoftwareVersion": "V5.50(ABPY.1)b15_20201207",
+                "CurrentLanguage": "en",
+                "AvailableLanguages": "nl,en",
+                "RememberPassword": 0,
             },
         )
 
-        result = self._run_module(self.module, {})
+        result = self._run_module(
+            self.module,
+            {"gather_subset": ["!all"], "gather_network_resources": ["static_dhcp"]},
+        )
 
         self.assertFalse(result["changed"])
         # self.assertEquals(result["result"], "ZCFG_SUCCESS")

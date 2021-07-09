@@ -92,3 +92,21 @@ class Connection(object):
 
     def queue_message(self, level, message):
         print(f"level: {level} - {message}")
+
+    # def get_device_info(self):
+    #     return self.httpapi.get_device_info()
+
+    # alternative for json_rpc behavior
+    # def get_device_operations(self):
+    #     return self.httpapi.get_device_operations()
+
+    # alternative for json_rpc behavior
+    # # nxos.py
+    # def get_capabilities(self):
+    # return self.httpapi.get_capabilities()
+
+    # alternative for json_rpc behavior
+    # def get(self, command, output=None):
+
+    # alternative for json_rpc behavior
+    # def edit_config(self, candidate):
