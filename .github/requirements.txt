@@ -1,4 +1,4 @@
-ansible==4.3.0
+ansible==4.4.0
 PyYaml
 # requests
 # ovh
