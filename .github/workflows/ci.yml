@@ -42,7 +42,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: |
-            ~/.ansible/collections
+            ansible_collections
+            !ansible_collections/jwnmulder/zyxel_vmg8825
           key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/tests/requirements.yml') }}
 
       - name: Setup venv
@@ -106,7 +107,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: |
-            ~/.ansible/collections
+            ansible_collections
+            !ansible_collections/jwnmulder/zyxel_vmg8825
           key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/tests/requirements.yml') }}
 
       - name: Setup venv
