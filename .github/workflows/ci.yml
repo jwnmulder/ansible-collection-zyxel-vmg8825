@@ -23,8 +23,8 @@ jobs:
           path: >-
             ansible_collections/jwnmulder/zyxel_vmg8825
 
-      - name: Setup Python
-        uses: actions/setup-python@v2
+      - uses: actions/setup-python@v2
+        id: setup-python
         with:
           python-version: ${{ matrix.python }}
 
@@ -87,8 +87,8 @@ jobs:
           path: >-
             ansible_collections/jwnmulder/zyxel_vmg8825
 
-      - name: Setup Python
-        uses: actions/setup-python@v2
+      - uses: actions/setup-python@v2
+        id: setup-python
         with:
           python-version: ${{ matrix.python }}
 
