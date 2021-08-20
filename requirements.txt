@@ -1,5 +1,5 @@
-ansible==4.1.0
-PyYaml
+ansible==4.4.0
+# PyYaml
 # requests
 # ovh
 # build

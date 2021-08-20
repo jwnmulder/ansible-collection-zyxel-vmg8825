@@ -56,6 +56,13 @@ class Static_dhcpFacts(object):
         )
         objs = list(static_dhcp_parser.parse().values())
 
+        # objs = list()
+        # for conf in data:
+        #     if conf:
+        #         obj = self.render_config(self.generated_spec, conf)
+        #         if obj:
+        #             objs.append(obj)
+
         ansible_facts["ansible_network_resources"].pop("static_dhcp", None)
 
         params = utils.remove_empties(
