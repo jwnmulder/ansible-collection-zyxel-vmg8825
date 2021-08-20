@@ -30,6 +30,8 @@ repos:
         args:
           - plugins
           - tests
+          - --exclude
+          - (\.eggs|\.git|\.hg|\.mypy_cache|__pycache__|\.nox|\.tox|\.venv|\.svn|buck-out|build|dist|output)/
 
   - repo: https://github.com/psf/black
     rev: 21.7b0
