@@ -42,12 +42,14 @@ jobs:
         uses: actions/cache@v2
         with:
           path: |
-            ~/.ansible/collection
+            ~/.ansible/collections
           key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/tests/requirements.yml') }}
 
       - name: Setup venv
         run: |
           scripts/ensure-venv.sh
+        working-directory: >-
+          ansible_collections/jwnmulder/zyxel_vmg8825
 
       - uses: webfactory/ssh-agent@v0.5.3
         with:
@@ -62,7 +64,7 @@ jobs:
 
       - name: Install collection dependencies
         run: |
-          . .venv/bin/activate
+          . ansible_collections/jwnmulder/zyxel_vmg8825/.venv/bin/activate
           ansible-galaxy collection install ansible.netcommon -p .
 
       - name: Run ansible-test units
@@ -104,12 +106,14 @@ jobs:
         uses: actions/cache@v2
         with:
           path: |
-            ~/.ansible/collection
+            ~/.ansible/collections
           key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/tests/requirements.yml') }}
 
       - name: Setup venv
         run: |
           scripts/ensure-venv.sh
+        working-directory: >-
+          ansible_collections/jwnmulder/zyxel_vmg8825
 
       - uses: webfactory/ssh-agent@v0.5.3
         with:
@@ -124,7 +128,7 @@ jobs:
 
       - name: Install collection dependencies
         run: |
-          . .venv/bin/activate
+          . ansible_collections/jwnmulder/zyxel_vmg8825/.venv/bin/activate
           ansible-galaxy collection install ansible.netcommon -p .
 
       - name: Run ansible-test sanity
