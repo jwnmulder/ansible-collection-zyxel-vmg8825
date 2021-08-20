@@ -7,7 +7,8 @@
 ## ansible-test
 
 ```bash
-pip install wheel
+bin/ensure-venv.sh
+. .venv/bin/activate
 
 cd collections && ansible-galaxy collection install ansible.netcommon -p .
 ansible-test sanity -v --color --docker --python 3.8
