@@ -47,7 +47,7 @@ jobs:
 
       - name: Setup venv
         run: |
-          bin/ensure-venv.sh
+          scripts/ensure-venv.sh
 
       - uses: webfactory/ssh-agent@v0.5.3
         with:
@@ -109,7 +109,7 @@ jobs:
 
       - name: Setup venv
         run: |
-          bin/ensure-venv.sh
+          scripts/ensure-venv.sh
 
       - uses: webfactory/ssh-agent@v0.5.3
         with:
