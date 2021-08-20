@@ -31,19 +31,23 @@ jobs:
       - name: add /root/.local/bin to PATH
         run: echo "${HOME}/.local/bin" >> $GITHUB_PATH
 
-      - name: Cache packages
+      - name: Cache venv
         uses: actions/cache@v2
         with:
           path: |
-            ~/.cache/pip
-            ~/.local/lib/python${{ matrix.python }}
-            ~/.local/bin
+            .venv
+          key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/requirements*.txt') }}
+
+      - name: Cache ansible collections
+        uses: actions/cache@v2
+        with:
+          path: |
             ~/.ansible/collection
-          key: ${{ runner.os }}-packages-${{ matrix.python }}-${{ hashFiles('./ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
-          #restore-keys: |
-          #  ${{ runner.os }}-packages-${{ matrix.python }}-
-          #  ${{ runner.os }}-packages-
-          #  ${{ runner.os }}-
+          key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/tests/requirements.yml') }}
+
+      - name: Setup venv
+        run: |
+          bin/ensure-venv.sh
 
       - uses: webfactory/ssh-agent@v0.5.3
         with:
@@ -51,17 +55,19 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip wheel
-          python -m pip install -r .github/requirements.txt --user
+          . .venv/bin/activate
+          python -m pip install -r requirements.txt
         working-directory: >-
           ansible_collections/jwnmulder/zyxel_vmg8825
 
       - name: Install collection dependencies
         run: |
+          . .venv/bin/activate
           ansible-galaxy collection install ansible.netcommon -p .
 
       - name: Run ansible-test units
         run: |
+          . .venv/bin/activate
           ansible-test units -v --color --venv --python ${{ matrix.python }}
         working-directory: >-
           ./ansible_collections/jwnmulder/zyxel_vmg8825
@@ -87,19 +93,23 @@ jobs:
       - name: add /root/.local/bin to PATH
         run: echo "${HOME}/.local/bin" >> $GITHUB_PATH
 
-      - name: Cache packages
+      - name: Cache venv
         uses: actions/cache@v2
         with:
           path: |
-            ~/.cache/pip
-            ~/.local/lib/python${{ matrix.python }}
-            ~/.local/bin
+            .venv
+          key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/requirements*.txt') }}
+
+      - name: Cache ansible collections
+        uses: actions/cache@v2
+        with:
+          path: |
             ~/.ansible/collection
-          key: ${{ runner.os }}-packages-${{ matrix.python }}-${{ hashFiles('ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
-          #restore-keys: |
-          #  ${{ runner.os }}-packages-${{ matrix.python }}-
-          #  ${{ runner.os }}-packages-
-          #  ${{ runner.os }}-
+          key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/tests/requirements.yml') }}
+
+      - name: Setup venv
+        run: |
+          bin/ensure-venv.sh
 
       - uses: webfactory/ssh-agent@v0.5.3
         with:
@@ -107,17 +117,19 @@ jobs:
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip wheel
-          python -m pip install -r .github/requirements.txt --user
+          . .venv/bin/activate
+          python -m pip install -r requirements.txt
         working-directory: >-
           ansible_collections/jwnmulder/zyxel_vmg8825
 
       - name: Install collection dependencies
         run: |
+          . .venv/bin/activate
           ansible-galaxy collection install ansible.netcommon -p .
 
       - name: Run ansible-test sanity
         run: |
+          . .venv/bin/activate
           ansible-test sanity -v --color --docker --python ${{ matrix.python }}
         working-directory: >-
           ansible_collections/jwnmulder/zyxel_vmg8825
