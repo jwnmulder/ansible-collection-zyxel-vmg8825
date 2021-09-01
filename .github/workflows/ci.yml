@@ -48,6 +48,7 @@ jobs:
 
       - name: Setup venv
         run: |
+          sudo apt install python3-venv -y
           scripts/ensure-venv.sh
         working-directory: >-
           ansible_collections/jwnmulder/zyxel_vmg8825
@@ -113,6 +114,7 @@ jobs:
 
       - name: Setup venv
         run: |
+          sudo apt install python3-venv -y
           scripts/ensure-venv.sh
         working-directory: >-
           ansible_collections/jwnmulder/zyxel_vmg8825
