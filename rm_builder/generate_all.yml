@@ -4,14 +4,18 @@
 
   tasks:
     - include_vars: vars.yml
+
     - include_role:
         name: ansible_network.cli_rm_builder.run
       vars:
+        copyright: "Copyright {{ ansible_date_time.year }}"
+        version_added: "1.0.0"
         collection_org: "jwnmulder"
         collection_name: "zyxel_vmg8825"
         network_os: "zyxel_vmg8825"
         transport: "httpapi"
         resource: "{{ item.resource }}"
+        docstring: "{{ playbook_dir }}/docstrings/zyxel_{{ item.resource }}.yaml"
       loop:
-        - { resource: 'static_dhcp_table' }
-#        - { resource: 'interfaces' }
+        - { resource: 'static_dhcp' }
+        - { resource: 'interfaces' }
