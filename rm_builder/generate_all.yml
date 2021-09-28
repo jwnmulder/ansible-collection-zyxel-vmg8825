@@ -17,5 +17,5 @@
         resource: "{{ item.resource }}"
         docstring: "{{ playbook_dir }}/docstrings/zyxel_{{ item.resource }}.yaml"
       loop:
-        - { resource: 'static_dhcp' }
+        - { resource: 'static_dhcp_table' }
         - { resource: 'interfaces' }
