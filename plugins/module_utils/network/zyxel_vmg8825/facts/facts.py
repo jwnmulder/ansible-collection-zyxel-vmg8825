@@ -2,7 +2,9 @@
 # Copyright 2021
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+from __future__ import absolute_import, division, print_function
 
+__metaclass__ = type
 """
 The facts class for zyxel_vmg8825
 this file validates each subset of facts and selectively
