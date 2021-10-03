@@ -29,6 +29,7 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zy
     Facts,
 )
 
+
 class Static_dhcp_table(ResourceModule):
     """
     The zyxel_vmg8825_static_dhcp_table config class
@@ -39,13 +40,12 @@ class Static_dhcp_table(ResourceModule):
             empty_fact_val={},
             facts_module=Facts(module),
             module=module,
-            resource="static_dhcp_table"
+            resource="static_dhcp_table",
         )
-        self.parsers = [
-        ]
+        self.parsers = []
 
     def execute_module(self):
-        """ Execute the module
+        """Execute the module
 
         :rtype: A dictionary
         :returns: The result from module execution
@@ -56,11 +56,11 @@ class Static_dhcp_table(ResourceModule):
         return self.result
 
     def generate_commands(self):
-        """ Generate configuration commands to send based on
-            want, have and desired state.
+        """Generate configuration commands to send based on
+        want, have and desired state.
         """
-        wantd = {entry['name']: entry for entry in self.want}
-        haved = {entry['name']: entry for entry in self.have}
+        wantd = {entry["name"]: entry for entry in self.want}
+        haved = {entry["name"]: entry for entry in self.have}
 
         # if state is merged, merge want onto have and then compare
         if self.state == "merged":
@@ -68,9 +68,7 @@ class Static_dhcp_table(ResourceModule):
 
         # if state is deleted, empty out wantd and set haved to wantd
         if self.state == "deleted":
-            haved = {
-                k: v for k, v in iteritems(haved) if k in wantd or not wantd
-            }
+            haved = {k: v for k, v in iteritems(haved) if k in wantd or not wantd}
             wantd = {}
 
         # remove superfluous config for overridden and deleted
@@ -84,8 +82,8 @@ class Static_dhcp_table(ResourceModule):
 
     def _compare(self, want, have):
         """Leverages the base class `compare()` method and
-           populates the list of commands to be run by comparing
-           the `want` and `have` data with the `parsers` defined
-           for the Static_dhcp_table network resource.
+        populates the list of commands to be run by comparing
+        the `want` and `have` data with the `parsers` defined
+        for the Static_dhcp_table network resource.
         """
         self.compare(parsers=self.parsers, want=want, have=have)

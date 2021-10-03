@@ -68,7 +68,6 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         self.assertEqual(args[1]["method"].upper(), "GET")
         self.assertEqual(args[1]["path"], "/cgi-bin/DAL?oid=static_dhcp")
 
-
     def test_update_with_same_info(self):
 
         self.register_connection_call(
@@ -99,9 +98,7 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         self.assertEqual(data[0]["index"], 1)
 
         # update with same config
-        result = self._run_module(self.module, {
-            "config": data
-        })
+        result = self._run_module(self.module, {"config": data})
 
         # config should not have changed as it is exactly the same
         self.assertFalse(result["changed"])

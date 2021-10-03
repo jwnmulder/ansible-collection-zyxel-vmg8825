@@ -146,11 +146,11 @@ Parameters
                 </td>
                 <td>
                         <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                    <li>merged</li>
+                                    <li><div style="color: blue"><b>merged</b>&nbsp;&larr;</div></li>
                                     <li>replaced</li>
                                     <li>overridden</li>
                                     <li>deleted</li>
-                                    <li><div style="color: blue"><b>gathered</b>&nbsp;&larr;</div></li>
+                                    <li>gathered</li>
                         </ul>
                 </td>
                 <td>
