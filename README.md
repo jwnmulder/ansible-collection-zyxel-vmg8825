@@ -211,8 +211,6 @@ Name | Description
 ### Modules
 Name | Description
 --- | ---
-[jwnmulder.zyxel_vmg8825.zyxel2_facts](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel2_facts_module.rst)|Get facts about zyxel devices.
-[jwnmulder.zyxel_vmg8825.zyxel2_static_dhcp](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel2_static_dhcp_module.rst)|Manages <xxxx> attributes of <network_os> <resource>.
 [jwnmulder.zyxel_vmg8825.zyxel_dal_raw](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_dal_raw_module.rst)|Zyxel Module
 [jwnmulder.zyxel_vmg8825.zyxel_dal_rpc](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_dal_rpc_module.rst)|Zyxel Module
 [jwnmulder.zyxel_vmg8825.zyxel_ping](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_ping_module.rst)|Zyxel Module
