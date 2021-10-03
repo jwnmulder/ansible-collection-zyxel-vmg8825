@@ -1,0 +1,18 @@
+---
+- debug: msg="START common/ensure_not_changed on connection={{ ansible_connection }}"
+
+- name: grab facts
+  zyxel_vmg8825_facts:
+    gather_subset: min
+    gather_network_resources: static_dhcp_table
+
+- name: Update static_dhcp_table with same info
+  zyxel_vmg8825_static_dhcp_table:
+    config: "{{ ansible_network_resources['static_dhcp_table'] }}"
+  register: result
+
+- name: Ensure config did not change.
+  assert:
+    that: not result.changed
+
+- debug: msg="END common/ensure_not_changed on connection={{ ansible_connection }}"

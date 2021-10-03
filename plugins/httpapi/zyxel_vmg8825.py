@@ -81,7 +81,6 @@ class HttpApi(HttpApiBase):
         super().__init__(*args, **kwargs)
         # self._device_info = None
         # self._session_support = None
-        self._conn = args[0]
         self._log = None
         self._sessionkey = None
 
@@ -193,14 +192,9 @@ class HttpApi(HttpApiBase):
         headers = {"Content-Type": "application/json"}
         path = message_kwargs.get("path", "/")
         method = message_kwargs.get("method", "GET")
-        oid = message_kwargs.get("oid")
-        # data = message_kwargs.get('data', None)
 
         if isinstance(data, dict):
             data = json.dumps(data)
-
-        if oid:
-            path = f"/cgi-bin/DAL?oid={oid}&sessionkey={self._sessionkey}"
 
         logger.debug(f"send_request: {method, path, data}")
 
@@ -259,6 +253,19 @@ class HttpApi(HttpApiBase):
 
         # return results
 
+    def send_dal__request(self, data, **message_kwargs):
+        oid = message_kwargs.get("oid")
+        oid_index = message_kwargs.get("oid_index")
+
+        if oid:
+            path = f"/cgi-bin/DAL?oid={oid}"
+            if self._sessionkey:
+                path += f"&sessionkey={self._sessionkey}"
+            if oid_index:
+                path += f"&Index={oid_index}"
+
+        return self.send_request(data, path=path, **message_kwargs)
+
     def handle_httperror(self, exc):
 
         # Delegate to super().handle_httperror() for 401?
@@ -306,6 +313,31 @@ class HttpApi(HttpApiBase):
 
         # self._device_info = device_info
         # return self._device_info
+
+    def dal_get(self, oid):
+        response_data, response_code = self.send_dal__request(
+            oid=oid, method="GET", data=None
+        )
+        data = response_data["Object"]
+        return data
+
+    def dal_put(self, oid, data):
+        response_data, response_code = self.send_dal__request(
+            oid=oid, method="PUT", data=data
+        )
+        return response_data
+
+    def dal_post(self, oid, data):
+        response_data, response_code = self.send_dal__request(
+            oid=oid, method="POST", data=data
+        )
+        return response_data
+
+    def dal_delete(self, oid, index):
+        response_data, response_code = self.send_dal__request(
+            oid=oid, method="POST", oid_index=index
+        )
+        return response_data
 
     def get_device_operations(self):
         return {

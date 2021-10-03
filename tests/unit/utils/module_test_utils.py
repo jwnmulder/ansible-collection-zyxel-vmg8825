@@ -10,6 +10,10 @@ from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
 )
 from ansible.module_utils import basic
 
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825 import (
+    HttpApi,
+)
+
 import httpretty
 import json
 import logging
@@ -29,14 +33,35 @@ class ZyxelModuleTestCase(ModuleTestCase):
         elif self.connection_type == "httpapi":
             self.mock_http_url = "https://router.test:443"
 
-            self.mock_get_connection = mock.patch(
-                "ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.ansible_utils.get_connection"
-            )
-            self.get_connection = self.mock_get_connection.start()
-            self.connection = self.get_connection()
+            http_api_connection_mock = mock.Mock()
+            http_api_connection_mock.send = mock.Mock()
+            http_api_connection_mock.send.side_effect = self.httpapi_connection_send
 
-            self.connection.send_request = mock.Mock()
-            self.connection.send_request.side_effect = self.request_handler
+            self.http_api = FakeZyxelHttpApiPlugin(http_api_connection_mock)
+            self.http_api.send_request_orig = self.http_api.send_request
+            self.http_api.send_request = mock.Mock()
+            self.http_api.send_request.side_effect = self.http_api.send_request_orig
+
+            self.connection = mock.Mock()
+            self.connection.send_request = self.http_api.send_request
+            self.connection.dal_get.side_effect = self.http_api.dal_get
+
+            self.setUpGetConnectionMock(
+                self.connection,
+                "ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.ansible_utils.get_connection",
+            )
+            self.setUpGetConnectionMock(
+                self.connection,
+                "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.cfg.base.get_resource_connection",
+            )
+            self.setUpGetConnectionMock(
+                self.connection,
+                "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.facts.facts.get_resource_connection",
+            )
+            self.setUpGetConnectionMock(
+                self.connection,
+                "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.resource_module_base.get_resource_connection",
+            )
 
             self.connection_calls = []
 
@@ -49,14 +74,33 @@ class ZyxelModuleTestCase(ModuleTestCase):
             )
             self.mock_socket_path.start()
 
+    def setUpGetConnectionMock(self, connection_mock, target):
+        mock_get_connection = mock.patch(target)
+        get_connection = mock_get_connection.start()
+        get_connection.return_value = connection_mock
+
+        self.addCleanup(get_connection.stop)
+
     def tearDown(self):
         super().tearDown()
 
         if self.connection_type == "httpapi":
-            self.mock_get_connection.stop()
             self.mock_socket_path.stop()
 
-    def request_handler(self, data, **kwargs):
+    def httpapi_connection_send(self, path, data, **kwargs):
+        # data = args[0]
+        logger.debug(
+            "request_handler, preparing mock data for: path=%s, kwargs=%s", path, kwargs
+        )
+
+        mocked_call = self.connection_calls[0]
+        response_data = mocked_call.get("body")
+        response_code = mocked_call.get("status")
+        http_response = mocked_response(response=response_data, status=response_code)
+
+        return http_response, http_response
+
+    def get_connection_send_request(self, data, **kwargs):
         # data = args[0]
         logger.debug("request_handler, preparing mock data for: kwargs=%s", kwargs)
 
@@ -125,9 +169,9 @@ class ZyxelModuleTestCase(ModuleTestCase):
         return result.exception.args[0]
 
 
-class FakeZyxelHttpApiPlugin(object):
-    def __init__(self, conn):
-        super().__init__(conn)
+class FakeZyxelHttpApiPlugin(HttpApi):
+    def __init__(self, connection):
+        super().__init__(connection)
         self.hostvars = {"use_ssl": True, "host": "router.test"}
 
     def get_option(self, var):

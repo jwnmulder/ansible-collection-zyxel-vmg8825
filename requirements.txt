@@ -5,3 +5,4 @@ ansible==4.6.0
 # build
 # tox
 # tox-ansible
+pytest

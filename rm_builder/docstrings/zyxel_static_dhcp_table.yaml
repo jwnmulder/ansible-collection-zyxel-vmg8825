@@ -1,4 +1,4 @@
-module: zyxel_static8825_dhcp_table
+module: zyxel_vmg8825_static_dhcp_table
 short_description: 'Manages <xxxx> attributes of <network_os> <resource>.'
 description: 'Manages <xxxx> attributes of <network_os> <resource>'
 version_added: 2.10
@@ -41,4 +41,5 @@ options:
     - replaced
     - overridden
     - deleted
+    - gathered
     default: merged

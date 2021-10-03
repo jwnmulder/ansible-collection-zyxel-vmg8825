@@ -1,0 +1,20 @@
+---
+- debug: msg="START common/facts on connection={{ ansible_connection }}"
+
+- name: zyxel_vmg8825_facts
+  zyxel_vmg8825_facts:
+    gather_subset:
+      - '!all'
+      - '!min'
+    gather_network_resources:
+      - static_dhcp_table
+  register: result
+
+- assert:
+    that:
+      - "result.changed == false"
+      - "result.ansible_facts.ansible_net_gather_network_resources[0] == 'static_dhcp_table'"
+      - "result.ansible_facts.ansible_network_resources.static_dhcp_table is defined"
+      # - "result.ansible_facts.ansible_network_resources.static_dhcp_table[0].BrWan is defined"
+
+- debug: msg="END common/facts on connection={{ ansible_connection }}"
