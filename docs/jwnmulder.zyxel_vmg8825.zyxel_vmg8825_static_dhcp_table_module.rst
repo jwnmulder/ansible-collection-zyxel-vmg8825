@@ -8,7 +8,7 @@ jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_table
 **Manages <xxxx> attributes of <network_os> <resource>.**
 
 
-Version added: 2.1
+Version added: 2.10
 
 .. contents::
    :local:

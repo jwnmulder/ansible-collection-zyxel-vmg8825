@@ -57,8 +57,8 @@ EXAMPLES = """
 # Collect only the static_dhcp_table facts
 - zyxel_vmg8825_facts:
     gather_subset:
-      - !all
-      - !min
+      - "!all"
+      - "!min"
     gather_network_resources:
       - static_dhcp_table
 
