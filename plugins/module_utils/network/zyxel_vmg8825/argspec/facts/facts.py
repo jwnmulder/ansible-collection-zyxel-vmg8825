@@ -19,6 +19,7 @@ class FactsArgs:  # pylint: disable=R0903
     choices = [
         "all",
         "static_dhcp",
+        "static_dhcp_table",
     ]
 
     argument_spec = {

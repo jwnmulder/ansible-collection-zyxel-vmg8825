@@ -66,6 +66,6 @@ repos:
         files: ^(plugins|tests)/.+\.py$
 
   - repo: https://github.com/ansible-network/collection_prep
-    rev: d6cb3dca5bf3d29a416c5271893ac4d34dcf6b36 # master pre 0.9.4
+    rev: 0.9.4
     hooks:
       - id: update-docs

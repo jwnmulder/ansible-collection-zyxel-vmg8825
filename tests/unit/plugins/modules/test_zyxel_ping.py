@@ -34,7 +34,7 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
             result["changed"]
         )  # self.assertEquals(result["response"]["result"], "ZCFG_SUCCESS")
         # self.assertIsNotNone(result["response"]["Object"])
-        self.assertEquals(result["result"], "ZCFG_SUCCESS")
+        self.assertEqual(result["result"], "ZCFG_SUCCESS")
         self.assertIsNotNone(result["obj"])
 
         args = self.connection.send_request.call_args

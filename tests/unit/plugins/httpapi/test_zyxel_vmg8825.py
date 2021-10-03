@@ -136,7 +136,7 @@ class TestZyxelHttpApi(unittest.TestCase):
 
         # assert that a login session exists
         self.assertIsNotNone(self.zyxel_plugin.connection._auth)
-        self.assertEquals(self.zyxel_plugin._sessionkey, sessionkey)
+        self.assertEqual(self.zyxel_plugin._sessionkey, sessionkey)
 
         self.assertTrue(
             any(

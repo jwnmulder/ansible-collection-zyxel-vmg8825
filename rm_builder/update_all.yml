@@ -11,7 +11,9 @@
         collection_name: "zyxel_vmg8825"
         network_os: "zyxel_vmg8825"
         transport: "httpapi"
-        resource: "{{ item.resource }}"
+        resource: "{{ i.resource }}"
+      loop_control:
+        loop_var: i
       loop:
         - { resource: 'static_dhcp_table' }
 #        - { resource: 'interfaces' }

@@ -14,8 +14,12 @@
         collection_name: "zyxel_vmg8825"
         network_os: "zyxel_vmg8825"
         transport: "httpapi"
-        resource: "{{ item.resource }}"
-        docstring: "{{ playbook_dir }}/docstrings/zyxel_{{ item.resource }}.yaml"
+        resource: "{{ i.resource }}"
+        docstring: "{{ playbook_dir }}/docstrings/zyxel_{{ i.resource }}.yaml"
+        rm:
+          LICENSE: "{{ playbook_dir }}/files/LICENSE"
+      loop_control:
+        loop_var: i
       loop:
         - { resource: 'static_dhcp_table' }
-        - { resource: 'interfaces' }
+        # - { resource: 'interfaces' }
