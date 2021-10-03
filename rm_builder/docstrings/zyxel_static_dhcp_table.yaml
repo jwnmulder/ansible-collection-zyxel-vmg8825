@@ -1,7 +1,7 @@
 module: zyxel_vmg8825_static_dhcp_table
 short_description: 'Manages <xxxx> attributes of <network_os> <resource>.'
 description: 'Manages <xxxx> attributes of <network_os> <resource>'
-version_added: 2.10
+version_added: '2.10'
 author: Jan-Willem Mulder (@jwnmulder)
 notes:
   - 'Tested against <network_os> <version>'
