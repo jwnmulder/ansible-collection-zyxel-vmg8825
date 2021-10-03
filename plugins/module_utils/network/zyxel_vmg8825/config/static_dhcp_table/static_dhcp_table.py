@@ -50,9 +50,9 @@ class Static_dhcp_table(ResourceModule):
         :rtype: A dictionary
         :returns: The result from module execution
         """
-        if self.state not in ["parsed", "gathered"]:
-            self.generate_commands()
-            self.run_commands()
+        # if self.state not in ["parsed", "gathered"]:
+        # self.generate_commands()
+        # self.run_commands()
         return self.result
 
     def generate_commands(self):

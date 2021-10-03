@@ -50,7 +50,7 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
             },
         )
 
-        result = self._run_module(self.module, {})
+        result = self._run_module(self.module, {"state": "gathered"})
 
         self.assertFalse(result["changed"])
         self.assertIsNotNone(result["gathered"])
@@ -90,7 +90,7 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         )
 
         # get current config
-        result = self._run_module(self.module, {})
+        result = self._run_module(self.module, {"state": "gathered"})
 
         data = result["gathered"]
 
