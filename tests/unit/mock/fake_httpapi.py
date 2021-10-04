@@ -26,14 +26,14 @@ class Connection(object):
         self.httpapi = None
         # HttpApiBase
 
-    def get_option(self, var):
+    def get_option(self, option):
         if self.httpapi:
-            return self.httpapi.get_option(var)
+            return self.httpapi.get_option(option)
 
-        return self.hostvars.get(var)
+        return self.hostvars.get(option)
 
-    def set_option(self, var, val):
-        self.hostvars[var] = val
+    def set_option(self, option, value):
+        self.hostvars[option] = value
 
     @property
     def _url(self):
