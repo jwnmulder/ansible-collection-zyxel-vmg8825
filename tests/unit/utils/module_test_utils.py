@@ -174,11 +174,11 @@ class FakeZyxelHttpApiPlugin(HttpApi):
         super().__init__(connection)
         self.hostvars = {"use_ssl": True, "host": "router.test"}
 
-    def get_option(self, var):
-        return self.hostvars.get(var)
+    def get_option(self, option):
+        return self.hostvars.get(option)
 
-    def set_option(self, var, val):
-        self.hostvars[var] = val
+    def set_option(self, option, value):
+        self.hostvars[option] = value
 
 
 class PropertyMock(mock.Mock):
