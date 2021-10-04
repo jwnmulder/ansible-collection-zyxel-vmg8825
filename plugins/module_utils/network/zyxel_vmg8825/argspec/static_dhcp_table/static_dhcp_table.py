@@ -42,6 +42,7 @@ class Static_dhcp_tableArgs(object):  # pylint: disable=R0903
                 "ip_addr": {"type": "str"},
             },
         },
+        "running_config": {"type": "str"},
         "state": {
             "type": "str",
             "choices": ["merged", "replaced", "overridden", "deleted", "gathered"],

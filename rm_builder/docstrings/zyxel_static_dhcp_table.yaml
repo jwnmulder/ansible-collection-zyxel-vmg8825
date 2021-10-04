@@ -1,10 +1,10 @@
 module: zyxel_vmg8825_static_dhcp_table
-short_description: 'Manages <xxxx> attributes of <network_os> <resource>.'
-description: 'Manages <xxxx> attributes of <network_os> <resource>'
-version_added: '2.10'
+short_description: 'Manages static_dhcp entries of zyxel_vmg8825'
+description: 'Manages static_dhcp entries of zyxel_vmg8825'
+version_added: '1.0.0'
 author: Jan-Willem Mulder (@jwnmulder)
 notes:
-  - 'Tested against <network_os> <version>'
+  - 'Tested against Zyxel VMG8825'
 options:
   config:
     description: The provided configuration
@@ -32,6 +32,15 @@ options:
         description:
         - IPAddr
         type: str
+  running_config:
+    description:
+    - This option is used only with state I(parsed).
+    #- The value of this option should be the output received from the EOS device by
+    #  executing the command B(show running-config | section ospfv3).
+    - The state I(parsed) reads the configuration from C(running_config) option and
+      transforms it into Ansible structured data as per the resource module's argspec
+      and the value is then returned in the I(parsed) key within the result.
+    type: str
   state:
     description:
     - The state the configuration should be left in
