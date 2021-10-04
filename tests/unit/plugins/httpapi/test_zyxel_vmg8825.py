@@ -9,7 +9,6 @@ import logging
 import pytest
 
 from ansible_collections.ansible.netcommon.tests.unit.compat import mock, unittest
-from ansible.errors import AnsibleConnectionFailure
 from ansible.module_utils.connection import ConnectionError
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825 import (
     HttpApi,
@@ -52,7 +51,7 @@ class TestZyxelHttpApi(unittest.TestCase):
 
     def test_login_raises_exception_when_username_and_password_are_not_provided(self):
 
-        with self.assertRaises(AnsibleConnectionFailure) as res:
+        with self.assertRaises(ValueError) as res:
             self.zyxel_plugin.login(None, None)
 
         assert "Please provide username/password to login" in str(res.exception)
