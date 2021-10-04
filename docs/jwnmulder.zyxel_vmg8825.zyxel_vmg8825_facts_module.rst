@@ -39,11 +39,15 @@ Parameters
                     <b>gather_network_resources</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">-</span>
+                        <span style="color: purple">list</span>
+                         / <span style="color: purple">elements=string</span>
                     </div>
-                    <div style="font-style: italic; font-size: small; color: darkgreen">added in 2.9</div>
                 </td>
                 <td>
+                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
+                                    <li>all</li>
+                                    <li>static_dhcp_table</li>
+                        </ul>
                 </td>
                 <td>
                         <div>When supplied, this argument will restrict the facts collected to a given subset. Possible values for this argument include all and the resources like interfaces, vlans etc. Can specify a list of values to include a larger subset. Values can also be used with an initial <code><span class='module'>!</span></code> to specify that a specific subset should not be collected.</div>
@@ -55,9 +59,9 @@ Parameters
                     <b>gather_subset</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">-</span>
+                        <span style="color: purple">list</span>
+                         / <span style="color: purple">elements=string</span>
                     </div>
-                    <div style="font-style: italic; font-size: small; color: darkgreen">added in 2.2</div>
                 </td>
                 <td>
                         <b>Default:</b><br/><div style="color: blue">"all"</div>

@@ -34,8 +34,10 @@ options:
         with an initial C(M(!)) to specify that a specific subset should
         not be collected.
     required: false
+    type: list
+    elements: str
     default: 'all'
-    version_added: "2.2"
+    # default: '!config'
   gather_network_resources:
     description:
       - When supplied, this argument will restrict the facts collected
@@ -45,7 +47,11 @@ options:
         can also be used with an initial C(M(!)) to specify that a
         specific subset should not be collected.
     required: false
-    version_added: "2.9"
+    type: list
+    elements: str
+    choices:
+      - all
+      - static_dhcp_table
 """
 
 EXAMPLES = """

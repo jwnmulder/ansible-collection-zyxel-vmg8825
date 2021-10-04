@@ -14,12 +14,12 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 module: zyxel_vmg8825_static_dhcp_table
-short_description: 'Manages <xxxx> attributes of <network_os> <resource>.'
-description: 'Manages <xxxx> attributes of <network_os> <resource>'
-version_added: '2.10'
+short_description: 'Manages static_dhcp entries of zyxel_vmg8825'
+description: 'Manages static_dhcp entries of zyxel_vmg8825'
+version_added: '1.0.0'
 author: Jan-Willem Mulder (@jwnmulder)
 notes:
-  - 'Tested against <network_os> <version>'
+  - 'Tested against Zyxel VMG8825'
 options:
   config:
     description: The provided configuration
@@ -47,6 +47,15 @@ options:
         description:
         - IPAddr
         type: str
+  running_config:
+    description:
+    - This option is used only with state I(parsed).
+    #- The value of this option should be the output received from the EOS device by
+    #  executing the command B(show running-config | section ospfv3).
+    - The state I(parsed) reads the configuration from C(running_config) option and
+      transforms it into Ansible structured data as per the resource module's argspec
+      and the value is then returned in the I(parsed) key within the result.
+    type: str
   state:
     description:
     - The state the configuration should be left in
@@ -67,7 +76,7 @@ EXAMPLES = """
 RETURN = """
 before:
   description: The configuration prior to the module execution.
-  returned: when state is I(merged), I(replaced), I(overridden), I(deleted) or I(purged)
+  returned: when I(state) is C(merged), C(replaced), C(overridden), C(deleted) or C(purged)
   type: dict
   sample: >
     This output will always be in the same format as the
@@ -81,7 +90,7 @@ after:
     module argspec.
 commands:
   description: The set of commands pushed to the remote device.
-  returned: when state is I(merged), I(replaced), I(overridden), I(deleted) or I(purged)
+  returned: when I(state) is C(merged), C(replaced), C(overridden), C(deleted) or C(purged)
   type: list
   sample:
     - sample command 1
@@ -89,7 +98,7 @@ commands:
     - sample command 3
 rendered:
   description: The provided configuration in the task rendered in device-native format (offline).
-  returned: when state is I(rendered)
+  returned: when I(state) is C(rendered)
   type: list
   sample:
     - sample command 1
@@ -97,14 +106,14 @@ rendered:
     - sample command 3
 gathered:
   description: Facts about the network resource gathered from the remote device as structured data.
-  returned: when state is I(gathered)
+  returned: when I(state) is C(gathered)
   type: list
   sample: >
     This output will always be in the same format as the
     module argspec.
 parsed:
   description: The device native config provided in I(running_config) option parsed into structured data as per module argspec.
-  returned: when state is I(parsed)
+  returned: when I(state) is C(parsed)
   type: list
   sample: >
     This output will always be in the same format as the

@@ -7,11 +7,15 @@
     - include_role:
         name: ansible_network.cli_rm_builder.run
       vars:
+        copyright: "Copyright {{ ansible_date_time.year }}"
+        version_added: "1.0.0"
         collection_org: "jwnmulder"
         collection_name: "zyxel_vmg8825"
         network_os: "zyxel_vmg8825"
         transport: "httpapi"
         resource: "{{ i.resource }}"
+        rm:
+          LICENSE: "{{ playbook_dir }}/files/LICENSE"
       loop_control:
         loop_var: i
       loop:
