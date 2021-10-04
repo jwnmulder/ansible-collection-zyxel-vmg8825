@@ -22,6 +22,6 @@ class FactsArgs:  # pylint: disable=R0903
     ]
 
     argument_spec = {
-        "gather_subset": dict(default=["all"], type="list", elements="str"),
+        "gather_subset": dict(default=["min"], type="list", elements="str"),
         "gather_network_resources": dict(choices=choices, type="list", elements="str"),
     }

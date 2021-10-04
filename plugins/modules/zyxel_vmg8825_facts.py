@@ -36,8 +36,7 @@ options:
     required: false
     type: list
     elements: str
-    default: 'all'
-    # default: '!config'
+    default: 'min'
   gather_network_resources:
     description:
       - When supplied, this argument will restrict the facts collected
@@ -102,8 +101,8 @@ def main():
         argument_spec=FactsArgs.argument_spec, supports_check_mode=True
     )
     warnings = [
-        "default value for `gather_subset` "
-        "will be changed to `min` from `!config` v2.11 onwards"
+        # "default value for `gather_subset` "
+        # "will be changed to `min` from `!config` v2.11 onwards"
     ]
 
     result = Facts(module).get_facts()
