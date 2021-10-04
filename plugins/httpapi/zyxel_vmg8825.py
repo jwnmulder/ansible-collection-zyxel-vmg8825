@@ -33,7 +33,6 @@ import logging
 import time
 import os
 
-from ansible.errors import AnsibleConnectionFailure
 from ansible.module_utils._text import to_text
 from ansible.module_utils.connection import ConnectionError
 
@@ -109,7 +108,7 @@ class HttpApi(HttpApiBase):
 
         """Call a defined login endpoint to receive an authentication token."""
         if username is None or password is None:
-            raise AnsibleConnectionFailure("Please provide username/password to login")
+            raise ValueError("Please provide username/password to login")
 
         logger.debug(f"login with username '{ username }' and password")
 
