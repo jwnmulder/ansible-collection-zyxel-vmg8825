@@ -2,6 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
+
 from ansible_collections.ansible.netcommon.tests.unit.compat import mock
 from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     AnsibleExitJson,
@@ -10,8 +11,8 @@ from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
 )
 from ansible.module_utils import basic
 
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825 import (
-    HttpApi,
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils import (
+    zyxel_vmg8825_requests,
 )
 
 import httpretty
@@ -169,16 +170,21 @@ class ZyxelModuleTestCase(ModuleTestCase):
         return result.exception.args[0]
 
 
-class FakeZyxelHttpApiPlugin(HttpApi):
+class FakeZyxelHttpApiPlugin(zyxel_vmg8825_requests.ZyxelHttpApiRequests):
     def __init__(self, connection):
-        super().__init__(connection)
+        super().__init__(self)
         self.hostvars = {"use_ssl": True, "host": "router.test"}
+        self.connection = connection
+        self._sessionkey = None
 
     def get_option(self, option):
         return self.hostvars.get(option)
 
     def set_option(self, option, value):
         self.hostvars[option] = value
+
+    def _display(self, http_method, title, msg=""):
+        pass
 
 
 class PropertyMock(mock.Mock):

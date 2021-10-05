@@ -33,16 +33,16 @@ import logging
 import time
 import os
 
-from ansible.module_utils._text import to_text
 from ansible.module_utils.connection import ConnectionError
 
-# pylint: disable-all
-# pyright: reportMissingImports=false
-from ansible.module_utils.six.moves.urllib.error import HTTPError
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
     to_list,
 )
 from ansible.plugins.httpapi import HttpApiBase
+
+from ..module_utils.network.zyxel_vmg8825.utils.zyxel_vmg8825_requests import (
+    ZyxelHttpApiRequests,
+)
 
 OPTIONS = {
     "format": ["text", "json"],
@@ -78,6 +78,9 @@ logger.addHandler(RequestsHandler())
 class HttpApi(HttpApiBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        self.requests = ZyxelHttpApiRequests(self)
+
         # self._device_info = None
         # self._session_support = None
         self._log = None
@@ -90,16 +93,16 @@ class HttpApi(HttpApiBase):
         # update_auth is not invoked when an HTTPError occurs
         response_data = json.loads(response_text.getvalue())
 
-        logger.debug(f"update_auth - response_data={response_data}")
+        logger.debug("update_auth - response_data=%s", response_data)
 
         # if 'result' in response and response['result'] == 'ZCFG_SUCCESS':
         if "sessionkey" in response_data:
             self._sessionkey = response_data["sessionkey"]
-            logger.debug(f"update_auth - sessiokey={self._sessionkey}")
+            logger.debug("update_auth - sessiokey=%s", self._sessionkey)
 
         cookie = response.info().get("Set-Cookie")
         if cookie:
-            logger.debug(f"update_auth - cookie={cookie}")
+            logger.debug("update_auth - cookie=%s", cookie)
             return {"Cookie": cookie}
 
         return None
@@ -110,7 +113,7 @@ class HttpApi(HttpApiBase):
         if username is None or password is None:
             raise ValueError("Please provide username/password to login")
 
-        logger.debug(f"login with username '{ username }' and password")
+        logger.debug("login with username '%s' and password", username)
 
         login_path = "/UserLogin"
         data = {
@@ -124,11 +127,11 @@ class HttpApi(HttpApiBase):
         # zyxel_response = self._process_http_response(http_response)
 
         # response = self.send_request(data, path=login_path)
-        logger.debug(f"login/data: {data}")
+        logger.debug("login/data: %s", data)
         response_data, response_code = self.send_request(
             data=data, path=login_path, method="POST"
         )
-        logger.debug(f"login/response: {response_code, response_data}")
+        logger.debug("login/response: %s, %s", response_code, response_data)
 
         # try:
         # This is still sent as an HTTP header, so we can set our connection's _auth
@@ -163,7 +166,7 @@ class HttpApi(HttpApiBase):
                     method="POST",
                 )
             except Exception as e:
-                logger.debug(f"logout error: {e}")
+                logger.debug("logout error: %s", e)
 
         self._sessionkey = None
         self.connection._auth = None
@@ -187,103 +190,13 @@ class HttpApi(HttpApiBase):
     #     return self._session_support
 
     def send_request(self, data, **message_kwargs):
-        # Fixed headers for requests
-        headers = {"Content-Type": "application/json"}
-        path = message_kwargs.get("path", "/")
-        method = message_kwargs.get("method", "GET")
+        return self.requests.send_request(data, **message_kwargs)
 
-        if isinstance(data, dict):
-            data = json.dumps(data)
-
-        logger.debug(f"send_request: {method, path, data}")
-
-        self._display(method, "send_request/oid")
-
-        try:
-            # https://github.com/ansible-collections/ansible.netcommon/blob/main/plugins/connection/httpapi.py
-            response, response_data = self.connection.send(
-                path, data, method=method, headers=headers
-            )
-        except HTTPError as exc:
-            response = exc
-            response_data = exc
-            return handle_response(method, path, response, response_data)
-
-        # # return response.status, to_text(response_data.getvalue())
-        # except Exception as err:
-        #     log(f"3, {err}")
-        #     log(traceback.format_exc())
-        #     raise Exception(err)
-
-        # handle_response (defined separately) will take the format returned by the device
-        # and transform it into something more suitable for use by modules.
-        # This may be JSON text to Python dictionaries, for example.
-        return handle_response(method, path, response, response_data)
-
-        # data = to_list(data)
-        # become = self._become
-        # if become:
-        #     self.connection.queue_message("vvvv", "firing event: on_become")
-        #     data.insert(0, {"cmd": "enable", "input": self._become_pass})
-
-        # output = message_kwargs.get("output") or "text"
-        # request = request_builder(data, output)
-        # headers = {"Content-Type": "application/json-rpc"}
-
-        # _response, response_data = self.connection.send(
-        #     "/command-api", request, headers=headers, method="POST"
-        # )
-
-        # try:
-        #     response_data = json.loads(to_text(response_data.getvalue()))
-        # except ValueError:
-        #     raise ConnectionError(
-        #         "Response was not valid JSON, got {0}".format(
-        #             to_text(response_data.getvalue())
-        #         )
-        #     )
-
-        # results = handle_response(response_data)
-
-        # if become:
-        #     results = results[1:]
-        # if len(results) == 1:
-        #     results = results[0]
-
-        # return results
-
-    def send_dal__request(self, data, **message_kwargs):
-        oid = message_kwargs.get("oid")
-        oid_index = message_kwargs.get("oid_index")
-
-        if oid:
-            path = f"/cgi-bin/DAL?oid={oid}"
-            if self._sessionkey:
-                path += f"&sessionkey={self._sessionkey}"
-            if oid_index:
-                path += f"&Index={oid_index}"
-
-        return self.send_request(data, path=path, **message_kwargs)
+    def send_dal_request(self, data, **message_kwargs):
+        return self.requests.send_dal_request(data, **message_kwargs)
 
     def handle_httperror(self, exc):
-
-        # Delegate to super().handle_httperror() for 401?
-
-        # is_auth_related_code = exc.code == TOKEN_EXPIRATION_STATUS_CODE or exc.code == UNAUTHORIZED_STATUS_CODE
-        # if not self._ignore_http_errors and is_auth_related_code:
-        #     self.connection._auth = None
-        #     self.login(self.connection.get_option('remote_user'), self.connection.get_option('password'))
-        #     return True
-        # False means that the exception will be passed further to the caller
-
-        logger.warning(exc)
-
-        # just ignore HTTPErrors if they contain json data
-        content_type = exc.headers.get("Content-Type")
-        if content_type != "application/json":
-            return exc
-
-        return False
+        return self.requests.handle_httperror(exc)
 
     def _display(self, http_method, title, msg=""):
         pass
@@ -314,29 +227,16 @@ class HttpApi(HttpApiBase):
         # return self._device_info
 
     def dal_get(self, oid):
-        response_data, response_code = self.send_dal__request(
-            oid=oid, method="GET", data=None
-        )
-        data = response_data["Object"]
-        return data
+        return self.requests.dal_get(oid)
 
     def dal_put(self, oid, data):
-        response_data, response_code = self.send_dal__request(
-            oid=oid, method="PUT", data=data
-        )
-        return response_data
+        return self.requests.dal_put(oid, data)
 
     def dal_post(self, oid, data):
-        response_data, response_code = self.send_dal__request(
-            oid=oid, method="POST", data=data
-        )
-        return response_data
+        return self.requests.dal_post(oid, data)
 
     def dal_delete(self, oid, index):
-        response_data, response_code = self.send_dal__request(
-            oid=oid, method="POST", oid_index=index
-        )
-        return response_data
+        return self.requests.dal_delete(oid, index)
 
     def get_device_operations(self):
         return {
@@ -390,40 +290,3 @@ class HttpApi(HttpApiBase):
             raise
 
         return [resp for resp in to_list(responses) if resp != "{}"]
-
-
-def handle_response(method, path, response, response_data):
-
-    content_type = response.headers.get("Content-Type")
-    if content_type != "application/json":
-        raise ValueError(f"Expected application/json content-type, got {content_type}")
-
-    # log("4")
-    # try:
-    #     response_content = json.loads(to_text(response_data.read()))
-    #     log("5")
-    # except ValueError:
-    #     raise ConnectionError(
-    #         "Response was not valid JSON, got {0}".format(
-    #             to_text(response_content.getvalue())
-    #         )
-    #     )
-    response_data = response_data.read()
-    response_data = json.loads(response_data)
-
-    logger.debug(f"handle_response: {method, path, response_data}")
-
-    if isinstance(response, HTTPError):
-        if response_data:
-            if "errors" in response_data:
-                errors = response_data["errors"]["error"]
-                error_text = "\n".join((error["error-message"] for error in errors))
-            else:
-                error_text = response_data
-
-            logger.debug("A: %s", response_data)
-            raise ConnectionError(error_text, code=response.code)
-        logger.debug("B")
-        raise ConnectionError(to_text(response), code=response.code)
-
-    return response_data, response.code
