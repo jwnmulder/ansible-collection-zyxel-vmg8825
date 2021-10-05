@@ -31,12 +31,12 @@ jobs:
       - name: add /root/.local/bin to PATH
         run: echo "${HOME}/.local/bin" >> $GITHUB_PATH
 
-      # - name: Cache venv
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: |
-      #       ansible_collections/jwnmulder/zyxel_vmg8825/.venv
-      #     key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/requirements*.txt') }}
+      - name: Cache venv
+        uses: actions/cache@v2
+        with:
+          path: |
+            ansible_collections/jwnmulder/zyxel_vmg8825/.venv
+          key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/requirements*.txt') }}
 
       # - name: Cache ansible collections
       #   uses: actions/cache@v2
@@ -97,12 +97,12 @@ jobs:
       - name: add /root/.local/bin to PATH
         run: echo "${HOME}/.local/bin" >> $GITHUB_PATH
 
-      # - name: Cache venv
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: |
-      #       ansible_collections/jwnmulder/zyxel_vmg8825/.venv
-      #     key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/requirements*.txt') }}
+      - name: Cache venv
+        uses: actions/cache@v2
+        with:
+          path: |
+            ansible_collections/jwnmulder/zyxel_vmg8825/.venv
+          key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/requirements*.txt') }}
 
       # - name: Cache ansible collections
       #   uses: actions/cache@v2
