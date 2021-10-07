@@ -43,9 +43,10 @@ class ZyxelModuleTestCase(ModuleTestCase):
             self.http_api.send_request = mock.Mock()
             self.http_api.send_request.side_effect = self.http_api.send_request_orig
 
-            self.connection = mock.Mock()
+            self.connection = mock.Mock(
+                spec_set=FakeZyxelHttpApiPlugin, wraps=self.http_api
+            )
             self.connection.send_request = self.http_api.send_request
-            self.connection.dal_get.side_effect = self.http_api.dal_get
 
             self.setUpGetConnectionMock(
                 self.connection,

@@ -16,9 +16,9 @@ based on the configuration.
 
 
 # from ansible.module_utils.six import iteritems
-# from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
-#     utils,
-# )
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
+    utils,
+)
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.static_dhcp_table.static_dhcp_table import (
     Static_dhcp_tableArgs,
 )
@@ -41,34 +41,32 @@ class Static_dhcp_tableFacts(object):
         :rtype: dictionary
         :returns: facts
         """
-        facts = {}
-        # objs = []
 
         if not data:
-            # data = connection.get()
-            # data = connection.get_device_info()
             data = connection.dal_get(oid="static_dhcp")
-            data = list(
-                map(
-                    lambda s: {
-                        "index": s.get("Index"),
-                        "br_wan": s.get("BrWan"),
-                        "enable": s.get("Enable"),
-                        "mac_addr": s.get("MACAddr"),
-                        "ip_addr": s.get("IPAddr"),
-                    },
-                    data,
-                )
-            )
 
-        # parse native config using the Static_dhcp_table template
-        # objs = []
+        objs = list(
+            map(
+                lambda s: {
+                    "index": s.get("Index"),
+                    "br_wan": s.get("BrWan"),
+                    "enable": s.get("Enable"),
+                    "mac_addr": s.get("MACAddr"),
+                    "ip_addr": s.get("IPAddr"),
+                },
+                data,
+            )
+        )
+
         ansible_facts["ansible_network_resources"].pop("static_dhcp_table", None)
 
-        params = {"config": data}
+        facts = {}
+        if objs:
+            facts["static_dhcp_table"] = []
+            params = utils.validate_config(self.argument_spec, {"config": objs})
+            for entry in params["config"]:
+                facts["static_dhcp_table"].append(utils.remove_empties(entry))
 
-        facts["static_dhcp_table"] = params["config"]
-        facts["static_dhcp_table"] = data
         ansible_facts["ansible_network_resources"].update(facts)
 
         return ansible_facts
