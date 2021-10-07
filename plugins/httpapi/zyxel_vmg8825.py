@@ -30,14 +30,8 @@ options:
 import base64
 import json
 import logging
-import time
 import os
 
-from ansible.module_utils.connection import ConnectionError
-
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
-    to_list,
-)
 from ansible.plugins.httpapi import HttpApiBase
 
 from ..module_utils.network.zyxel_vmg8825.utils.zyxel_vmg8825_requests import (
@@ -271,22 +265,4 @@ class HttpApi(HttpApiBase):
         return self.send_request(data=command, output=output)
 
     def edit_config(self, candidate):
-        # This method is ONLY here to support resource modules. Therefore most
-        # arguments are unsupported and not present.
-
-        session = None
-        if self.supports_sessions():
-            session = "ansible_%d" % int(time.time())
-            candidate = ["configure session %s" % session] + candidate
-        else:
-            candidate = ["configure"] + candidate
-        candidate.append("commit")
-
-        try:
-            responses = self.send_request(candidate)
-        except ConnectionError:
-            if session:
-                self.send_request(["configure session %s" % session, "abort"])
-            raise
-
-        return [resp for resp in to_list(responses) if resp != "{}"]
+        return self.requests.edit_config(candidate)

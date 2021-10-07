@@ -8,6 +8,12 @@ import json
 import logging
 import os
 
+# import time
+
+# from ansible_collections.ansible.utils.plugins.module_utils.common.utils import (
+#     to_list,
+# )
+
 from ansible.module_utils._text import to_text
 from ansible.module_utils.connection import ConnectionError
 
@@ -165,6 +171,28 @@ class ZyxelHttpApiRequests(object):
             oid=oid, method="POST", oid_index=index
         )
         return response_data
+
+    def edit_config(self, candidate):
+        # This method is ONLY here to support resource modules. Therefore most
+        # arguments are unsupported and not present.
+        logger.info("edit_config, candidate=%s", candidate)
+
+        # session = None
+        # if self.supports_sessions():
+        #     session = "ansible_%d" % int(time.time())
+        #     candidate = ["configure session %s" % session] + candidate
+        # else:
+        #     candidate = ["configure"] + candidate
+        # candidate.append("commit")
+
+        # try:
+        #     responses = self.send_request(candidate)
+        # except ConnectionError:
+        #     if session:
+        #         self.send_request(["configure session %s" % session, "abort"])
+        #     raise
+
+        # return [resp for resp in to_list(responses) if resp != "{}"]
 
 
 def handle_response(method, path, response, response_data):

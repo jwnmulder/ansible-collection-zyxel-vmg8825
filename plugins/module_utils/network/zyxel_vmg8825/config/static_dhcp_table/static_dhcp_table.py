@@ -18,10 +18,11 @@ created.
 """
 
 
-from ansible.module_utils.six import iteritems
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
-    dict_merge,
-)
+# from ansible.module_utils.six import iteritems
+
+# from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
+#     dict_merge,
+# )
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.resource_module import (
     ResourceModule,
 )
@@ -50,35 +51,39 @@ class Static_dhcp_table(ResourceModule):
         :rtype: A dictionary
         :returns: The result from module execution
         """
-        # if self.state not in ["parsed", "gathered"]:
-        # self.generate_commands()
-        # self.run_commands()
+        # print("XXX - execute_module")
+        if self.state not in ["parsed", "gathered"]:
+            self.generate_commands()
+            self.run_commands()
         return self.result
 
     def generate_commands(self):
         """Generate configuration commands to send based on
         want, have and desired state.
         """
-        wantd = {entry["name"]: entry for entry in self.want}
-        haved = {entry["name"]: entry for entry in self.have}
+        # print("XXX - generate_commands")
+        # self.commands.append("test command")
 
-        # if state is merged, merge want onto have and then compare
-        if self.state == "merged":
-            wantd = dict_merge(haved, wantd)
+        # wantd = {entry["name"]: entry for entry in self.want}
+        # haved = {entry["name"]: entry for entry in self.have}
 
-        # if state is deleted, empty out wantd and set haved to wantd
-        if self.state == "deleted":
-            haved = {k: v for k, v in iteritems(haved) if k in wantd or not wantd}
-            wantd = {}
+        # # if state is merged, merge want onto have and then compare
+        # if self.state == "merged":
+        #     wantd = dict_merge(haved, wantd)
 
-        # remove superfluous config for overridden and deleted
-        if self.state in ["overridden", "deleted"]:
-            for k, have in iteritems(haved):
-                if k not in wantd:
-                    self._compare(want={}, have=have)
+        # # if state is deleted, empty out wantd and set haved to wantd
+        # if self.state == "deleted":
+        #     haved = {k: v for k, v in iteritems(haved) if k in wantd or not wantd}
+        #     wantd = {}
 
-        for k, want in iteritems(wantd):
-            self._compare(want=want, have=haved.pop(k, {}))
+        # # remove superfluous config for overridden and deleted
+        # if self.state in ["overridden", "deleted"]:
+        #     for k, have in iteritems(haved):
+        #         if k not in wantd:
+        #             self._compare(want={}, have=have)
+
+        # for k, want in iteritems(wantd):
+        #     self._compare(want=want, have=haved.pop(k, {}))
 
     def _compare(self, want, have):
         """Leverages the base class `compare()` method and
@@ -86,4 +91,5 @@ class Static_dhcp_table(ResourceModule):
         the `want` and `have` data with the `parsers` defined
         for the Static_dhcp_table network resource.
         """
+        # print("XXX - compare")
         self.compare(parsers=self.parsers, want=want, have=have)
