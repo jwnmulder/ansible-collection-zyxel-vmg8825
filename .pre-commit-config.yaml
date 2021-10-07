@@ -57,7 +57,7 @@ repos:
           - pycodestyle==2.7.0  # renovate: datasource=pypi
           - pyflakes==2.3.1     # renovate: datasource=pypi
           # - flake8-docstrings==1.6.0
-          - pydocstyle==6.0.0   # renovate: datasource=pypi
+          - pydocstyle==6.1.1   # renovate: datasource=pypi
           # - flake8-comprehensions==3.4.0
           - flake8-noqa==1.1.0  # renovate: datasource=pypi
         args:
