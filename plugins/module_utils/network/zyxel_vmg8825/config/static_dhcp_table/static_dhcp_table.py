@@ -7,6 +7,15 @@
 
 from __future__ import absolute_import, division, print_function
 
+from ansible.module_utils.six import iteritems
+
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
+    dict_merge,
+)
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.rm_templates.static_dhcp_table import (
+    Static_dhcp_tableTemplate,
+)
+
 __metaclass__ = type
 
 """
@@ -17,6 +26,9 @@ necessary to bring the current configuration to its desired end-state is
 created.
 """
 
+import logging
+
+logger = logging.getLogger(__name__)
 
 # from ansible.module_utils.six import iteritems
 
@@ -28,6 +40,9 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.r
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.facts.facts import (
     Facts,
+)
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.rm_templates import (
+    static_dhcp_table,
 )
 
 
@@ -42,8 +57,9 @@ class Static_dhcp_table(ResourceModule):
             facts_module=Facts(module),
             module=module,
             resource="static_dhcp_table",
+            tmplt=Static_dhcp_tableTemplate(),
         )
-        self.parsers = []
+        # self.parsers = ["mac_addr"]
 
     def execute_module(self):
         """Execute the module
@@ -51,7 +67,7 @@ class Static_dhcp_table(ResourceModule):
         :rtype: A dictionary
         :returns: The result from module execution
         """
-        # print("XXX - execute_module")
+        logger.debug("execute_module")
         if self.state not in ["parsed", "gathered"]:
             self.generate_commands()
             self.run_commands()
@@ -61,29 +77,31 @@ class Static_dhcp_table(ResourceModule):
         """Generate configuration commands to send based on
         want, have and desired state.
         """
-        # print("XXX - generate_commands")
-        # self.commands.append("test command")
+        logger.debug("generate_commands")
 
-        # wantd = {entry["name"]: entry for entry in self.want}
-        # haved = {entry["name"]: entry for entry in self.have}
+        # self.commands.append({"oid": "static_dhcp", "method": "GET", "data": None})
+        # return
 
-        # # if state is merged, merge want onto have and then compare
-        # if self.state == "merged":
-        #     wantd = dict_merge(haved, wantd)
+        wantd = {entry["mac_addr"]: entry for entry in self.want}
+        haved = {entry["mac_addr"]: entry for entry in self.have}
 
-        # # if state is deleted, empty out wantd and set haved to wantd
-        # if self.state == "deleted":
-        #     haved = {k: v for k, v in iteritems(haved) if k in wantd or not wantd}
-        #     wantd = {}
+        # if state is merged, merge want onto have and then compare
+        if self.state == "merged":
+            wantd = dict_merge(haved, wantd)
 
-        # # remove superfluous config for overridden and deleted
-        # if self.state in ["overridden", "deleted"]:
-        #     for k, have in iteritems(haved):
-        #         if k not in wantd:
-        #             self._compare(want={}, have=have)
+        # if state is deleted, empty out wantd and set haved to wantd
+        if self.state == "deleted":
+            haved = {k: v for k, v in iteritems(haved) if k in wantd or not wantd}
+            wantd = {}
 
-        # for k, want in iteritems(wantd):
-        #     self._compare(want=want, have=haved.pop(k, {}))
+        # remove superfluous config for overridden and deleted
+        if self.state in ["overridden", "deleted"]:
+            for k, have in iteritems(haved):
+                if k not in wantd:
+                    self._compare(want={}, have=have)
+
+        for k, want in iteritems(wantd):
+            self._compare(want=want, have=haved.pop(k, {}))
 
     def _compare(self, want, have):
         """Leverages the base class `compare()` method and
@@ -91,5 +109,29 @@ class Static_dhcp_table(ResourceModule):
         the `want` and `have` data with the `parsers` defined
         for the Static_dhcp_table network resource.
         """
-        # print("XXX - compare")
-        self.compare(parsers=self.parsers, want=want, have=have)
+        logger.debug("compare, want=%s, have=%s", want, have)
+
+        # if both 'have' and 'want' are set, they have the same PK
+        # if dict values differ, an update is needed
+        if want and have and want != have:
+            self.add_zyxel_dal_command("PUT", static_dhcp_table.to_dal_object(want))
+
+        # if only 'have' is set, delete based on index
+        if not want and have:
+            self.add_zyxel_dal_command("DELETE", oid_index=have["index"])
+
+        # if only 'want' is set, inset new
+        if want and not have:
+            self.add_zyxel_dal_command("POST", static_dhcp_table.to_dal_object(want))
+
+    def add_zyxel_dal_command(self, method, data=None, oid_index=None):
+        request = {
+            "oid": static_dhcp_table.oid(),
+            "method": method,
+            "data": data,
+        }
+
+        if oid_index:
+            request["oid_index"] = oid_index
+
+        self.commands.append(request)

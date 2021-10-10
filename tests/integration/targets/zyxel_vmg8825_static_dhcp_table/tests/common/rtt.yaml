@@ -1,0 +1,52 @@
+---
+- debug:
+    msg: "Start round trip integration tests on connection={{ ansible_connection }}"
+    # round trip test case.
+    # This involves a merge operation,
+    # followed by gather_facts,
+    # a merge update with additional configuration,
+    # and then reverting back to the base configuration using the previously gathered facts with the state set to overridden.
+- block:
+    - name: Ensure test entry is not present
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_table:
+        config: &test_entries
+          - br_wan: Default
+            enable: False
+            # mac_addr: "01:02:03:04:05:06:01"
+            mac_addr: "00:05:cd:24:67:68"
+            ip_addr: 192.168.2.123
+        state: deleted
+
+    - name: Get base config from test device
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_table:
+        state: gathered
+      register: base_config
+
+    - name: Gather static_dhcp facts
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts:
+        gather_subset:
+          - "!all"
+          - "!min"
+        gather_network_resources:
+          - static_dhcp_table
+
+    - name: Apply test configuration (this will be reverted)
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_table:
+        config: *test_entries
+        state: merged
+      register: result
+
+    - name: Assert that changes are applied
+      assert:
+        that:
+          - "result.changed == true"
+
+    - name: Revert back to base configuration
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_table:
+        config: "{{ ansible_facts['network_resources']['static_dhcp_table'] }}"
+        state: overridden
+      register: revert
+
+    - assert:
+        that:
+          - "base_config['gathered'] | symmetric_difference(revert['after']) | length == 0"

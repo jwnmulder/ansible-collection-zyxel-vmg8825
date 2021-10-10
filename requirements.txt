@@ -8,3 +8,4 @@ ansible-lint==5.2.0
 # tox
 # tox-ansible
 pytest
+q

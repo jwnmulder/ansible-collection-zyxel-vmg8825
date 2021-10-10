@@ -10,9 +10,9 @@ import os
 
 # import time
 
-# from ansible_collections.ansible.utils.plugins.module_utils.common.utils import (
-#     to_list,
-# )
+from ansible_collections.ansible.utils.plugins.module_utils.common.utils import (
+    to_list,
+)
 
 from ansible.module_utils._text import to_text
 from ansible.module_utils.connection import ConnectionError
@@ -82,39 +82,8 @@ class ZyxelHttpApiRequests(object):
         # This may be JSON text to Python dictionaries, for example.
         return handle_response(method, path, response, response_data)
 
-        # data = to_list(data)
-        # become = self._become
-        # if become:
-        #     self.connection.queue_message("vvvv", "firing event: on_become")
-        #     data.insert(0, {"cmd": "enable", "input": self._become_pass})
+    def send_dal_request(self, data, **message_kwargs):
 
-        # output = message_kwargs.get("output") or "text"
-        # request = request_builder(data, output)
-        # headers = {"Content-Type": "application/json-rpc"}
-
-        # _response, response_data = self.connection.send(
-        #     "/command-api", request, headers=headers, method="POST"
-        # )
-
-        # try:
-        #     response_data = json.loads(to_text(response_data.getvalue()))
-        # except ValueError:
-        #     raise ConnectionError(
-        #         "Response was not valid JSON, got {0}".format(
-        #             to_text(response_data.getvalue())
-        #         )
-        #     )
-
-        # results = handle_response(response_data)
-
-        # if become:
-        #     results = results[1:]
-        # if len(results) == 1:
-        #     results = results[0]
-
-        # return results
-
-    def send_dal__request(self, data, **message_kwargs):
         oid = message_kwargs.get("oid")
         oid_index = message_kwargs.get("oid_index")
 
@@ -125,18 +94,31 @@ class ZyxelHttpApiRequests(object):
             if oid_index:
                 path += f"&Index={oid_index}"
 
-        return self.send_request(data, path=path, **message_kwargs)
+        response_data, response_code = self.send_request(
+            data, path=path, **message_kwargs
+        )
+
+        dal_result = response_data.get("result")
+        if dal_result and dal_result != "ZCFG_SUCCESS":
+            dal_reply_msg = response_data.get("ReplyMsg")
+            dal_reply_msg_multi_lang = response_data.get("ReplyMsgMultiLang")
+
+            msg = (
+                "Server returned non successful DAL response, result=%s, ReplyMsg=%s,"
+                " ReplyMsgMultiLang=%s"
+                % (dal_result, dal_reply_msg, dal_reply_msg_multi_lang)
+            )
+            raise ConnectionError(
+                msg,
+                code=response_code,
+                result=dal_result,
+                reply_msg=dal_reply_msg,
+                reply_msg_multi_lang=dal_reply_msg_multi_lang,
+            )
+
+        return response_data, response_code
 
     def handle_httperror(self, exc):
-
-        # Delegate to super().handle_httperror() for 401?
-
-        # is_auth_related_code = exc.code == TOKEN_EXPIRATION_STATUS_CODE or exc.code == UNAUTHORIZED_STATUS_CODE
-        # if not self._ignore_http_errors and is_auth_related_code:
-        #     self.connection._auth = None
-        #     self.login(self.connection.get_option('remote_user'), self.connection.get_option('password'))
-        #     return True
-        # False means that the exception will be passed further to the caller
 
         logger.warning(exc)
 
@@ -148,49 +130,53 @@ class ZyxelHttpApiRequests(object):
         return False
 
     def dal_get(self, oid):
-        response_data, response_code = self.send_dal__request(
+        response_data, response_code = self.send_dal_request(
             oid=oid, method="GET", data=None
         )
         data = response_data["Object"]
         return data
 
     def dal_put(self, oid, data):
-        response_data, response_code = self.send_dal__request(
+        response_data, response_code = self.send_dal_request(
             oid=oid, method="PUT", data=data
         )
         return response_data
 
     def dal_post(self, oid, data):
-        response_data, response_code = self.send_dal__request(
+        response_data, response_code = self.send_dal_request(
             oid=oid, method="POST", data=data
         )
         return response_data
 
     def dal_delete(self, oid, index):
-        response_data, response_code = self.send_dal__request(
+        response_data, response_code = self.send_dal_request(
             oid=oid, method="POST", oid_index=index
         )
         return response_data
 
     def edit_config(self, candidate):
-        # This method is ONLY here to support resource modules. Therefore most
-        # arguments are unsupported and not present.
         logger.info("edit_config, candidate=%s", candidate)
 
-        # session = None
-        # if self.supports_sessions():
-        #     session = "ansible_%d" % int(time.time())
-        #     candidate = ["configure session %s" % session] + candidate
-        # else:
-        #     candidate = ["configure"] + candidate
-        # candidate.append("commit")
+        results = []
+        requests = []
 
-        # try:
-        #     responses = self.send_request(candidate)
-        # except ConnectionError:
-        #     if session:
-        #         self.send_request(["configure session %s" % session, "abort"])
-        #     raise
+        for cmd in to_list(candidate):
+            data = cmd.get("data")
+            oid = cmd.get("oid")
+            oid_index = cmd.get("oid_index")
+            method = cmd.get("method")
+
+            results.append(
+                self.send_dal_request(
+                    data=data, oid=oid, oid_index=oid_index, method=method
+                )
+            )
+            requests.append(cmd)
+
+        resp = {}
+        resp["request"] = requests
+        resp["response"] = results
+        return resp
 
         # return [resp for resp in to_list(responses) if resp != "{}"]
 
@@ -211,10 +197,11 @@ def handle_response(method, path, response, response_data):
     #             to_text(response_content.getvalue())
     #         )
     #     )
+    response_code = response.code
     response_data = response_data.read()
     response_data = json.loads(response_data)
 
-    logger.debug(f"handle_response: {method, path, response_data}")
+    logger.debug(f"handle_response: {method, response_code, path, response_data}")
 
     if isinstance(response, HTTPError):
         if response_data:
@@ -224,9 +211,8 @@ def handle_response(method, path, response, response_data):
             else:
                 error_text = response_data
 
-            logger.debug("A: %s", response_data)
             raise ConnectionError(error_text, code=response.code)
-        logger.debug("B")
+
         raise ConnectionError(to_text(response), code=response.code)
 
     return response_data, response.code

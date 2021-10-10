@@ -76,8 +76,6 @@ class HttpApi(HttpApiBase):
         self.requests = ZyxelHttpApiRequests(self)
 
         # self._device_info = None
-        # self._session_support = None
-        self._log = None
         self._sessionkey = None
 
     def update_auth(self, response, response_text):
@@ -127,24 +125,6 @@ class HttpApi(HttpApiBase):
         )
         logger.debug("login/response: %s, %s", response_code, response_data)
 
-        # try:
-        # This is still sent as an HTTP header, so we can set our connection's _auth
-        # variable manually. If the token is returned to the device in another way,
-        # you will have to keep track of it another way and make sure that it is sent
-        # with the rest of the request from send_request()
-
-        # self.connection._auth = {'X-api-token': response['token']}
-        # except KeyError:
-        #     raise AnsibleAuthenticationFailure(message="Failed to acquire login token.")
-        # return response
-
-        # try:
-        #     self.connection._auth = {'X-chkp-sid': response_data['sid']}
-        #     self.connection._session_uid = response_data['uid']
-        # except KeyError:
-        #     raise ConnectionError(
-        #         'Server returned response without token info during connection authentication: %s' % response)
-
     def logout(self):
         logger.debug(
             "logout: _sessionkey=%s, connecion._auth=%s",
@@ -164,24 +144,6 @@ class HttpApi(HttpApiBase):
 
         self._sessionkey = None
         self.connection._auth = None
-
-    # def supports_sessions(self):
-    #     use_session = self.get_option("eos_use_sessions")
-    #     try:
-    #         use_session = int(use_session)
-    #     except ValueError:
-    #         pass
-
-    #     if not bool(use_session):
-    #         self._session_support = False
-    #     else:
-    #         if self._session_support:
-    #             return self._session_support
-
-    #         response = self.send_request("show configuration sessions")
-    #         self._session_support = "error" not in response
-
-    #     return self._session_support
 
     def send_request(self, data, **message_kwargs):
         return self.requests.send_request(data, **message_kwargs)

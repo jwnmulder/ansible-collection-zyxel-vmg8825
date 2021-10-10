@@ -200,3 +200,30 @@ class TestZyxelHttpApi(unittest.TestCase):
         self.zyxel_plugin.logout()
 
         self.assertEqual(len(self.request_mock.mock_calls), 0)
+
+    def test_dal_non_success_should_raise_error(self):
+
+        self.request_mock.side_effect = [
+            mocked_response(
+                {
+                    "result": "ZCFG_INVALID_PARAM_VALUE",
+                    "ReplyMsg": "BrWan",
+                    "ReplyMsgMultiLang": (
+                        "zylang.Home_Networking.StaticDHCP.Error.invalid_subnet"
+                    ),
+                    "sessionkey": 701906455,
+                },
+                status=200,
+            )
+        ]
+
+        with self.assertRaises(ConnectionError) as res:
+            self.zyxel_plugin.dal_post(oid="test", data={})
+
+        self.assertTrue(len(str(res.exception)) > 100)
+        self.assertEqual(res.exception.result, "ZCFG_INVALID_PARAM_VALUE")
+        self.assertEqual(res.exception.reply_msg, "BrWan")
+        self.assertEqual(
+            res.exception.reply_msg_multi_lang,
+            "zylang.Home_Networking.StaticDHCP.Error.invalid_subnet",
+        )

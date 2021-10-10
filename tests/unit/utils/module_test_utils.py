@@ -34,11 +34,13 @@ class ZyxelModuleTestCase(ModuleTestCase):
         elif self.connection_type == "httpapi":
             self.mock_http_url = "https://router.test:443"
 
-            http_api_connection_mock = mock.Mock()
-            http_api_connection_mock.send = mock.Mock()
-            http_api_connection_mock.send.side_effect = self.httpapi_connection_send
+            self.http_api_connection_mock = mock.Mock()
+            self.http_api_connection_mock.send = mock.Mock()
+            self.http_api_connection_mock.send.side_effect = (
+                self.httpapi_connection_send
+            )
 
-            self.http_api = FakeZyxelHttpApiPlugin(http_api_connection_mock)
+            self.http_api = FakeZyxelHttpApiPlugin(self.http_api_connection_mock)
             self.http_api.send_request_orig = self.http_api.send_request
             self.http_api.send_request = mock.Mock()
             self.http_api.send_request.side_effect = self.http_api.send_request_orig

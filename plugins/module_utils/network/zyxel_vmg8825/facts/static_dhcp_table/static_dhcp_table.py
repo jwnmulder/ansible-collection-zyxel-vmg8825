@@ -22,6 +22,9 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common i
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.static_dhcp_table.static_dhcp_table import (
     Static_dhcp_tableArgs,
 )
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.rm_templates import (
+    static_dhcp_table,
+)
 
 
 class Static_dhcp_tableFacts(object):
@@ -43,20 +46,9 @@ class Static_dhcp_tableFacts(object):
         """
 
         if not data:
-            data = connection.dal_get(oid="static_dhcp")
+            data = connection.dal_get(oid=static_dhcp_table.oid())
 
-        objs = list(
-            map(
-                lambda s: {
-                    "index": s.get("Index"),
-                    "br_wan": s.get("BrWan"),
-                    "enable": s.get("Enable"),
-                    "mac_addr": s.get("MACAddr"),
-                    "ip_addr": s.get("IPAddr"),
-                },
-                data,
-            )
-        )
+        objs = list(map(static_dhcp_table.from_dal_object, data))
 
         ansible_facts["ansible_network_resources"].pop("static_dhcp_table", None)
 
