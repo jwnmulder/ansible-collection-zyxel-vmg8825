@@ -8,8 +8,6 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.module_test_ut
 
 __metaclass__ = type
 
-import pytest
-
 from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     AnsibleFailJson,
     set_module_args,
@@ -23,7 +21,6 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
 
     module = zyxel_vmg8825_static_dhcp_table
 
-    # @pytest.mark.skip(reason="wip")
     def test_module_fail_when_required_args_missing(self):
         with self.assertRaises(AnsibleFailJson):
             set_module_args({})
@@ -68,7 +65,6 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         self.assertEqual(args[1]["method"].upper(), "GET")
         self.assertEqual(args[1]["path"], "/cgi-bin/DAL?oid=static_dhcp")
 
-    @pytest.mark.skip(reason="wip")
     def test_update_with_same_info(self):
 
         self.register_connection_call(
@@ -104,8 +100,18 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         # config should not have changed as it is exactly the same
         self.assertFalse(result["changed"])
 
-    @pytest.mark.skip(reason="wip")
-    def test_add_new_entry(self):
+        # check requests that have been sent
+        static_dhcp_calls = list(
+            filter(
+                lambda x: x.kwargs["method"] != "GET",
+                self.connection.send_request.call_args_list,
+            )
+        )
+
+        # no PUT/POST/DELETE
+        self.assertEqual(len(static_dhcp_calls), 0)
+
+    def test_add_entry(self):
 
         self.register_connection_call(
             method="GET",
@@ -148,19 +154,13 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]["index"], 1)
 
-        # add new entry
-        #         self.assertEqual(data["index"], 1)
-        # self.assertEqual(data["br_wan"], "Default")
-        # self.assertEqual(data["enable"], True)
-        # self.assertEqual(data["mac_addr"], "01:02:03:04:05:06:01")
-        # self.assertEqual(data["ip_addr"], "192.168.0.1")
         data.append(
             {
                 # "Index": 1,
                 "enable": True,
                 "br_wan": "Default",
-                "mac_addr": "01:02:03:04:05:06:01",
-                "ip_addr": "192.168.0.1",
+                "mac_addr": "01:02:03:04:05:06:02",
+                "ip_addr": "192.168.0.2",
             }
         )
 
@@ -168,19 +168,146 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         result = self._run_module(self.module, {"config": data})
 
         # config should have changed
-        # self.assertTrue(result["changed"])
+        self.assertTrue(result["changed"])
 
-        # check that request has been sent
-        # args = self.connection.send_request.call_args
-        # print(str(self.connection.send_request.call_args))
-        self.assertTrue(
-            any(
-                len(x) > 1
-                and x["method"] == "POST"
-                and x["path"].find("/cgi-bin/DAL?oid=static_dhcp&sessionkey=") >= 0
-                # add sessionkey
-                for x in self.connection.send_request.call_args
+        # check requests that have been sent
+        static_dhcp_calls = list(
+            filter(
+                lambda x: x.kwargs["method"] == "POST"
+                and (x.kwargs["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
+                self.connection.send_request.call_args_list,
             )
         )
-        # self.assertEqual(args[1]["method"].upper(), "GET")
-        # self.assertEqual(args[1]["path"], "/cgi-bin/DAL?oid=static_dhcp")
+
+        self.assertEqual(len(static_dhcp_calls), 1)
+
+    def test_delete_entry(self):
+
+        self.register_connection_call(
+            method="GET",
+            uri="/cgi-bin/DAL?oid=static_dhcp",
+            body={
+                "result": "ZCFG_SUCCESS",
+                "ReplyMsg": "BrWan",
+                "ReplyMsgMultiLang": "",
+                "Object": [
+                    {
+                        "Index": 1,
+                        "BrWan": "Default",
+                        "Enable": True,
+                        "MACAddr": "01:02:03:04:05:06:01",
+                        "IPAddr": "192.168.0.1",
+                    },
+                    {
+                        "Index": 2,
+                        "BrWan": "Default",
+                        "Enable": True,
+                        "MACAddr": "01:02:03:04:05:06:02",
+                        "IPAddr": "192.168.0.2",
+                    },
+                ],
+            },
+        )
+
+        self.register_connection_call(
+            method="DELETE",
+            uri="/cgi-bin/DAL?oid=static_dhcp",
+            body={
+                "result": "ZCFG_SUCCESS",
+                "ReplyMsg": "BrWan",
+                "ReplyMsgMultiLang": "",
+                "sessionkey": "100000001",
+            },
+        )
+
+        # get current config
+        result = self._run_module(self.module, {"state": "gathered"})
+
+        data = result["gathered"]
+
+        # remove first item
+        data.pop(0)
+
+        # update device with new config
+        result = self._run_module(self.module, {"state": "overridden", "config": data})
+
+        # config should have changed
+        self.assertTrue(result["changed"])
+
+        # check requests that have been sent
+        static_dhcp_calls = list(
+            filter(
+                lambda x: x.kwargs["method"] == "DELETE"
+                and (x.kwargs["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
+                self.connection.send_request.call_args_list,
+            )
+        )
+
+        self.assertEqual(len(static_dhcp_calls), 1)
+
+    def test_update_entry(self):
+
+        self.register_connection_call(
+            method="GET",
+            uri="/cgi-bin/DAL?oid=static_dhcp",
+            body={
+                "result": "ZCFG_SUCCESS",
+                "ReplyMsg": "BrWan",
+                "ReplyMsgMultiLang": "",
+                "Object": [
+                    {
+                        "Index": 1,
+                        "BrWan": "Default",
+                        "Enable": True,
+                        "MACAddr": "01:02:03:04:05:06:01",
+                        "IPAddr": "192.168.0.1",
+                    },
+                    {
+                        "Index": 2,
+                        "BrWan": "Default",
+                        "Enable": True,
+                        "MACAddr": "01:02:03:04:05:06:02",
+                        "IPAddr": "192.168.0.2",
+                    },
+                ],
+            },
+        )
+
+        self.register_connection_call(
+            method="PUT",
+            uri="/cgi-bin/DAL?oid=static_dhcp",
+            body={
+                "result": "ZCFG_SUCCESS",
+                "ReplyMsg": "BrWan",
+                "ReplyMsgMultiLang": "",
+                "sessionkey": "100000001",
+            },
+        )
+
+        # get current config
+        result = self._run_module(self.module, {"state": "gathered"})
+
+        data = result["gathered"]
+
+        # update data
+        data[1]["ip_addr"] = "192.168.0.3"
+
+        # update device with new config
+        result = self._run_module(self.module, {"config": data})
+
+        # config should have changed
+        self.assertTrue(result["changed"])
+
+        # check requests that have been sent
+        static_dhcp_calls = list(
+            filter(
+                lambda x: x.kwargs["method"] == "PUT"
+                and (x.kwargs["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
+                self.connection.send_request.call_args_list,
+            )
+        )
+
+        self.assertEqual(len(static_dhcp_calls), 1)
+
+        request_data = static_dhcp_calls[0].args[0]
+        self.assertEqual(request_data["IPAddr"], "192.168.0.3")
