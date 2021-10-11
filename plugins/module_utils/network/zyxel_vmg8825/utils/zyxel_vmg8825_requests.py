@@ -86,6 +86,7 @@ class ZyxelHttpApiRequests(object):
 
         oid = message_kwargs.get("oid")
         oid_index = message_kwargs.get("oid_index")
+        method = message_kwargs.get("method")
 
         if oid:
             path = f"/cgi-bin/DAL?oid={oid}"
@@ -94,9 +95,7 @@ class ZyxelHttpApiRequests(object):
             if oid_index:
                 path += f"&Index={oid_index}"
 
-        response_data, response_code = self.send_request(
-            data, path=path, **message_kwargs
-        )
+        response_data, response_code = self.send_request(data, path=path, method=method)
 
         dal_result = response_data.get("result")
         if dal_result and dal_result != "ZCFG_SUCCESS":

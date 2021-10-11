@@ -16,8 +16,8 @@ author: Jan-Willem Mulder (@jwnmulder)
 short_description: Zyxel Module
 description:
   - This module can be used to send dal commands to the Zyxel router
-requirements:
-  - zyxelclient_vmg8825
+# requirements:
+#   - zyxelclient_vmg8825
 options:
   api_oid:
     type: str
@@ -51,11 +51,9 @@ obj:
 """
 
 
-from ansible.module_utils.basic import AnsibleModule, missing_required_lib
+from ansible.module_utils.basic import AnsibleModule
 
 from ..module_utils.network.zyxel_vmg8825.utils.ansible_utils import (
-    ZYXEL_LIB_NAME,
-    ZYXEL_LIB_ERR,
     zyxel_ansible_api,
 )
 
@@ -67,14 +65,8 @@ def main():
         api_method=dict(type="str", required=True),
         data=dict(type="dict", required=False),
     )
-    # argument_specs.update(zyxel_common_argument_spec())
 
     module = AnsibleModule(argument_spec=argument_specs, supports_check_mode=False)
-
-    if ZYXEL_LIB_ERR:
-        return module.fail_json(
-            msg=missing_required_lib(ZYXEL_LIB_NAME), exception=ZYXEL_LIB_ERR
-        )
 
     api_oid = module.params.get("api_oid")
     api_method = module.params.get("api_method")
