@@ -6,20 +6,11 @@ __metaclass__ = type
 
 import logging
 import os
-import traceback
 
 from ansible.module_utils._text import to_text
 from ansible.module_utils.connection import Connection
 from ansible.module_utils.connection import ConnectionError
 
-ZYXEL_LIB_NAME = "zyxelclient_vmg8825"
-ZYXEL_LIB_ERR = None
-try:
-    from zyxelclient_vmg8825.httpclient import ZyxelResponse
-
-    # from zyxelclient_vmg8825.factory import ZyxelClientFactory
-except ImportError:
-    ZYXEL_LIB_ERR = traceback.format_exc()
 
 logger = logging.getLogger(__name__)
 if os.environ.get("ANSIBLE_DEBUG") is not None:
@@ -44,20 +35,9 @@ class RequestsHandler(logging.Handler):
 logger.addHandler(RequestsHandler())
 
 
-class ZyxelCheckModeResponse:
-    """
-    Class to support ansible check mode.
-    """
-
-    def __init__(self, obj, status_code=200):
-        self.obj = obj
-        self.status_code = status_code
-
-    def json(self):
-        return self.obj
-
-
-def ansible_return(module, rsp, changed, req=None, existing_obj=None):
+def ansible_return(
+    module, response_code, response_data, changed, req=None, existing_obj=None
+):
     """
     :param module: AnsibleModule
     :param rsp: ApiResponse from zyxel_api
@@ -69,7 +49,7 @@ def ansible_return(module, rsp, changed, req=None, existing_obj=None):
     Returns: specific ansible module exit function
     """
 
-    obj_val = rsp.json() if rsp else existing_obj
+    obj_val = response_data or existing_obj
     old_obj_val = existing_obj if changed and existing_obj else None
 
     obj = obj_val.get("Object")
@@ -79,7 +59,7 @@ def ansible_return(module, rsp, changed, req=None, existing_obj=None):
 
     result = {}
     result["changed"] = False
-    result["result"] = rsp.zyxel_zcfg_result
+    result["result"] = response_data.get("result")
     result["obj"] = obj
     if req:
         result["request_data"] = req
@@ -90,65 +70,29 @@ def ansible_return(module, rsp, changed, req=None, existing_obj=None):
     if reply_msg_multi_lang:
         result["reply_msg_multi_lang"] = reply_msg_multi_lang
 
-    if isinstance(rsp, ZyxelResponse):
-        # zyxel_result = f"{rsp.zyxel_zcfg_result} - {rsp.success()}"
-        # if not rsp.success():
-        if rsp.status_code > 299:
-            result["msg"] = "Error %d Msg %s req: %s" % (rsp.status_code, rsp.text, req)
-            return module.fail_json(result)
-            #     #obj=obj_val,
-            #     obj=obj,
-            #     old_obj=old_obj_val,
-            #     result=rsp.zyxel_zcfg_result,
-            #     #zyxel_result=zyxel_result,
-            # )
+    if response_code > 299:
+        result["msg"] = "Error %d Msg %s req: %s" % (response_code, response_data, req)
+        return module.fail_json(result)
 
     return module.exit_json(**result)
-    # changed=changed,
-    # request_data=req,
-    # #obj=obj_val,
-    # obj=obj,
-    # old_obj=old_obj_val,
-    # #zyxel_result=zyxel_result,
-    # result=rsp.zyxel_zcfg_result,
-    # #response=rsp.response_data,
-    # #response2=rsp.text,
-    # reply_msg=reply_msg,
-    # reply_msg_multi_lang=reply_msg_multi_lang,
-    # )
 
 
 def get_connection(module):
     return Connection(module._socket_path)
 
 
-def zyxel_ansible_api(
-    module, api_oid, api_method, request_data=None, sensitive_fields=None
-):
+def zyxel_ansible_api(module, api_oid, api_method, request_data=None):
 
     connection = get_connection(module)
-    logger.debug(
-        "pre-send-request: connection=%s, api_oid=%s, api_method=%s",
-        connection,
-        api_oid,
-        api_method,
-    )
     try:
-        response_data, response_code = connection.send_request(
-            data=None, path=f"/cgi-bin/DAL?oid={api_oid}", method=api_method
+        response_data, response_code = connection.send_dal_request(
+            data=None, oid=api_oid, method=api_method
         )
-        logger.debug(
-            "post-send-request: connection=%s, api_oid=%s, api_method=%s",
-            connection,
-            api_oid,
-            api_method,
-        )
-
-        rsp = ZyxelResponse(response_code, response_data)
 
         return ansible_return(
             module=module,
-            rsp=rsp,
+            response_code=response_code,
+            response_data=response_data,
             changed=False,
             req=request_data,
             existing_obj=None,

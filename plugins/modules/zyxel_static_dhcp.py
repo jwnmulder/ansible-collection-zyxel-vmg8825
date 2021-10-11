@@ -15,7 +15,7 @@ module: zyxel_static_dhcp
 author: Jan-Willem Mulder (@jwnmulder)
 short_description: Zyxel Module
 description: Zyxel module
-requirements: [ zyxelclient_vmg8825 ]
+# requirements: [ zyxelclient_vmg8825 ]
 """
 
 EXAMPLES = """
@@ -37,11 +37,9 @@ obj:
 """
 
 
-from ansible.module_utils.basic import AnsibleModule, missing_required_lib
+from ansible.module_utils.basic import AnsibleModule
 
 from ..module_utils.network.zyxel_vmg8825.utils.ansible_utils import (
-    ZYXEL_LIB_NAME,
-    ZYXEL_LIB_ERR,
     zyxel_ansible_api,
 )
 
@@ -52,11 +50,6 @@ def main():
     # argument_specs.update(zyxel_common_argument_spec())
 
     module = AnsibleModule(argument_spec=argument_specs, supports_check_mode=False)
-
-    if ZYXEL_LIB_ERR:
-        return module.fail_json(
-            msg=missing_required_lib(ZYXEL_LIB_NAME), exception=ZYXEL_LIB_ERR
-        )
 
     return zyxel_ansible_api(module, "static_dhcp", "get")
 
