@@ -79,11 +79,14 @@ class Static_dhcp_table(ResourceModule):
         """
         logger.debug("generate_commands")
 
-        # self.commands.append({"oid": "static_dhcp", "method": "GET", "data": None})
-        # return
-
-        wantd = {entry["mac_addr"]: entry for entry in self.want}
-        haved = {entry["mac_addr"]: entry for entry in self.have}
+        # If mac_addr is empty, it means we got an empty string back from our device.
+        # This does happen sometimes after an invalid entry was sent.
+        wantd = {
+            entry.get("mac_addr") or entry.get("index"): entry for entry in self.want
+        }
+        haved = {
+            entry.get("mac_addr") or entry.get("index"): entry for entry in self.have
+        }
 
         # if state is merged, merge want onto have and then compare
         if self.state == "merged":

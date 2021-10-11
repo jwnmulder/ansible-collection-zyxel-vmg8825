@@ -12,8 +12,7 @@
         config: &test_entries
           - br_wan: Default
             enable: False
-            # mac_addr: "01:02:03:04:05:06:01"
-            mac_addr: "00:05:cd:24:67:68"
+            mac_addr: "01:02:03:04:05:06"
             ip_addr: 192.168.2.123
         state: deleted
 
