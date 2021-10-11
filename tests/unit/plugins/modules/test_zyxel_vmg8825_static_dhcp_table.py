@@ -311,3 +311,46 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
 
         request_data = static_dhcp_calls[0].args[0]
         self.assertEqual(request_data["IPAddr"], "192.168.0.3")
+
+    def test_update_with_incomplete_entry_in_response(self):
+
+        self.register_connection_call(
+            method="GET",
+            uri="/cgi-bin/DAL?oid=static_dhcp",
+            body={
+                "result": "ZCFG_SUCCESS",
+                "ReplyMsg": "BrWan",
+                "ReplyMsgMultiLang": "",
+                "Object": [
+                    {
+                        "Index": 1,
+                        "BrWan": "Default",
+                        "Enable": True,
+                        "MACAddr": "01:02:03:04:05:06:01",
+                        "IPAddr": "192.168.0.1",
+                    },
+                    {
+                        "Index": 2,
+                        "BrWan": "Default",
+                        "Enable": False,
+                        "MACAddr": "",
+                        "IPAddr": "",
+                    },
+                    {
+                        "Index": 3,
+                        "BrWan": "Default",
+                        "Enable": False,
+                        "MACAddr": "",
+                        "IPAddr": "",
+                    },
+                ],
+            },
+        )
+
+        # get current config
+        result = self._run_module(self.module, {"state": "gathered"})
+
+        data = result["gathered"]
+
+        # update device with new config
+        result = self._run_module(self.module, {"config": data})
