@@ -5,7 +5,7 @@ set -x
 
 pre-commit run --all-files
 
-ansible-galaxy collection install ansible.netcommon
+ansible-galaxy collection install --upgrade ansible.netcommon -p ../../
 
 ansible-test units -v --color --venv --requirements --python 3.8 --debug
 ansible-test sanity -v --color --docker --python 3.8
