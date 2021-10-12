@@ -219,3 +219,14 @@ Name | Description
 [jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_table](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_table_module.rst)|Manages static_dhcp entries of zyxel_vmg8825
 
 <!--end collection content-->
+
+
+## Contributing to this collection
+
+We're following the general Ansible contributor guidelines; see [Ansible Community Guide](https://docs.ansible.com/ansible/latest/community/index.html).
+
+If you want to clone this repositority (or a fork of it) to improve it, you can proceed as follows:
+1. Create a directory `ansible_collections/jwnmulder`;
+2. In there, checkout this repository (or a fork) as `zyxel_vmg8825`;
+3. In the zyxel_vmg8825 dir, run the following command 'ansible-galaxy collection install ansible.netcommon'
+3. Add the directory containing `ansible_collections` to your [ANSIBLE_COLLECTIONS_PATH](https://docs.ansible.com/ansible/latest/reference_appendices/config.html#collections-paths).

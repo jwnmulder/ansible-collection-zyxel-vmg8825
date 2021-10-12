@@ -1,4 +1,4 @@
 integration_tests_dependencies:
-- ansible.netcommon
+  - ansible.netcommon
 unit_tests_dependencies:
-- ansible.netcommon
+  - ansible.netcommon
