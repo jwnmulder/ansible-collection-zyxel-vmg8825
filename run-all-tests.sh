@@ -5,6 +5,7 @@ set -x
 
 pre-commit run --all-files
 
+# TODO: check that ../../ is named 'ansible_collections'
 ansible-galaxy collection install --upgrade ansible.netcommon -p ../../
 
 ansible-test units -v --color --venv --requirements --python 3.8 --debug
