@@ -5,8 +5,19 @@ set -x
 
 pre-commit run --all-files
 
-# TODO: check that ../../ is named 'ansible_collections'
-ansible-galaxy collection install --upgrade ansible.netcommon -p ../../
+# Check that ../../ is named 'ansible_collections'.
+
+collections_dir=$(readlink -f "$(pwd)/../../")
+collections_dir_name=$(basename "$collections_dir")
+if [ "${collections_dir_name}" != "ansible_collections" ]; then
+    echo "not a ansible_collections dir: ${collections_dir}"
+    exit 1
+fi
+
+# Set ANSIBLE_COLLECTIONS_PATHS to avoid some warnings
+export ANSIBLE_COLLECTIONS_PATHS="$collections_dir"
+
+ansible-galaxy collection install --upgrade ansible.netcommon -p "$collections_dir"
 
 ansible-test units -v --color --venv --requirements --python 3.8 --debug
 ansible-test sanity -v --color --docker --python 3.8
