@@ -6,7 +6,6 @@ set -x
 pre-commit run --all-files
 
 # Check that ../../ is named 'ansible_collections'.
-
 collections_dir=$(readlink -f "$(pwd)/../../")
 collections_dir_name=$(basename "$collections_dir")
 if [ "${collections_dir_name}" != "ansible_collections" ]; then
