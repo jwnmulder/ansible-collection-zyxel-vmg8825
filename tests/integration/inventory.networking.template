@@ -9,3 +9,6 @@ ansible_host=192.168.0.1
 ansible_httpapi_validate_certs=no
 ansible_user=admin
 ansible_password=password
+
+# Needs to match subnet to avoid test-error 'zylang.Home_Networking.StaticDHCP.Error.invalid_subnet'
+test_zyxel_ip_prefix=192.168.0

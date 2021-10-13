@@ -138,7 +138,7 @@ print(fc)  # print router model informations
 
     - name: Configure ipv4 dhcp fixed address
       zyxel_static_dhcp:
-        mac: "90:0C:c8:d9:cf:ef"
+        mac: "01:01:01:01:01:01"
         ipaddr: 192.168.0.86
         state: present
         enabled: true
