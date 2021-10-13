@@ -10,7 +10,7 @@ pre-commit run --all-files
 collections_dir=$(readlink -f "$(pwd)/../../")
 collections_dir_name=$(basename "$collections_dir")
 if [ "${collections_dir_name}" != "ansible_collections" ]; then
-    echo "not a ansible_collections dir: ${collections_dir}"
+    echo "Not a ansible_collections dir. git repo needs to be cloned in ./ansible_collections/jwnmulder/zyxel_vmg8825. Got: ${collections_dir}"
     exit 1
 fi
 
