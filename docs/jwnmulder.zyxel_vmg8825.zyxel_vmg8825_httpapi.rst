@@ -22,40 +22,6 @@ Synopsis
 
 
 
-Parameters
-----------
-
-.. raw:: html
-
-    <table  border=0 cellpadding=0 class="documentation-table">
-        <tr>
-            <th colspan="1">Parameter</th>
-            <th>Choices/<font color="blue">Defaults</font></th>
-                <th>Configuration</th>
-            <th width="100%">Comments</th>
-        </tr>
-            <tr>
-                <td colspan="1">
-                    <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>eos_use_sessions</b>
-                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
-                    <div style="font-size: small">
-                        <span style="color: purple">integer</span>
-                    </div>
-                </td>
-                <td>
-                </td>
-                    <td>
-                                <div>env:ANSIBLE_EOS_USE_SESSIONS</div>
-                                <div>var: ansible_eos_use_sessions</div>
-                    </td>
-                <td>
-                        <div>Specifies if sessions should be used on remote host or not</div>
-                </td>
-            </tr>
-    </table>
-    <br/>
-
 
 
 
@@ -70,7 +36,7 @@ Status
 Authors
 ~~~~~~~
 
-- Ansible Networking Team
+- Jan-Willem Mulder (@jwnmulder)
 
 
 .. hint::
