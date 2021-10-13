@@ -14,8 +14,8 @@
         network_os: "zyxel_vmg8825"
         transport: "httpapi"
         resource: "{{ i.resource }}"
-        rm:
-          LICENSE: "{{ playbook_dir }}/files/LICENSE"
+        # rm:
+          # LICENSE: "{{ playbook_dir }}/files/LICENSE"
       loop_control:
         loop_var: i
       loop:

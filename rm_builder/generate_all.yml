@@ -16,8 +16,8 @@
         transport: "httpapi"
         resource: "{{ i.resource }}"
         docstring: "{{ playbook_dir }}/docstrings/zyxel_{{ i.resource }}.yaml"
-        rm:
-          LICENSE: "{{ playbook_dir }}/files/LICENSE"
+        # rm:
+          # LICENSE: "{{ playbook_dir }}/files/LICENSE"
       loop_control:
         loop_var: i
       loop:
