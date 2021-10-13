@@ -110,7 +110,7 @@ print(fc)  # print router model informations
 - hosts: localhost
   vars:
     zyxel_cli:
-      url: "https://192.168.2.1"
+      url: "https://192.168.0.1"
       username: "{{ username }}"
       password: "{{ password }}"
   tasks:
@@ -138,8 +138,8 @@ print(fc)  # print router model informations
 
     - name: Configure ipv4 dhcp fixed address
       zyxel_static_dhcp:
-        mac: "90:0C:c8:d9:cf:ef"
-        ipaddr: 192.168.2.86
+        mac: "01:01:01:01:01:01"
+        ipaddr: 192.168.0.86
         state: present
         enabled: true
         #index: 1

@@ -12,8 +12,8 @@
         config: &test_entries
           - br_wan: Default
             enable: False
-            mac_addr: "01:02:03:04:05:06"
-            ip_addr: 192.168.2.123
+            mac_addr: "01:01:01:01:01:02"
+            ip_addr: "{{ test_zyxel_ip_prefix }}.123"
         state: deleted
 
     - name: Get base config from test device
