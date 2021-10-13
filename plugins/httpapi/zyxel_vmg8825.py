@@ -9,23 +9,13 @@ __metaclass__ = type
 # TODO check BaseConfigurationResource
 
 DOCUMENTATION = """
-author: Ansible Networking Team
+author: Jan-Willem Mulder (@jwnmulder)
 httpapi: zyxel_vmg8825
 short_description: Zyxel Web REST interface
 description:
 - plugin that uses the Zyxel Web REST interface to manage the router.
   Main usecase is to send commands on the /DAL interface
 version_added: 1.0.0
-options:
-  eos_use_sessions:
-    type: int
-    # default: 1
-    description:
-    - Specifies if sessions should be used on remote host or not
-    env:
-    - name: ANSIBLE_EOS_USE_SESSIONS
-    vars:
-    - name: ansible_eos_use_sessions
 """
 import base64
 import json
@@ -115,10 +105,6 @@ class HttpApi(HttpApiBase):
             "SHA512_password": False,
         }
 
-        # http_response = self.r.post(f"{self.url}/UserLogin", data=json.dumps(request))
-        # zyxel_response = self._process_http_response(http_response)
-
-        # response = self.send_request(data, path=login_path)
         logger.debug("login/data: %s", data)
         response_data, response_code = self.send_request(
             data=data, path=login_path, method="POST"
