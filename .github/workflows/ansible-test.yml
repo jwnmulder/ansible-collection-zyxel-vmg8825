@@ -115,5 +115,5 @@ jobs:
         run: ansible-galaxy collection install ansible.netcommon ansible.utils -p .
 
       - name: Run unit test
-        run: ansible-test units -v --color --venv --python ${{ matrix.python }}
+        run: ansible-test units -v --color --venv --requirements --python ${{ matrix.python }}
         working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
