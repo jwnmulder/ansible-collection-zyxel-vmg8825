@@ -18,7 +18,7 @@ export ANSIBLE_COLLECTIONS_PATHS="$collections_dir"
 
 ansible-galaxy collection install --upgrade ansible.netcommon -p "$collections_dir"
 
-ansible-test units -v --color --venv --requirements --python 3.8 --debug
+ansible-test units -v --color --venv --python 3.8 --debug
 ansible-test sanity -v --color --docker --python 3.8
 
 # temporarily until https://github.com/ansible/ansible/issues/75873 is fixed
