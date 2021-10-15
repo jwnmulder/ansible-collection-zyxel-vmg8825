@@ -228,6 +228,14 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
 
     def test_delete_entry(self):
 
+        # TODO: data: null can be removed
+        # {
+        #     "data": null,
+        #     "method": "DELETE",
+        #     "oid": "static_dhcp",
+        #     "oid_index": 2
+        # },
+
         self.register_connection_call(
             method="GET",
             uri="/cgi-bin/DAL?oid=static_dhcp",
