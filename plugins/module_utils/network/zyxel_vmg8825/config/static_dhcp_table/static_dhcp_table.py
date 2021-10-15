@@ -15,6 +15,10 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.u
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.rm_templates.static_dhcp_table import (
     Static_dhcp_tableTemplate,
 )
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.utils import (
+    equal_dicts,
+)
+
 
 __metaclass__ = type
 
@@ -116,7 +120,7 @@ class Static_dhcp_table(ResourceModule):
 
         # if both 'have' and 'want' are set, they have the same PK
         # if dict values differ, an update is needed
-        if want and have and want != have:
+        if want and have and not equal_dicts(want, have, ["index"]):
             self.add_zyxel_dal_command("PUT", static_dhcp_table.to_dal_object(want))
 
         # if only 'have' is set, delete based on index
