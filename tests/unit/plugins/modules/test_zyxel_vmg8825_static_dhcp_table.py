@@ -236,6 +236,9 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         #     "oid_index": 2
         # },
 
+        # TODO: Deletes should be backwards as indexes are otherwise changing
+        #       A simple sort might be sufficient
+
         self.register_connection_call(
             method="GET",
             uri="/cgi-bin/DAL?oid=static_dhcp",
