@@ -111,6 +111,50 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         # no PUT/POST/DELETE
         self.assertEqual(len(static_dhcp_calls), 0)
 
+    def test_override_with_same_info_no_index_specified(self):
+
+        self.register_connection_call(
+            method="GET",
+            uri="/cgi-bin/DAL?oid=static_dhcp",
+            body={
+                "result": "ZCFG_SUCCESS",
+                "ReplyMsg": "BrWan",
+                "ReplyMsgMultiLang": "",
+                "Object": [
+                    {
+                        "Index": 1,
+                        "BrWan": "Default",
+                        "Enable": True,
+                        "MACAddr": "01:02:03:04:05:06:01",
+                        "IPAddr": "192.168.0.1",
+                    }
+                ],
+            },
+        )
+
+        # get current config
+        result = self._run_module(self.module, {"state": "gathered"})
+
+        data = result["gathered"]
+        del data[0]["index"]
+
+        # update with same config
+        result = self._run_module(self.module, {"state": "overridden", "config": data})
+
+        # config should not have changed as it is exactly the same
+        self.assertFalse(result["changed"])
+
+        # check requests that have been sent
+        static_dhcp_calls = list(
+            filter(
+                lambda x: x.kwargs["method"] != "GET",
+                self.connection.send_request.call_args_list,
+            )
+        )
+
+        # no PUT/POST/DELETE
+        self.assertEqual(len(static_dhcp_calls), 0)
+
     def test_add_entry(self):
 
         self.register_connection_call(
@@ -173,13 +217,14 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         # check requests that have been sent
         static_dhcp_calls = list(
             filter(
-                lambda x: x.kwargs["method"] == "POST"
+                lambda x: x.kwargs["method"] != "GET"
                 and (x.kwargs["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
                 self.connection.send_request.call_args_list,
             )
         )
 
         self.assertEqual(len(static_dhcp_calls), 1)
+        self.assertEqual(static_dhcp_calls[0].kwargs["method"], "POST")
 
     def test_delete_entry(self):
 
@@ -228,6 +273,15 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         # remove first item
         data.pop(0)
 
+        # data = [
+        #     {
+        #         'br_wan': 'Default',
+        #         'enable': True,
+        #         'mac_addr': '01:02:03:04:05:06:01',
+        #         'ip_addr': '192.168.0.1'
+        #     }
+        # ]
+
         # update device with new config
         result = self._run_module(self.module, {"state": "overridden", "config": data})
 
@@ -237,13 +291,14 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         # check requests that have been sent
         static_dhcp_calls = list(
             filter(
-                lambda x: x.kwargs["method"] == "DELETE"
+                lambda x: x.kwargs["method"] != "GET"
                 and (x.kwargs["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
                 self.connection.send_request.call_args_list,
             )
         )
 
         self.assertEqual(len(static_dhcp_calls), 1)
+        self.assertEqual(static_dhcp_calls[0].kwargs["method"], "DELETE")
 
     def test_update_entry(self):
 
@@ -301,13 +356,14 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         # check requests that have been sent
         static_dhcp_calls = list(
             filter(
-                lambda x: x.kwargs["method"] == "PUT"
+                lambda x: x.kwargs["method"] != "GET"
                 and (x.kwargs["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
                 self.connection.send_request.call_args_list,
             )
         )
 
         self.assertEqual(len(static_dhcp_calls), 1)
+        self.assertEqual(static_dhcp_calls[0].kwargs["method"], "PUT")
 
         request_data = static_dhcp_calls[0].args[0]
         self.assertEqual(request_data["IPAddr"], "192.168.0.3")
