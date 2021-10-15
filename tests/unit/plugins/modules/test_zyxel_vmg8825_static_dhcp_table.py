@@ -235,10 +235,6 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         #     "oid": "static_dhcp",
         #     "oid_index": 2
         # },
-
-        # TODO: Deletes should be backwards as indexes are otherwise changing
-        #       A simple sort might be sufficient
-
         self.register_connection_call(
             method="GET",
             uri="/cgi-bin/DAL?oid=static_dhcp",
@@ -284,15 +280,6 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         # remove first item
         data.pop(0)
 
-        # data = [
-        #     {
-        #         'br_wan': 'Default',
-        #         'enable': True,
-        #         'mac_addr': '01:02:03:04:05:06:01',
-        #         'ip_addr': '192.168.0.1'
-        #     }
-        # ]
-
         # update device with new config
         result = self._run_module(self.module, {"state": "overridden", "config": data})
 
@@ -310,6 +297,86 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
 
         self.assertEqual(len(static_dhcp_calls), 1)
         self.assertEqual(static_dhcp_calls[0].kwargs["method"], "DELETE")
+
+    def test_delete_multiple_entries_should_occur_backwards(self):
+
+        self.register_connection_call(
+            method="GET",
+            uri="/cgi-bin/DAL?oid=static_dhcp",
+            body={
+                "result": "ZCFG_SUCCESS",
+                "ReplyMsg": "BrWan",
+                "ReplyMsgMultiLang": "",
+                "Object": [
+                    {
+                        "Index": 1,
+                        "BrWan": "Default",
+                        "Enable": True,
+                        "MACAddr": "01:02:03:04:05:06:01",
+                        "IPAddr": "192.168.0.1",
+                    },
+                    {
+                        "Index": 2,
+                        "BrWan": "Default",
+                        "Enable": True,
+                        "MACAddr": "01:02:03:04:05:06:02",
+                        "IPAddr": "192.168.0.2",
+                    },
+                    {
+                        "Index": 3,
+                        "BrWan": "Default",
+                        "Enable": True,
+                        "MACAddr": "01:02:03:04:05:06:03",
+                        "IPAddr": "192.168.0.3",
+                    },
+                ],
+            },
+        )
+
+        self.register_connection_call(
+            method="DELETE",
+            uri="/cgi-bin/DAL?oid=static_dhcp",
+            body={
+                "result": "ZCFG_SUCCESS",
+                "ReplyMsg": "BrWan",
+                "ReplyMsgMultiLang": "",
+                "sessionkey": "100000001",
+            },
+        )
+
+        # get current config
+        result = self._run_module(self.module, {"state": "gathered"})
+
+        data = result["gathered"]
+
+        # remove first two items
+        data.pop(0)
+        data.pop(0)
+
+        # delete all entries
+        result = self._run_module(self.module, {"state": "overridden", "config": data})
+
+        # config should have changed
+        self.assertTrue(result["changed"])
+
+        # check requests that have been sent
+        static_dhcp_calls = list(
+            filter(
+                lambda x: x.kwargs["method"] != "GET"
+                and (x.kwargs["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
+                self.connection.send_request.call_args_list,
+            )
+        )
+
+        self.assertEqual(len(static_dhcp_calls), 2)
+        self.assertEqual(static_dhcp_calls[0].kwargs["method"], "DELETE")
+        self.assertEqual(static_dhcp_calls[1].kwargs["method"], "DELETE")
+        self.assertEqual(
+            static_dhcp_calls[0].kwargs["path"], "/cgi-bin/DAL?oid=static_dhcp&Index=2"
+        )
+        self.assertEqual(
+            static_dhcp_calls[1].kwargs["path"], "/cgi-bin/DAL?oid=static_dhcp&Index=1"
+        )
 
     def test_update_entry(self):
 
