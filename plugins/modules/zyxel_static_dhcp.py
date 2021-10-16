@@ -15,7 +15,6 @@ module: zyxel_static_dhcp
 author: Jan-Willem Mulder (@jwnmulder)
 short_description: Zyxel Module
 description: Zyxel module
-# requirements: [ zyxelclient_vmg8825 ]
 """
 
 EXAMPLES = """

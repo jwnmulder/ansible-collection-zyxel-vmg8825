@@ -53,10 +53,6 @@ jobs:
         working-directory: >-
           ansible_collections/jwnmulder/zyxel_vmg8825
 
-      - uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_KEY_PYTHON_ZYXELCLIENT_VMG8825 }}
-
       - name: Install dependencies
         run: |
           . .venv/bin/activate
@@ -118,10 +114,6 @@ jobs:
           scripts/ensure-venv.sh
         working-directory: >-
           ansible_collections/jwnmulder/zyxel_vmg8825
-
-      - uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_KEY_PYTHON_ZYXELCLIENT_VMG8825 }}
 
       - name: Install dependencies
         run: |
