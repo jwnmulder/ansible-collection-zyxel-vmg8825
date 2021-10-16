@@ -309,25 +309,32 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
                 "ReplyMsgMultiLang": "",
                 "Object": [
                     {
-                        "Index": 1,
+                        "Index": 2,
                         "BrWan": "Default",
                         "Enable": True,
                         "MACAddr": "01:02:03:04:05:06:01",
                         "IPAddr": "192.168.0.1",
                     },
                     {
-                        "Index": 2,
+                        "Index": 4,
                         "BrWan": "Default",
                         "Enable": True,
                         "MACAddr": "01:02:03:04:05:06:02",
                         "IPAddr": "192.168.0.2",
                     },
                     {
-                        "Index": 3,
+                        "Index": 1,
                         "BrWan": "Default",
                         "Enable": True,
                         "MACAddr": "01:02:03:04:05:06:03",
                         "IPAddr": "192.168.0.3",
+                    },
+                    {
+                        "Index": 3,
+                        "BrWan": "Default",
+                        "Enable": True,
+                        "MACAddr": "01:02:03:04:05:06:04",
+                        "IPAddr": "192.168.0.4",
                     },
                 ],
             },
@@ -352,6 +359,7 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         # remove first two items
         data.pop(0)
         data.pop(0)
+        data.pop(0)
 
         # delete all entries
         result = self._run_module(self.module, {"state": "overridden", "config": data})
@@ -368,14 +376,21 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
             )
         )
 
-        self.assertEqual(len(static_dhcp_calls), 2)
+        # self.assertEqual(len(static_dhcp_calls), 2)
         self.assertEqual(static_dhcp_calls[0].kwargs["method"], "DELETE")
         self.assertEqual(static_dhcp_calls[1].kwargs["method"], "DELETE")
+        self.assertEqual(static_dhcp_calls[2].kwargs["method"], "DELETE")
+
+        # If deletes would start at index=1, index=2 will not exist anymore on the remote device.
+        # Assert that deletes happen form the higest index to the lowest
         self.assertEqual(
-            static_dhcp_calls[0].kwargs["path"], "/cgi-bin/DAL?oid=static_dhcp&Index=2"
+            static_dhcp_calls[0].kwargs["path"], "/cgi-bin/DAL?oid=static_dhcp&Index=4"
         )
         self.assertEqual(
-            static_dhcp_calls[1].kwargs["path"], "/cgi-bin/DAL?oid=static_dhcp&Index=1"
+            static_dhcp_calls[1].kwargs["path"], "/cgi-bin/DAL?oid=static_dhcp&Index=2"
+        )
+        self.assertEqual(
+            static_dhcp_calls[2].kwargs["path"], "/cgi-bin/DAL?oid=static_dhcp&Index=1"
         )
 
     def test_update_entry(self):
