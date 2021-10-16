@@ -141,4 +141,20 @@ class Static_dhcp_table(ResourceModule):
         if oid_index:
             request["oid_index"] = oid_index
 
-        self.commands.append(request)
+        if self.commands and method == "DELETE":
+            # deletes must happen first and in reverse orde
+            # higest indexes are to be deleted first as indexes
+            # keep changing while adding or deleting entries on a Zyxel device
+            closests_higher = None
+            for x in self.commands:
+                if x["method"] == "DELETE":
+                    index = x["oid_index"]
+                    if index > oid_index:
+                        closests_higher = x
+
+            index = 0
+            if closests_higher:
+                index = self.commands.index(closests_higher) + 1
+            self.commands.insert(index, request)
+        else:
+            self.commands.append(request)
