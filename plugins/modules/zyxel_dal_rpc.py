@@ -16,8 +16,6 @@ author: Jan-Willem Mulder (@jwnmulder)
 short_description: Zyxel Module
 description:
   - This module can be used to send dal cfg commands to the Zyxel router
-# requirements:
-#   - zyxelclient_vmg8825
 options:
   oid:
     type: str

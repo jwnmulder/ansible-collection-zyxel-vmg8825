@@ -50,10 +50,6 @@ jobs:
       #     #  ${{ runner.os }}-packages-
       #     #  ${{ runner.os }}-
 
-      - uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_KEY_PYTHON_ZYXELCLIENT_VMG8825 }}
-
       - name: Install ansible-base (${{ matrix.ansible }})
         run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
 
@@ -103,10 +99,6 @@ jobs:
       #     #  ${{ runner.os }}-packages-${{ matrix.python }}-
       #     #  ${{ runner.os }}-packages-
       #     #  ${{ runner.os }}-
-
-      - uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.DEPLOY_KEY_PYTHON_ZYXELCLIENT_VMG8825 }}
 
       - name: Install ansible-base (${{ matrix.ansible }})
         run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
