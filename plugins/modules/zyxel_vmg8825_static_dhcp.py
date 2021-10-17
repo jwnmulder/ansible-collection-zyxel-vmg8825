@@ -5,7 +5,7 @@
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """
-The module file for zyxel_vmg8825_static_dhcp_table
+The module file for zyxel_vmg8825_static_dhcp
 """
 
 from __future__ import absolute_import, division, print_function
@@ -13,7 +13,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 DOCUMENTATION = """
-module: zyxel_vmg8825_static_dhcp_table
+module: zyxel_vmg8825_static_dhcp
 short_description: 'Manages static_dhcp entries of zyxel_vmg8825'
 description: 'Manages static_dhcp entries of zyxel_vmg8825'
 version_added: '1.0.0'
@@ -121,11 +121,11 @@ parsed:
 """
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.static_dhcp_table.static_dhcp_table import (
-    Static_dhcp_tableArgs,
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.static_dhcp.static_dhcp import (
+    static_dhcpArgs,
 )
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.config.static_dhcp_table.static_dhcp_table import (
-    Static_dhcp_table,
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.config.static_dhcp.static_dhcp import (
+    static_dhcp,
 )
 
 
@@ -136,7 +136,7 @@ def main():
     :returns: the result form module invocation
     """
     module = AnsibleModule(
-        argument_spec=Static_dhcp_tableArgs.argument_spec,
+        argument_spec=static_dhcpArgs.argument_spec,
         mutually_exclusive=[["config", "running_config"]],
         required_if=[
             ["state", "merged", ["config"]],
@@ -148,7 +148,7 @@ def main():
         supports_check_mode=True,
     )
 
-    result = Static_dhcp_table(module).execute_module()
+    result = static_dhcp(module).execute_module()
     module.exit_json(**result)
 
 

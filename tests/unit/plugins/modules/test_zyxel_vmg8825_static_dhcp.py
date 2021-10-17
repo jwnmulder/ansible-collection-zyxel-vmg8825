@@ -13,13 +13,13 @@ from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     set_module_args,
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import (
-    zyxel_vmg8825_static_dhcp_table,
+    zyxel_vmg8825_static_dhcp,
 )
 
 
 class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
 
-    module = zyxel_vmg8825_static_dhcp_table
+    module = zyxel_vmg8825_static_dhcp
 
     def test_module_fail_when_required_args_missing(self):
         with self.assertRaises(AnsibleFailJson):

@@ -15,14 +15,14 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.f
     FactsBase,
 )
 
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.facts.static_dhcp_table.static_dhcp_table import (
-    Static_dhcp_tableFacts,
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.facts.static_dhcp.static_dhcp import (
+    static_dhcpFacts,
 )
 
 
 FACT_LEGACY_SUBSETS = {}
 FACT_RESOURCE_SUBSETS = dict(
-    static_dhcp_table=Static_dhcp_tableFacts,
+    static_dhcp=static_dhcpFacts,
 )
 
 

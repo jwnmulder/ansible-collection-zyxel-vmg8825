@@ -50,7 +50,7 @@ options:
     elements: str
     choices:
       - all
-      - static_dhcp_table
+      - static_dhcp
 """
 
 EXAMPLES = """
@@ -59,23 +59,23 @@ EXAMPLES = """
     gather_subset: all
     gather_network_resources: all
 
-# Collect only the static_dhcp_table facts
+# Collect only the static_dhcp facts
 - zyxel_vmg8825_facts:
     gather_subset:
       - "!all"
       - "!min"
     gather_network_resources:
-      - static_dhcp_table
+      - static_dhcp
 
-# Do not collect static_dhcp_table facts
+# Do not collect static_dhcp facts
 - zyxel_vmg8825_facts:
     gather_network_resources:
-      - "!static_dhcp_table"
+      - "!static_dhcp"
 
-# Collect static_dhcp_table and minimal default facts
+# Collect static_dhcp and minimal default facts
 - zyxel_vmg8825_facts:
     gather_subset: min
-    gather_network_resources: static_dhcp_table
+    gather_network_resources: static_dhcp
 """
 
 # RETURN = """

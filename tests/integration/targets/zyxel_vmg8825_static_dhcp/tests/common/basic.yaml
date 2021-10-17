@@ -1,8 +1,8 @@
 ---
 - debug: msg="START common/basic on connection={{ ansible_connection }}"
 
-- name: zyxel_vmg8825_static_dhcp_table gathered
-  zyxel_vmg8825_static_dhcp_table:
+- name: zyxel_vmg8825_static_dhcp gathered
+  zyxel_vmg8825_static_dhcp:
     state: gathered
   register: result
 

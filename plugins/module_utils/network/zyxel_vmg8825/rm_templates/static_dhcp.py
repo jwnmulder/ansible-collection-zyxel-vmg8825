@@ -8,7 +8,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 """
-The Static_dhcp_table parser templates file. This contains
+The static_dhcp parser templates file. This contains
 a list of parser definitions and associated functions that
 facilitates both facts gathering and native command generation for
 the given network resource.
@@ -19,9 +19,9 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.r
 )
 
 
-class Static_dhcp_tableTemplate(NetworkTemplate):
+class static_dhcpTemplate(NetworkTemplate):
     def __init__(self, lines=None, module=None):
-        super(Static_dhcp_tableTemplate, self).__init__(
+        super(static_dhcpTemplate, self).__init__(
             lines=lines, tmplt=self, module=module
         )
 
