@@ -50,8 +50,6 @@ options:
   running_config:
     description:
     - This option is used only with state I(parsed).
-    #- The value of this option should be the output received from the EOS device by
-    #  executing the command B(show running-config | section ospfv3).
     - The state I(parsed) reads the configuration from C(running_config) option and
       transforms it into Ansible structured data as per the resource module's argspec
       and the value is then returned in the I(parsed) key within the result.
@@ -122,7 +120,7 @@ parsed:
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.static_dhcp.static_dhcp import (
-    static_dhcpArgs,
+    Static_dhcpArgs,
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.config.static_dhcp.static_dhcp import (
     static_dhcp,
@@ -136,7 +134,7 @@ def main():
     :returns: the result form module invocation
     """
     module = AnsibleModule(
-        argument_spec=static_dhcpArgs.argument_spec,
+        argument_spec=Static_dhcpArgs.argument_spec,
         mutually_exclusive=[["config", "running_config"]],
         required_if=[
             ["state", "merged", ["config"]],

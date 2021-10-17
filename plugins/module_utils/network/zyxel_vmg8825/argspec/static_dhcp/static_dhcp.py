@@ -27,7 +27,7 @@ The arg spec for the zyxel_vmg8825_static_dhcp module
 """
 
 
-class static_dhcpArgs(object):  # pylint: disable=R0903
+class Static_dhcpArgs(object):  # pylint: disable=R0903
     """The arg spec for the zyxel_vmg8825_static_dhcp module"""
 
     argument_spec = {
