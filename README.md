@@ -25,7 +25,7 @@ PEP440 is the schema used to describe the versions of Ansible.
 ### Httpapi plugins
 Name | Description
 --- | ---
-[jwnmulder.zyxel_vmg8825.zyxel_vmg8825](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_vmg8825_httpapi.rst)|Zyxel Web REST interface
+[jwnmulder.zyxel_vmg8825.zyxel_vmg8825](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_vmg8825_httpapi.rst)|HttpApi Plugin for Zyxel VMG 8825
 
 ### Modules
 Name | Description

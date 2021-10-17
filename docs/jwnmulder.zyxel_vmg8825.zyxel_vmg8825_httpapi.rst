@@ -5,7 +5,7 @@
 jwnmulder.zyxel_vmg8825.zyxel_vmg8825
 *************************************
 
-**Zyxel Web REST interface**
+**HttpApi Plugin for Zyxel VMG 8825**
 
 
 Version added: 1.0.0
