@@ -52,7 +52,7 @@ class ZyxelModuleTestCase(ModuleTestCase):
 
             self.setUpGetConnectionMock(
                 self.connection,
-                "ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.ansible_utils.get_connection",
+                "ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.utils.get_connection",
             )
             self.setUpGetConnectionMock(
                 self.connection,

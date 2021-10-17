@@ -11,7 +11,7 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 ---
-module: zyxel_dal_rpc
+module: zyxel_vmg8825_dal_rpc
 author: Jan-Willem Mulder (@jwnmulder)
 short_description: Zyxel Module for interacting with the Zyxel DAL API
 description:
@@ -32,9 +32,12 @@ options:
     - put
     - patch
     - delete
+  index:
+    type: int
+    description: index for deleting entries, required when method=delete
   data:
     type: dict
-    description: data
+    description: data, required when method=post,put
 """
 
 EXAMPLES = """
@@ -56,7 +59,7 @@ response:
 
 from ansible.module_utils.basic import AnsibleModule
 
-from ..module_utils.network.zyxel_vmg8825.utils.ansible_utils import (
+from ..module_utils.network.zyxel_vmg8825.utils.utils import (
     zyxel_ansible_api,
 )
 
@@ -71,6 +74,7 @@ def main():
             choices=["get", "post", "put", "patch", "delete"],
             default="get",
         ),
+        index=dict(type="int", required=False),
         data=dict(type="dict", required=False),
     )
 
@@ -78,6 +82,7 @@ def main():
         ["method", "post", ["data"]],
         ["method", "put", ["data"]],
         ["method", "patch", ["data"]],
+        ["method", "delete", ["index"]],
     ]
 
     module = AnsibleModule(
@@ -87,10 +92,13 @@ def main():
     )
 
     rpc_oid = module.params.get("oid")
+    rpc_index = module.params.get("index")
     rpc_method = module.params.get("method")
     rpc_data = module.params.get("data")
 
-    return zyxel_ansible_api(module, rpc_oid, rpc_method, request_data=rpc_data)
+    return zyxel_ansible_api(
+        module, rpc_oid, rpc_method, request_data=rpc_data, api_oid_index=rpc_index
+    )
 
 
 if __name__ == "__main__":

@@ -1,9 +1,9 @@
-.. _jwnmulder.zyxel_vmg8825.zyxel_dal_rpc_module:
+.. _jwnmulder.zyxel_vmg8825.zyxel_vmg8825_dal_rpc_module:
 
 
-*************************************
-jwnmulder.zyxel_vmg8825.zyxel_dal_rpc
-*************************************
+*********************************************
+jwnmulder.zyxel_vmg8825.zyxel_vmg8825_dal_rpc
+*********************************************
 
 **Zyxel Module for interacting with the Zyxel DAL API**
 
@@ -44,7 +44,22 @@ Parameters
                 <td>
                 </td>
                 <td>
-                        <div>data</div>
+                        <div>data, required when method=post,put</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>index</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">integer</span>
+                    </div>
+                </td>
+                <td>
+                </td>
+                <td>
+                        <div>index for deleting entries, required when method=delete</div>
                 </td>
             </tr>
             <tr>

@@ -43,7 +43,7 @@ class ZyxelModuleTestCase(ModuleTestCase):
             self.connection.httpapi = self.zyxel_plugin
 
             self.get_connection_patch = mock.patch(
-                "ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.ansible_utils.get_connection"
+                "ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.utils.get_connection"
             )
             self.get_connection_mock = self.get_connection_patch.start()
             self.get_connection_mock.return_value = self.zyxel_plugin
