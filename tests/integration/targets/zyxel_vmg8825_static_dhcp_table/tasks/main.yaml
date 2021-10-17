@@ -1,4 +1,0 @@
----
-- include: httpapi.yaml
-  tags:
-    - httpapi

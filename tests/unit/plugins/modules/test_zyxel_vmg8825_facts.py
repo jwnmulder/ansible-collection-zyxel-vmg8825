@@ -51,7 +51,7 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         )
 
         result = self._run_module(
-            self.module, {"gather_network_resources": ["static_dhcp_table"]}
+            self.module, {"gather_network_resources": ["static_dhcp"]}
         )
 
         self.assertFalse(result["changed"])
@@ -59,7 +59,7 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         # self.assertIsNotNone(result["response"]["Object"])
         # self.assertEqual(result["result"], "ZCFG_SUCCESS")
         self.assertIsNotNone(
-            result["ansible_facts"]["ansible_network_resources"]["static_dhcp_table"]
+            result["ansible_facts"]["ansible_network_resources"]["static_dhcp"]
         )
 
         args = self.connection.send_request.call_args

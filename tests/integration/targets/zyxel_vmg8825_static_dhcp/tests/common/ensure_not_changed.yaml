@@ -4,11 +4,11 @@
 - name: grab facts
   zyxel_vmg8825_facts:
     gather_subset: min
-    gather_network_resources: static_dhcp_table
+    gather_network_resources: static_dhcp
 
-- name: Update static_dhcp_table with same info
-  zyxel_vmg8825_static_dhcp_table:
-    config: "{{ ansible_network_resources['static_dhcp_table'] }}"
+- name: Update static_dhcp with same info
+  zyxel_vmg8825_static_dhcp:
+    config: "{{ ansible_network_resources['static_dhcp'] }}"
   register: result
 
 - name: Ensure config did not change.

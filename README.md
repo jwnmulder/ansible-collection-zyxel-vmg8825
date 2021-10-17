@@ -33,9 +33,8 @@ Name | Description
 [jwnmulder.zyxel_vmg8825.zyxel_dal_raw](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_dal_raw_module.rst)|Zyxel Module
 [jwnmulder.zyxel_vmg8825.zyxel_dal_rpc](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_dal_rpc_module.rst)|Zyxel Module
 [jwnmulder.zyxel_vmg8825.zyxel_ping](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_ping_module.rst)|Zyxel Module
-[jwnmulder.zyxel_vmg8825.zyxel_static_dhcp](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_static_dhcp_module.rst)|Zyxel Module
 [jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts_module.rst)|Get facts about zyxel_vmg8825 devices.
-[jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_table](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_table_module.rst)|Manages static_dhcp entries of zyxel_vmg8825
+[jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_module.rst)|Manages static_dhcp entries of zyxel_vmg8825
 
 <!--end collection content-->
 

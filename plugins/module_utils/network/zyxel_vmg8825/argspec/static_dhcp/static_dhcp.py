@@ -23,12 +23,12 @@ __metaclass__ = type
 #############################################
 
 """
-The arg spec for the zyxel_vmg8825_static_dhcp_table module
+The arg spec for the zyxel_vmg8825_static_dhcp module
 """
 
 
-class Static_dhcp_tableArgs(object):  # pylint: disable=R0903
-    """The arg spec for the zyxel_vmg8825_static_dhcp_table module"""
+class static_dhcpArgs(object):  # pylint: disable=R0903
+    """The arg spec for the zyxel_vmg8825_static_dhcp module"""
 
     argument_spec = {
         "config": {

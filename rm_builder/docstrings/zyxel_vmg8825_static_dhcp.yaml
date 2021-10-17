@@ -1,4 +1,4 @@
-module: zyxel_vmg8825_static_dhcp_table
+module: zyxel_vmg8825_static_dhcp
 short_description: 'Manages static_dhcp entries of zyxel_vmg8825'
 description: 'Manages static_dhcp entries of zyxel_vmg8825'
 version_added: '1.0.0'

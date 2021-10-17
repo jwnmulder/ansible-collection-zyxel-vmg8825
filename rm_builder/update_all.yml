@@ -19,5 +19,4 @@
       loop_control:
         loop_var: i
       loop:
-        - { resource: 'static_dhcp_table' }
-#        - { resource: 'interfaces' }
+        - { resource: 'static_dhcp' }

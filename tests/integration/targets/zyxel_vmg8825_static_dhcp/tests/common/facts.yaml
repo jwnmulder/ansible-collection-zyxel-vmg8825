@@ -7,14 +7,14 @@
       - '!all'
       - '!min'
     gather_network_resources:
-      - static_dhcp_table
+      - static_dhcp
   register: result
 
 - assert:
     that:
       - "result.changed == false"
-      - "result.ansible_facts.ansible_net_gather_network_resources[0] == 'static_dhcp_table'"
-      - "result.ansible_facts.ansible_network_resources.static_dhcp_table is defined"
-      # - "result.ansible_facts.ansible_network_resources.static_dhcp_table[0].BrWan is defined"
+      - "result.ansible_facts.ansible_net_gather_network_resources[0] == 'static_dhcp'"
+      - "result.ansible_facts.ansible_network_resources.static_dhcp is defined"
+      # - "result.ansible_facts.ansible_network_resources.static_dhcp[0].BrWan is defined"
 
 - debug: msg="END common/facts on connection={{ ansible_connection }}"

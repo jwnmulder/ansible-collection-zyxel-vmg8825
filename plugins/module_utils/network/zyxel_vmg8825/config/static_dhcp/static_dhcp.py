@@ -12,8 +12,8 @@ from ansible.module_utils.six import iteritems
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
     dict_merge,
 )
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.rm_templates.static_dhcp_table import (
-    Static_dhcp_tableTemplate,
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.rm_templates.static_dhcp import (
+    static_dhcpTemplate,
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.utils import (
     equal_dicts,
@@ -23,7 +23,7 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zy
 __metaclass__ = type
 
 """
-The zyxel_vmg8825_static_dhcp_table config file.
+The zyxel_vmg8825_static_dhcp config file.
 It is in this file where the current configuration (as dict)
 is compared to the provided configuration (as dict) and the command set
 necessary to bring the current configuration to its desired end-state is
@@ -45,23 +45,23 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.r
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.facts.facts import (
     Facts,
 )
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.rm_templates import (
-    static_dhcp_table,
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825 import (
+    rm_templates,
 )
 
 
-class Static_dhcp_table(ResourceModule):
+class static_dhcp(ResourceModule):
     """
-    The zyxel_vmg8825_static_dhcp_table config class
+    The zyxel_vmg8825_static_dhcp config class
     """
 
     def __init__(self, module):
-        super(Static_dhcp_table, self).__init__(
+        super(static_dhcp, self).__init__(
             empty_fact_val={},
             facts_module=Facts(module),
             module=module,
-            resource="static_dhcp_table",
-            tmplt=Static_dhcp_tableTemplate(),
+            resource="static_dhcp",
+            tmplt=static_dhcpTemplate(),
         )
         # self.parsers = ["mac_addr"]
 
@@ -114,14 +114,16 @@ class Static_dhcp_table(ResourceModule):
         """Leverages the base class `compare()` method and
         populates the list of commands to be run by comparing
         the `want` and `have` data with the `parsers` defined
-        for the Static_dhcp_table network resource.
+        for the static_dhcp network resource.
         """
         logger.debug("compare, want=%s, have=%s", want, have)
 
         # if both 'have' and 'want' are set, they have the same PK
         # if dict values differ, an update is needed
         if want and have and not equal_dicts(want, have, ["index"]):
-            self.add_zyxel_dal_command("PUT", static_dhcp_table.to_dal_object(want))
+            self.add_zyxel_dal_command(
+                "PUT", rm_templates.static_dhcp.to_dal_object(want)
+            )
 
         # if only 'have' is set, delete based on index
         if not want and have:
@@ -129,11 +131,13 @@ class Static_dhcp_table(ResourceModule):
 
         # if only 'want' is set, inset new
         if want and not have:
-            self.add_zyxel_dal_command("POST", static_dhcp_table.to_dal_object(want))
+            self.add_zyxel_dal_command(
+                "POST", rm_templates.static_dhcp.to_dal_object(want)
+            )
 
     def add_zyxel_dal_command(self, method, data=None, oid_index=None):
         request = {
-            "oid": static_dhcp_table.oid(),
+            "oid": rm_templates.static_dhcp.oid(),
             "method": method,
             "data": data,
         }
