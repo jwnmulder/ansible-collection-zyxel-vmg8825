@@ -4,9 +4,6 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-# TODO check restconf.py
-# TODO check checkpoint.py / HttpApi
-# TODO check BaseConfigurationResource
 
 DOCUMENTATION = """
 author: Jan-Willem Mulder (@jwnmulder)
