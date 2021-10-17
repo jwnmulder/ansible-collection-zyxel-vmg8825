@@ -60,7 +60,7 @@ response:
 from ansible.module_utils.basic import AnsibleModule
 
 from ..module_utils.network.zyxel_vmg8825.utils.utils import (
-    zyxel_ansible_api,
+    ansible_zyxel_dal_request,
 )
 
 
@@ -91,13 +91,13 @@ def main():
         supports_check_mode=False,
     )
 
-    rpc_oid = module.params.get("oid")
-    rpc_index = module.params.get("index")
-    rpc_method = module.params.get("method")
-    rpc_data = module.params.get("data")
+    oid = module.params.get("oid")
+    index = module.params.get("index")
+    method = module.params.get("method")
+    data = module.params.get("data")
 
-    return zyxel_ansible_api(
-        module, rpc_oid, rpc_method, request_data=rpc_data, api_oid_index=rpc_index
+    return ansible_zyxel_dal_request(
+        module, oid=oid, method=method, data=data, oid_index=index
     )
 
 

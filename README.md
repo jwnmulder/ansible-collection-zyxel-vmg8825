@@ -10,6 +10,8 @@ TODO
 
 Collection tested on Zyxel VMG8825-T50
 
+For now only the zyxel_vmg8825_static_dhcp module has been tested. Others modules are work in progres
+
 <!--start requires_ansible-->
 ## Ansible version compatibility
 
