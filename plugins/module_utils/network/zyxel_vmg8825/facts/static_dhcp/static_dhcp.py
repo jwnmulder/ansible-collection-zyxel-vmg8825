@@ -20,7 +20,7 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common i
     utils,
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.static_dhcp.static_dhcp import (
-    static_dhcpArgs,
+    Static_dhcpArgs,
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.rm_templates import (
     static_dhcp,
@@ -32,7 +32,7 @@ class static_dhcpFacts(object):
 
     def __init__(self, module, subspec="config", options="options"):
         self._module = module
-        self.argument_spec = static_dhcpArgs.argument_spec
+        self.argument_spec = Static_dhcpArgs.argument_spec
 
     def populate_facts(self, connection, ansible_facts, data=None):
         """Populate the facts for static_dhcp network resource

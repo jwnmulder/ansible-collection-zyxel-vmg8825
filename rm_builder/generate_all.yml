@@ -15,7 +15,7 @@
         network_os: "zyxel_vmg8825"
         transport: "httpapi"
         resource: "{{ i.resource }}"
-        docstring: "{{ playbook_dir }}/docstrings/zyxel_{{ i.resource }}.yaml"
+        docstring: "{{ playbook_dir }}/docstrings/zyxel_vmg8825_{{ i.resource }}.yaml"
         # rm:
           # LICENSE: "{{ playbook_dir }}/files/LICENSE"
       loop_control:
