@@ -5,7 +5,7 @@
 jwnmulder.zyxel_vmg8825.zyxel_dal_rpc
 *************************************
 
-**Zyxel Module**
+**Zyxel Module for interacting with the Zyxel DAL API**
 
 
 
@@ -91,18 +91,6 @@ Parameters
 
 
 
-Examples
---------
-
-.. code-block:: yaml
-
-    - name: Get AVI API version
-        community.network.avi_api_version:
-          controller: ""
-          username: ""
-          password: ""
-          tenant: ""
-        register: avi_controller_version
 
 
 

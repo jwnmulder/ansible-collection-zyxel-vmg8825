@@ -4,38 +4,12 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-import logging
-import os
-
 from ansible.module_utils._text import to_text
 from ansible.module_utils.connection import Connection
 from ansible.module_utils.connection import ConnectionError
 
 
-logger = logging.getLogger(__name__)
-if os.environ.get("ANSIBLE_DEBUG") is not None:
-    logger.setLevel(logging.DEBUG)
-
-try:
-    import q
-except ImportError:
-    HASS_Q_LIB = False
-else:
-    HASS_Q_LIB = True
-
-
-class RequestsHandler(logging.Handler):
-    def emit(self, record):
-        if HASS_Q_LIB:
-            msg = record.getMessage()
-            # pylint: disable=not-callable
-            q(msg)
-
-
-logger.addHandler(RequestsHandler())
-
-
-def ansible_return(
+def _ansible_return(
     module, response_code, response_data, changed, req=None, existing_obj=None
 ):
     """
@@ -89,7 +63,7 @@ def zyxel_ansible_api(module, api_oid, api_method, request_data=None):
             data=None, oid=api_oid, method=api_method
         )
 
-        return ansible_return(
+        return _ansible_return(
             module=module,
             response_code=response_code,
             response_data=response_data,

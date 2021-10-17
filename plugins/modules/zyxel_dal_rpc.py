@@ -13,7 +13,7 @@ DOCUMENTATION = """
 ---
 module: zyxel_dal_rpc
 author: Jan-Willem Mulder (@jwnmulder)
-short_description: Zyxel Module
+short_description: Zyxel Module for interacting with the Zyxel DAL API
 description:
   - This module can be used to send dal cfg commands to the Zyxel router
 options:
@@ -38,13 +38,7 @@ options:
 """
 
 EXAMPLES = """
-  - name: Get AVI API version
-    community.network.avi_api_version:
-      controller: ""
-      username: ""
-      password: ""
-      tenant: ""
-    register: avi_controller_version
+
 """
 
 
