@@ -31,7 +31,7 @@ RETURN = """
 from ansible.module_utils.basic import AnsibleModule
 
 from ..module_utils.network.zyxel_vmg8825.utils.utils import (
-    zyxel_ansible_api,
+    ansible_zyxel_dal_request,
 )
 
 
@@ -41,7 +41,7 @@ def main():
 
     module = AnsibleModule(argument_spec=argument_specs, supports_check_mode=False)
 
-    return zyxel_ansible_api(module, "PINGTEST", "get")
+    return ansible_zyxel_dal_request(module, oid="PINGTEST", method="get")
 
 
 if __name__ == "__main__":
