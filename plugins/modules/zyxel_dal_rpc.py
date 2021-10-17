@@ -32,7 +32,7 @@ options:
     - put
     - patch
     - delete
-  content:
+  data:
     type: dict
     description: data
 """
@@ -71,13 +71,13 @@ def main():
             choices=["get", "post", "put", "patch", "delete"],
             default="get",
         ),
-        content=dict(type="dict", required=False),
+        data=dict(type="dict", required=False),
     )
 
     required_if = [
-        ["method", "post", ["content"]],
-        ["method", "put", ["content"]],
-        ["method", "patch", ["content"]],
+        ["method", "post", ["data"]],
+        ["method", "put", ["data"]],
+        ["method", "patch", ["data"]],
     ]
 
     module = AnsibleModule(
@@ -88,9 +88,9 @@ def main():
 
     rpc_oid = module.params.get("oid")
     rpc_method = module.params.get("method")
-    rpc_content = module.params.get("content")
+    rpc_data = module.params.get("data")
 
-    return zyxel_ansible_api(module, rpc_oid, rpc_method, request_data=rpc_content)
+    return zyxel_ansible_api(module, rpc_oid, rpc_method, request_data=rpc_data)
 
 
 if __name__ == "__main__":
