@@ -80,3 +80,44 @@ ansible-galaxy collection install git+https://github.com/ansible-network/cli_rm_
 ansible-playbook -e rm_dest=$(pwd) rm_builder/generate_all.yml
 ansible-playbook -e rm_dest=$(pwd) rm_builder/update_all.yml
 ```
+
+## Whish list
+
+### status
+
+<https://192.168.0.1/cgi-bin/DAL?oid=status>
+
+Lots of info useful for facts
+
+```json
+{
+    "result": "ZCFG_SUCCESS",
+    "ReplyMsg": "X_ZYXEL_ConnectionType",
+    "ReplyMsgMultiLang": "",
+    "Object": [
+        {
+            "DeviceInfo": {
+            },
+            "SystemInfo": {
+            },
+            "FirewallInfo": {
+            },
+            "LanPortInfo": [
+            ]
+        }
+    ]
+}
+```
+
+### nat (port forwarding)
+
+<https://192.168.0.1/cgi-bin/DAL?oid=nat>
+
+Interface can be any of VD_Internet, ETH_Ethernet or ADSL_Ethernet
+ETH_Internet=IP.Interface.7 (lookup via <https://192.168.0.1/cgi-bin/WAN_LAN_LIST_Get>)
+
+Idea: WAN_LAN_LIST could be part of facts?
+
+```json
+{"result":"ZCFG_SUCCESS","ReplyMsg":"InternalClient","ReplyMsgMultiLang":"","Object":[{"Enable":true,"Protocol":"TCP","Description":"app forward","Interface":"IP.Interface.7","ExternalPortStart":443,"ExternalPortEnd":443,"InternalPortStart":1443,"InternalPortEnd":1443,"InternalClient":"192.168.0.2","SetOriginatingIP":false,"OriginatingIpAddress":"","Index":1,"X_ZYXEL_AutoDetectWanStatus":false}]}
+```
