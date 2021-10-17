@@ -8,7 +8,9 @@ from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     AnsibleFailJson,
     set_module_args,
 )
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import zyxel_dal_rpc
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import (
+    zyxel_vmg8825_dal_rpc,
+)
 
 from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.module_test_utils import (
     ZyxelModuleTestCase,
@@ -17,7 +19,7 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.module_test_ut
 
 class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
 
-    module = zyxel_dal_rpc
+    module = zyxel_vmg8825_dal_rpc
 
     def test_module_fail_when_required_args_missing(self):
         with self.assertRaises(AnsibleFailJson):

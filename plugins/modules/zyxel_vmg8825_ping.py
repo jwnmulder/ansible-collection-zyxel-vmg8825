@@ -11,35 +11,26 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 ---
-module: zyxel_ping
+module: zyxel_vmg8825_ping
 author: Jan-Willem Mulder (@jwnmulder)
-short_description: Zyxel Module
+short_description: Zyxel Module for sending PINGTEST
 description:
-  - Zyxel module
+  - Send a PINGTEST dal command
 """
 
 EXAMPLES = """
-  - name: Get AVI API version
-    community.network.avi_api_version:
-      controller: ""
-      username: ""
-      password: ""
-      tenant: ""
-    register: avi_controller_version
+
 """
 
 
 RETURN = """
-obj:
-    description: Avi REST resource
-    returned: success, changed
-    type: dict
+
 """
 
 
 from ansible.module_utils.basic import AnsibleModule
 
-from ..module_utils.network.zyxel_vmg8825.utils.ansible_utils import (
+from ..module_utils.network.zyxel_vmg8825.utils.utils import (
     zyxel_ansible_api,
 )
 

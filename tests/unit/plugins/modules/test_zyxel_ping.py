@@ -5,7 +5,9 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import zyxel_ping
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import (
+    zyxel_vmg8825_ping,
+)
 from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.module_test_utils import (
     ZyxelModuleTestCase,
 )
@@ -13,7 +15,7 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.module_test_ut
 
 class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
 
-    module = zyxel_ping
+    module = zyxel_vmg8825_ping
 
     def test_ensure_command_called_httpapi(self):
 

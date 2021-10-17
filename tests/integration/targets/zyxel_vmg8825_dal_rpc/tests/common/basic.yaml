@@ -1,0 +1,15 @@
+---
+- debug: msg="START common/zyxel_vmg8825_dal_rpc.yaml on connection={{ ansible_connection }}"
+
+- name: test zyxel_vmg8825_dal_rpc
+  zyxel_vmg8825_dal_rpc:
+    oid: static_dhcp
+    method: get
+  register: result
+
+- assert:
+    that:
+      - "result.changed == false"
+      - "result.obj is defined"
+
+- debug: msg="END common/zyxel_vmg8825_dal_rpc.yaml on connection={{ ansible_connection }}"
