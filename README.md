@@ -62,7 +62,7 @@ If you want to clone this repositority (or a fork of it) to improve it, you can 
 Using ansible-test
 
 1. Copy inventory.networking.template to inventory.networking and modify accordingly
-2. To run all tests, just run ./run-all-tests.
+2. To run all tests: `./run-all-tests`
 
 ### ansible-test debugging tips
 
