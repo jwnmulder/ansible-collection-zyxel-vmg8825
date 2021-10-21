@@ -189,7 +189,7 @@ class TestZyxelHttpApi(unittest.TestCase):
         args = self.request_mock.mock_calls[1].args
         self.assertEqual(args[0], "POST")
         self.assertRegex(args[1], "/cgi-bin/UserLogout")
-        self.assertRegex(args[1], f"sessionkey={sessionkey}")
+        self.assertRegex(args[1], "sessionkey=%s" % (sessionkey))
 
     def test_logout_without_login(self):
 

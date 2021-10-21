@@ -57,7 +57,7 @@ class ZyxelHttpApiRequests(object):
         if isinstance(data, dict):
             data = json.dumps(data)
 
-        logger.debug(f"send_request: {method, path, data}")
+        logger.debug("send_request: %s, %s, %s", method, path, data)
 
         self.httpapi._display(method, "send_request/oid")
 
@@ -89,11 +89,11 @@ class ZyxelHttpApiRequests(object):
         method = message_kwargs.get("method")
 
         if oid:
-            path = f"/cgi-bin/DAL?oid={oid}"
+            path = "/cgi-bin/DAL?oid=%s" % (oid)
             if self.httpapi._sessionkey:
-                path += f"&sessionkey={self.httpapi._sessionkey}"
+                path += "&sessionkey=%s" % (self.httpapi._sessionkey)
             if oid_index:
-                path += f"&Index={oid_index}"
+                path += "&Index=%s" % (oid_index)
 
         response_data, response_code = self.send_request(data, path=path, method=method)
 
@@ -184,23 +184,17 @@ def handle_response(method, path, response, response_data):
 
     content_type = response.headers.get("Content-Type")
     if content_type != "application/json":
-        raise ValueError(f"Expected application/json content-type, got {content_type}")
+        raise ValueError(
+            "Expected application/json content-type, got %s" % (content_type)
+        )
 
-    # log("4")
-    # try:
-    #     response_content = json.loads(to_text(response_data.read()))
-    #     log("5")
-    # except ValueError:
-    #     raise ConnectionError(
-    #         "Response was not valid JSON, got {0}".format(
-    #             to_text(response_content.getvalue())
-    #         )
-    #     )
     response_code = response.code
     response_data = response_data.read()
     response_data = json.loads(response_data)
 
-    logger.debug(f"handle_response: {method, response_code, path, response_data}")
+    logger.debug(
+        "handle_response: %s, %s, %s, %s" % (method, response_code, path, response_data)
+    )
 
     if isinstance(response, HTTPError):
         if response_data:

@@ -89,6 +89,3 @@ class Connection(object):
         response_buffer.seek(0)
 
         return response, response_buffer
-
-    def queue_message(self, level, message):
-        print(f"level: {level} - {message}")

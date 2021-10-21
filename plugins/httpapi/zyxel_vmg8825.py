@@ -119,7 +119,7 @@ class HttpApi(HttpApiBase):
             try:
                 self.send_request(
                     data=None,
-                    path=f"/cgi-bin/UserLogout?sessionkey={self._sessionkey}",
+                    path="/cgi-bin/UserLogout?sessionkey=%s" % (self._sessionkey),
                     method="POST",
                 )
             except Exception as e:
