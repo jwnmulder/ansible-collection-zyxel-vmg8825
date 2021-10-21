@@ -119,5 +119,5 @@ ETH_Internet=IP.Interface.7 (lookup via <https://192.168.0.1/cgi-bin/WAN_LAN_LIS
 Idea: WAN_LAN_LIST could be part of facts?
 
 ```json
-{"result":"ZCFG_SUCCESS","ReplyMsg":"InternalClient","ReplyMsgMultiLang":"","Object":[{"Enable":true,"Protocol":"TCP","Description":"app forward","Interface":"IP.Interface.7","ExternalPortStart":443,"ExternalPortEnd":443,"InternalPortStart":1443,"InternalPortEnd":1443,"InternalClient":"192.168.0.201","SetOriginatingIP":false,"OriginatingIpAddress":"","Index":1,"X_ZYXEL_AutoDetectWanStatus":false}]}
+{"result":"ZCFG_SUCCESS","ReplyMsg":"InternalClient","ReplyMsgMultiLang":"","Object":[{"Enable":true,"Protocol":"TCP","Description":"app forward","Interface":"IP.Interface.7","ExternalPortStart":443,"ExternalPortEnd":443,"InternalPortStart":1443,"InternalPortEnd":1443,"InternalClient":"192.168.2.201","SetOriginatingIP":false,"OriginatingIpAddress":"","Index":1,"X_ZYXEL_AutoDetectWanStatus":false}]}
 ```
