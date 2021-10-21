@@ -18,7 +18,11 @@ jobs:
       fail-fast: false
       matrix:
         python:
+          - 3.5
+          - 3.6
+          - 3.7
           - 3.8
+          - 3.9
         ansible:
           # - stable-2.9
           - stable-2.10
@@ -67,7 +71,11 @@ jobs:
       fail-fast: false
       matrix:
         python:
+          - 3.5
+          - 3.6
+          - 3.7
           - 3.8
+          - 3.9
         ansible:
           # - stable-2.9
           - stable-2.10
