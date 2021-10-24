@@ -139,7 +139,7 @@ class TestZyxelHttpApi(unittest.TestCase):
 
         self.assertTrue(
             any(
-                x.args[0] == "POST" and x.args[1].find("/UserLogin")
+                x[1][0] == "POST" and x[1][1].find("/UserLogin")
                 for x in self.request_mock.mock_calls
             )
         )
@@ -186,7 +186,7 @@ class TestZyxelHttpApi(unittest.TestCase):
         self.assertIsNone(self.zyxel_plugin._sessionkey)
 
         # assert that UserLogout was invoked
-        args = self.request_mock.mock_calls[1].args
+        name, args, kwargs = self.request_mock.mock_calls[1]
         self.assertEqual(args[0], "POST")
         self.assertRegex(args[1], "/cgi-bin/UserLogout")
         self.assertRegex(args[1], "sessionkey=%s" % (sessionkey))
