@@ -20,19 +20,11 @@ jobs:
         python:
           - 3.8
         ansible:
-          # - stable-2.9
           - stable-2.10
           - stable-2.11
           - stable-2.12
           - devel
-        include:
-          - ansible:
-            - stable-2.11
-            python:
-              - 3.6
-              - 3.7
-              - 3.8
-              - 3.9
+
     runs-on: ubuntu-latest
     steps:
 
@@ -66,7 +58,13 @@ jobs:
         run: ansible-galaxy collection install ansible.netcommon ansible.utils -p .
 
       - name: Run sanity tests
-        run: ansible-test sanity --docker -v --color --python ${{ matrix.python }}
+        run: |
+          if [ "${{ matrix.ansible }}" !-ne "stable-2.10" -a "${{ matrix.ansible }}" -ne "stable-2.11" ]; then
+            # ansible 2.12 uses tests/config.yml to determine the min python version
+            ansible-test sanity --docker -v --color
+          else
+            ansible-test sanity --docker -v --color --python ${{ matrix.python }}
+          fi
         working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
   units:
