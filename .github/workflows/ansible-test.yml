@@ -79,6 +79,7 @@ jobs:
           # - stable-2.9
           - stable-2.10
           - stable-2.11
+          - stable-2.12
           - devel
 
     steps:
@@ -114,7 +115,13 @@ jobs:
         run: ansible-galaxy collection install ansible.netcommon ansible.utils -p .
 
       - name: Run unit test
-        run: ansible-test units -v --color --venv --coverage --python ${{ matrix.python }}
+        run: |
+          if [ "${{ matrix.ansible }}" != "stable-2.10" -a "${{ matrix.ansible }}" != "stable-2.11" ]; then
+            # ansible>=2.12 uses tests/config.yml to determine the min python version
+            ansible-test units -v --color --docker --coverage
+          else
+            ansible-test units -v --color --docker --coverage --python ${{ matrix.python }}
+          fi
         working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
       #   # ansible-test support producing code coverage date
