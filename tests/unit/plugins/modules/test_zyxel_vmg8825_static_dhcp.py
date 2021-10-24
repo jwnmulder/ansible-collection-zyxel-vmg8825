@@ -103,7 +103,7 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         # check requests that have been sent
         static_dhcp_calls = list(
             filter(
-                lambda x: x.kwargs["method"] != "GET",
+                lambda x: x[1]["method"] != "GET",
                 self.connection.send_request.call_args_list,
             )
         )
@@ -147,7 +147,7 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         # check requests that have been sent
         static_dhcp_calls = list(
             filter(
-                lambda x: x.kwargs["method"] != "GET",
+                lambda x: x[1]["method"] != "GET",
                 self.connection.send_request.call_args_list,
             )
         )
@@ -217,14 +217,14 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         # check requests that have been sent
         static_dhcp_calls = list(
             filter(
-                lambda x: x.kwargs["method"] != "GET"
-                and (x.kwargs["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
+                lambda x: x[1]["method"] != "GET"
+                and (x[1]["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
                 self.connection.send_request.call_args_list,
             )
         )
 
         self.assertEqual(len(static_dhcp_calls), 1)
-        self.assertEqual(static_dhcp_calls[0].kwargs["method"], "POST")
+        self.assertEqual(static_dhcp_calls[0][1]["method"], "POST")
 
     def test_delete_entry(self):
 
@@ -289,14 +289,14 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         # check requests that have been sent
         static_dhcp_calls = list(
             filter(
-                lambda x: x.kwargs["method"] != "GET"
-                and (x.kwargs["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
+                lambda x: x[1]["method"] != "GET"
+                and (x[1]["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
                 self.connection.send_request.call_args_list,
             )
         )
 
         self.assertEqual(len(static_dhcp_calls), 1)
-        self.assertEqual(static_dhcp_calls[0].kwargs["method"], "DELETE")
+        self.assertEqual(static_dhcp_calls[0][1]["method"], "DELETE")
 
     def test_delete_multiple_entries_should_occur_backwards(self):
 
@@ -370,27 +370,27 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         # check requests that have been sent
         static_dhcp_calls = list(
             filter(
-                lambda x: x.kwargs["method"] != "GET"
-                and (x.kwargs["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
+                lambda x: x[1]["method"] != "GET"
+                and (x[1]["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
                 self.connection.send_request.call_args_list,
             )
         )
 
         # self.assertEqual(len(static_dhcp_calls), 2)
-        self.assertEqual(static_dhcp_calls[0].kwargs["method"], "DELETE")
-        self.assertEqual(static_dhcp_calls[1].kwargs["method"], "DELETE")
-        self.assertEqual(static_dhcp_calls[2].kwargs["method"], "DELETE")
+        self.assertEqual(static_dhcp_calls[0][1]["method"], "DELETE")
+        self.assertEqual(static_dhcp_calls[1][1]["method"], "DELETE")
+        self.assertEqual(static_dhcp_calls[2][1]["method"], "DELETE")
 
         # If deletes would start at index=1, index=2 will not exist anymore on the remote device.
         # Assert that deletes happen form the higest index to the lowest
         self.assertEqual(
-            static_dhcp_calls[0].kwargs["path"], "/cgi-bin/DAL?oid=static_dhcp&Index=4"
+            static_dhcp_calls[0][1]["path"], "/cgi-bin/DAL?oid=static_dhcp&Index=4"
         )
         self.assertEqual(
-            static_dhcp_calls[1].kwargs["path"], "/cgi-bin/DAL?oid=static_dhcp&Index=2"
+            static_dhcp_calls[1][1]["path"], "/cgi-bin/DAL?oid=static_dhcp&Index=2"
         )
         self.assertEqual(
-            static_dhcp_calls[2].kwargs["path"], "/cgi-bin/DAL?oid=static_dhcp&Index=1"
+            static_dhcp_calls[2][1]["path"], "/cgi-bin/DAL?oid=static_dhcp&Index=1"
         )
 
     def test_update_entry(self):
@@ -449,16 +449,16 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         # check requests that have been sent
         static_dhcp_calls = list(
             filter(
-                lambda x: x.kwargs["method"] != "GET"
-                and (x.kwargs["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
+                lambda x: x[1]["method"] != "GET"
+                and (x[1]["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
                 self.connection.send_request.call_args_list,
             )
         )
 
         self.assertEqual(len(static_dhcp_calls), 1)
-        self.assertEqual(static_dhcp_calls[0].kwargs["method"], "PUT")
+        self.assertEqual(static_dhcp_calls[0][1]["method"], "PUT")
 
-        request_data = static_dhcp_calls[0].args[0]
+        request_data = static_dhcp_calls[0][0][0]
         self.assertEqual(request_data["IPAddr"], "192.168.0.3")
 
     def test_update_with_incomplete_entry_in_response(self):
