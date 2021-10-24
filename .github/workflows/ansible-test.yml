@@ -59,7 +59,7 @@ jobs:
 
       - name: Run sanity tests
         run: |
-          if [ "${{ matrix.ansible }}" -ne "stable-2.10" -a "${{ matrix.ansible }}" -ne "stable-2.11" ]; then
+          if [ "${{ matrix.ansible }}" != "stable-2.10" -a "${{ matrix.ansible }}" != "stable-2.11" ]; then
             # ansible 2.12 uses tests/config.yml to determine the min python version
             ansible-test sanity --docker -v --color
           else
