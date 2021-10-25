@@ -27,11 +27,11 @@ options:
     type: str
     default: get
     choices:
-    - get
-    - post
-    - put
-    - patch
-    - delete
+    - GET
+    - POST
+    - PUT
+    - PATCH
+    - DELETE
   index:
     type: int
     description: index for deleting entries, required when method=delete
