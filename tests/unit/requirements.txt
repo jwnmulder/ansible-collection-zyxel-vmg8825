@@ -1,11 +1,7 @@
-responses==0.13.3
-httpretty==1.1.2
-urllib3>=1.25.10,<1.26
-pytest-mock==3.6.1
-mock==4.0.3
-q==2.6
+# urllib3
 
+# needed because ansible-test is otherwise throwing errors on branch 'devel' 
 jinja2
 
-# urllib3 >= 1.15 ; python_version >= '3.6' # we need raise_on_status for retry support to raise the correct exceptions https://github.com/urllib3/urllib3/blob/main/CHANGES.rst#115-2016-04-06
-# urllib3 >= 1.15, <2.0.0 ; python_version < '3.6' # https://urllib3.readthedocs.io/en/latest/v2-roadmap.html#optimized-for-python-3-6
+httpretty==1.1.4
+q==2.6

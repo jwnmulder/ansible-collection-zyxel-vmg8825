@@ -1,7 +1,10 @@
-ansible-core==2.11.6
+# ansible-core==2.11.6
+ansible-core==2.12.0rc1
 # https://github.com/ansible/ansible/archive/devel.tar.gz
 ansible-lint==5.2.1
 
-httpretty
+# For unit testing in vscode
 pytest
-q
+
+httpretty==1.1.4
+q==2.6

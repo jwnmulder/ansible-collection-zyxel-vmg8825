@@ -18,7 +18,13 @@ export ANSIBLE_COLLECTIONS_PATHS="$collections_dir"
 
 ansible-galaxy collection install --upgrade ansible.netcommon -p "$collections_dir"
 
-ansible-test units -v --venv --python 3.8 --debug
-ansible-test sanity -v --color --docker --python 3.8
-ansible-test network-integration -v --venv
+ansible-test units -v --color --docker
+ansible-test sanity -v --color --docker
+
+# This doesn't work as ansible-test is having issues with finding the default inventory.networking file
+# ansible-test network-integration -v --color --docker
+
+# '--venv --inventory' is temporarily needed. probably it will be fixed in stable-2.12
+ansible-test network-integration -v --color --venv --inventory "$(pwd)"/tests/integration/inventory.networking
+
 # ansible-test network-integration -v --venv --debug zyxel_vmg8825_dal_rpc --testcase pingtest
