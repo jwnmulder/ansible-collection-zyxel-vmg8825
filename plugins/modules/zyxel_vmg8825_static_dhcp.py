@@ -19,7 +19,8 @@ description: 'Manages static_dhcp entries of zyxel_vmg8825'
 version_added: '1.0.0'
 author: Jan-Willem Mulder (@jwnmulder)
 notes:
-  - 'Tested against Zyxel VMG8825'
+  - Tested against Zyxel VMG8825-T50
+  - Configuration is merged using the 'mac_addr' value and not the 'index' value
 options:
   config:
     description: The provided configuration
@@ -68,7 +69,144 @@ options:
 """
 
 EXAMPLES = """
+# Using replaced
 
+# Before state:
+# -------------
+#
+# DAL?oid=static_dhcp
+# [
+#   {
+#     "Index": 1,
+#     "BrWan": "Default",
+#     "Enable": true,
+#     "MACAddr": "01:01:01:01:01:01",
+#     "IPAddr": "192.168.0.1"
+#   },
+# ]
+
+- name: Configure static_dhcp
+  zyxel_vmg8825_static_dhcp:
+    config:
+      - br_wan: Default
+        enable: True
+        mac_addr: "01:01:01:01:01:01"
+        ip_addr: "192.168.0.2"
+    state: replaced
+
+# DAL?oid=static_dhcp
+# [
+#   {
+#     "Index": 1,
+#     "BrWan": "Default",
+#     "Enable": true,
+#     "MACAddr": "01:01:01:01:01:01",
+#     "IPAddr": "192.168.0.2"
+#   },
+# ]
+
+# Using deleted
+
+# Before state:
+# -------------
+#
+# DAL?oid=static_dhcp
+# [
+#   {
+#     "Index": 1,
+#     "BrWan": "Default",
+#     "Enable": true,
+#     "MACAddr": "01:01:01:01:01:01",
+#     "IPAddr": "192.168.0.1"
+#   },
+# ]
+
+- name: Configure static_dhcp
+  zyxel_vmg8825_static_dhcp:
+    state: deleted
+
+# DAL?oid=static_dhcp
+# [
+# ]
+
+# Using merged
+
+# Before state:
+# -------------
+#
+# DAL?oid=static_dhcp
+# [
+#   {
+#     "Index": 1,
+#     "BrWan": "Default",
+#     "Enable": true,
+#     "MACAddr": "01:01:01:01:01:01",
+#     "IPAddr": "192.168.0.1"
+#   },
+# ]
+
+- name: Configure static_dhcp
+  zyxel_vmg8825_static_dhcp:
+    config:
+      - br_wan: Default
+        enable: True
+        mac_addr: "01:01:01:01:01:02"
+        ip_addr: "192.168.0.2"
+    state: merged
+
+# DAL?oid=static_dhcp
+# [
+#   {
+#     "Index": 1,
+#     "BrWan": "Default",
+#     "Enable": true,
+#     "MACAddr": "01:01:01:01:01:01",
+#     "IPAddr": "192.168.0.1"
+#   },
+#   {
+#     "Index": 2,
+#     "BrWan": "Default",
+#     "Enable": true,
+#     "MACAddr": "01:01:01:01:01:02",
+#     "IPAddr": "192.168.0.2"
+#   },
+# ]
+
+# Using overridden
+
+# Before state:
+# -------------
+#
+# DAL?oid=static_dhcp
+# [
+#   {
+#     "Index": 1,
+#     "BrWan": "Default",
+#     "Enable": true,
+#     "MACAddr": "01:01:01:01:01:01",
+#     "IPAddr": "192.168.0.1"
+#   },
+# ]
+
+- name: Configure static_dhcp
+  zyxel_vmg8825_static_dhcp:
+    config:
+      - br_wan: Default
+        enable: True
+        mac_addr: "01:01:01:01:01:02"
+        ip_addr: "192.168.0.2"
+    state: replaced
+
+# DAL?oid=static_dhcp
+# [
+#   {
+#     "Index": 1,
+#     "BrWan": "Default",
+#     "Enable": true,
+#     "MACAddr": "01:01:01:01:01:02",
+#     "IPAddr": "192.168.0.2"
+#   },
+# ]
 """
 
 RETURN = """

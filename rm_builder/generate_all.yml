@@ -4,7 +4,6 @@
 
   tasks:
     - include_vars: vars.yml
-
     - include_role:
         name: ansible_network.cli_rm_builder.run
       vars:
@@ -16,6 +15,7 @@
         transport: "httpapi"
         resource: "{{ i.resource }}"
         docstring: "{{ playbook_dir }}/docstrings/zyxel_vmg8825_{{ i.resource }}.yaml"
+        examples: "{{ playbook_dir }}/example/zyxel_vmg8825_{{ i.resource }}.txt"
         # rm:
           # LICENSE: "{{ playbook_dir }}/files/LICENSE"
       loop_control:

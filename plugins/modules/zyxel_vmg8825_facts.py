@@ -78,9 +78,9 @@ EXAMPLES = """
     gather_network_resources: static_dhcp
 """
 
-# RETURN = """
+RETURN = """
 # See the respective resource module parameters for the tree.
-# """
+"""
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.facts.facts import (

@@ -8,3 +8,9 @@ pytest
 
 httpretty==1.1.4
 q==2.6
+
+# vscode reStructuredText support
+docutils
+sphinx
+sphinx-autobuild
+rstcheck
