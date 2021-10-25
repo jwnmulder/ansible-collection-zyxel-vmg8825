@@ -7,19 +7,6 @@
 
 from __future__ import absolute_import, division, print_function
 
-from ansible.module_utils.six import iteritems
-
-from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
-    dict_merge,
-)
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.rm_templates.static_dhcp import (
-    static_dhcpTemplate,
-)
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.utils import (
-    equal_dicts,
-)
-
-
 __metaclass__ = type
 
 """
@@ -32,36 +19,41 @@ created.
 
 import logging
 
-logger = logging.getLogger(__name__)
-
-# from ansible.module_utils.six import iteritems
-
-# from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
-#     dict_merge,
-# )
+from ansible.module_utils.six import iteritems
+from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
+    dict_merge,
+)
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.resource_module import (
     ResourceModule,
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.facts.facts import (
     Facts,
 )
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.rm_templates.static_dhcp import (
+    Static_dhcpTemplate,
+)
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.utils import (
+    equal_dicts,
+)
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825 import (
     rm_templates,
 )
 
+logger = logging.getLogger(__name__)
 
-class static_dhcp(ResourceModule):
+
+class Static_dhcp(ResourceModule):
     """
     The zyxel_vmg8825_static_dhcp config class
     """
 
     def __init__(self, module):
-        super(static_dhcp, self).__init__(
+        super(Static_dhcp, self).__init__(
             empty_fact_val={},
             facts_module=Facts(module),
             module=module,
             resource="static_dhcp",
-            tmplt=static_dhcpTemplate(),
+            tmplt=Static_dhcpTemplate(),
         )
         # self.parsers = ["mac_addr"]
 

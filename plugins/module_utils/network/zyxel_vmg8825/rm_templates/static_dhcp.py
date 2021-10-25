@@ -19,9 +19,9 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.r
 )
 
 
-class static_dhcpTemplate(NetworkTemplate):
+class Static_dhcpTemplate(NetworkTemplate):
     def __init__(self, lines=None, module=None):
-        super(static_dhcpTemplate, self).__init__(
+        super(Static_dhcpTemplate, self).__init__(
             lines=lines, tmplt=self, module=module
         )
 

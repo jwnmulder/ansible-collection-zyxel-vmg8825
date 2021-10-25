@@ -123,7 +123,7 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zy
     Static_dhcpArgs,
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.config.static_dhcp.static_dhcp import (
-    static_dhcp,
+    Static_dhcp,
 )
 
 
@@ -146,7 +146,7 @@ def main():
         supports_check_mode=True,
     )
 
-    result = static_dhcp(module).execute_module()
+    result = Static_dhcp(module).execute_module()
     module.exit_json(**result)
 
 
