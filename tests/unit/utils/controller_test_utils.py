@@ -151,6 +151,7 @@ def mocked_response(response, status=200, raise_for_status=True, url=None):
     else:
 
         response_mock = mock.Mock()
+        response_mock.code = status
         response_mock.status.return_value = status
         response_mock.read.return_value = response_bytes
         response_mock.headers = headers

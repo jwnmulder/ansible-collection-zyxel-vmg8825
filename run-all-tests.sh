@@ -27,4 +27,4 @@ ansible-test sanity -v --color --docker
 # '--venv --inventory' is temporarily needed. probably it will be fixed in stable-2.12
 ansible-test network-integration -v --color --venv --inventory "$(pwd)"/tests/integration/inventory.networking
 
-# ansible-test network-integration -v --venv --debug zyxel_vmg8825_dal_rpc --testcase pingtest
+# ansible-test network-integration -v --venv  --inventory "$(pwd)"/tests/integration/inventory.networking --debug zyxel_vmg8825_dal_rpc --testcase pingtest

@@ -71,7 +71,7 @@ def main():
         method=dict(
             type="str",
             required=False,
-            choices=["get", "post", "put", "patch", "delete"],
+            choices=["GET", "POST", "PUT", "PATCH", "DELETE"],
             default="get",
         ),
         index=dict(type="int", required=False),
@@ -79,10 +79,10 @@ def main():
     )
 
     required_if = [
-        ["method", "post", ["data"]],
-        ["method", "put", ["data"]],
-        ["method", "patch", ["data"]],
-        ["method", "delete", ["index"]],
+        ["method", "POST", ["data"]],
+        ["method", "PUT", ["data"]],
+        ["method", "PATCH", ["data"]],
+        ["method", "DELETE", ["index"]],
     ]
 
     module = AnsibleModule(

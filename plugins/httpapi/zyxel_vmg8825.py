@@ -67,21 +67,40 @@ class HttpApi(HttpApiBase):
 
     def update_auth(self, response, response_text):
 
-        logger.debug("update_auth")
+        response_code = response.code
 
-        # update_auth is not invoked when an HTTPError occurs
-        response_data = json.loads(response_text.getvalue())
+        # update_auth is invoked
+        # - after a successful login but
+        # - not after an unseccessful login
+        # - after a successful URL call (200 response)
+        # - after an unseccessul URL call (e.g. 403 response when POST is disallowed on a resource)
 
-        logger.debug("update_auth - response_data=%s", response_data)
+        content_type = response.headers.get("Content-Type")
+        logger.debug(
+            "update_auth: response_code=%s, content_type=%s"
+            % (response_code, content_type)
+        )
 
-        # if 'result' in response and response['result'] == 'ZCFG_SUCCESS':
-        if "sessionkey" in response_data:
-            self._sessionkey = response_data["sessionkey"]
-            logger.debug("update_auth - sessiokey=%s", self._sessionkey)
+        sessionkey = None
+        if content_type == "application/json":
+
+            response_data = json.loads(response_text.getvalue())
+
+            logger.debug("update_auth - response_data=%s", response_data)
+
+            # if 'result' in response and response['result'] == 'ZCFG_SUCCESS':
+            if "sessionkey" in response_data:
+                self._sessionkey = response_data["sessionkey"]
+                sessionkey = self._sessionkey
 
         cookie = response.info().get("Set-Cookie")
+
+        if cookie or sessionkey:
+            logger.debug(
+                "update_auth - sessionkey=%s, cookie=%s", self._sessionkey, cookie
+            )
+
         if cookie:
-            logger.debug("update_auth - cookie=%s", cookie)
             return {"Cookie": cookie}
 
         return None
@@ -106,7 +125,12 @@ class HttpApi(HttpApiBase):
         response_data, response_code = self.send_request(
             data=data, path=login_path, method="POST"
         )
-        logger.debug("login/response: %s, %s", response_code, response_data)
+        logger.debug(
+            "login/response: response_code=%s, session_key=%s, response_data=%s",
+            response_code,
+            self._sessionkey,
+            response_data,
+        )
 
     def logout(self):
         logger.debug(

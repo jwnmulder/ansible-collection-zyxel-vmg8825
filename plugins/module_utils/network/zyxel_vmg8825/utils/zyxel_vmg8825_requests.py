@@ -66,6 +66,8 @@ class ZyxelHttpApiRequests(object):
             response, response_data = self.httpapi.connection.send(
                 path, data, method=method, headers=headers
             )
+        # except Exception as e:
+        #     logger.warn("XXX 1: " + str(e))
         except HTTPError as exc:
             response = exc
             response_data = exc
@@ -119,7 +121,7 @@ class ZyxelHttpApiRequests(object):
 
     def handle_httperror(self, exc):
 
-        logger.warning(exc)
+        logger.warning("handle_httperror, exc=%s", exc)
 
         # just ignore HTTPErrors if they contain json data
         content_type = exc.headers.get("Content-Type")
@@ -182,13 +184,14 @@ class ZyxelHttpApiRequests(object):
 
 def handle_response(method, path, response, response_data):
 
+    response_code = response.code
     content_type = response.headers.get("Content-Type")
     if content_type != "application/json":
         raise ValueError(
-            "Expected application/json content-type, got %s" % (content_type)
+            "Expected application/json content-type, response_code=%s, content_type=%s"
+            % (response_code, content_type)
         )
 
-    response_code = response.code
     response_data = response_data.read()
     response_data = json.loads(response_data)
 
@@ -197,15 +200,20 @@ def handle_response(method, path, response, response_data):
     )
 
     if isinstance(response, HTTPError):
+
         if response_data:
             if "errors" in response_data:
                 errors = response_data["errors"]["error"]
                 error_text = "\n".join((error["error-message"] for error in errors))
             else:
                 error_text = response_data
+        else:
+            error_text = to_text(response)
 
-            raise ConnectionError(error_text, code=response.code)
-
-        raise ConnectionError(to_text(response), code=response.code)
+        msg = "Server returned error response, code=%s, error_text=%s" % (
+            response_code,
+            error_text,
+        )
+        raise ConnectionError(msg, code=response_code)
 
     return response_data, response.code
