@@ -63,7 +63,7 @@ class Static_dhcp(ResourceModule):
         :rtype: A dictionary
         :returns: The result from module execution
         """
-        logger.debug("execute_module")
+
         if self.state not in ["parsed", "gathered"]:
             self.generate_commands()
             self.run_commands()
@@ -73,7 +73,6 @@ class Static_dhcp(ResourceModule):
         """Generate configuration commands to send based on
         want, have and desired state.
         """
-        logger.debug("generate_commands")
 
         # If mac_addr is empty, it means we got an empty string back from our device.
         # This does happen sometimes after an invalid entry was sent.
@@ -108,7 +107,7 @@ class Static_dhcp(ResourceModule):
         the `want` and `have` data with the `parsers` defined
         for the static_dhcp network resource.
         """
-        logger.debug("compare, want=%s, have=%s", want, have)
+        # logger.debug("compare, want=%s, have=%s", want, have)
 
         # if both 'have' and 'want' are set, they have the same PK
         # if dict values differ, an update is needed
