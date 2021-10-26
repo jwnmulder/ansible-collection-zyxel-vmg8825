@@ -43,21 +43,7 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
                         "Enable": True,
                         "MACAddr": "01:02:03:04:05:06:01",
                         "IPAddr": "192.168.0.1",
-                    },
-                    {
-                        "Index": 2,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:02",
-                        "IPAddr": "192.168.0.2",
-                    },
-                    {
-                        "Index": 3,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:03",
-                        "IPAddr": "192.168.0.3",
-                    },
+                    }
                 ],
             },
         )
@@ -66,7 +52,7 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
             self.module,
             {
                 "oid": "static_dhcp",
-                "method": "get",
+                "method": "GET",
             },
         )
 
