@@ -4,7 +4,7 @@
 - name: test zyxel_vmg8825_dal_rpc
   zyxel_vmg8825_dal_rpc:
     oid: static_dhcp
-    method: get
+    method: GET
   register: result
 
 - assert:
