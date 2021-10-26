@@ -77,8 +77,9 @@ class HttpApi(HttpApiBase):
 
         content_type = response.headers.get("Content-Type")
         logger.debug(
-            "update_auth: response_code=%s, content_type=%s"
-            % (response_code, content_type)
+            "update_auth: response_code=%s, content_type=%s",
+            response_code,
+            content_type,
         )
 
         sessionkey = None
