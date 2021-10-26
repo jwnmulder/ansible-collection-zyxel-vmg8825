@@ -227,3 +227,19 @@ class TestZyxelHttpApi(unittest.TestCase):
             res.exception.reply_msg_multi_lang,
             "zylang.Home_Networking.StaticDHCP.Error.invalid_subnet",
         )
+
+    def test_resource_forbidden_should_raise_error(self):
+
+        self.request_mock.side_effect = [
+            mocked_response(
+                {},
+                status=403,
+            )
+        ]
+
+        with self.assertRaises(ConnectionError) as res:
+            self.zyxel_plugin.dal_post(oid="test", data={})
+
+        self.assertTrue(
+            "Server returned error response, code=403" in str(res.exception)
+        )
