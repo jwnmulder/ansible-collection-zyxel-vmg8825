@@ -1,4 +1,8 @@
 {
+    "files.associations": {
+        "**/tests/integration/targets/**/*.yaml": "ansible",
+        "**/rm_builders/*.yaml": "ansible"
+    },
     "python.testing.pytestArgs": [
         "-s",
         "--log-cli-level=2",
