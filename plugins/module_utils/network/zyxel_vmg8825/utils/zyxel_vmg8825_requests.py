@@ -187,9 +187,11 @@ def handle_response(method, path, response, response_data):
     response_code = response.code
     content_type = response.headers.get("Content-Type")
     if content_type != "application/json":
-        raise ValueError(
-            "Expected application/json content-type, response_code=%s, content_type=%s"
-            % (response_code, content_type)
+        raise ConnectionError(
+            "Error while sending '%s' request to '%s'. Expected application/json"
+            " content-type, response_code=%s, content_type=%s"
+            % (method, path, response_code, content_type),
+            code=response_code,
         )
 
     response_data = response_data.read()

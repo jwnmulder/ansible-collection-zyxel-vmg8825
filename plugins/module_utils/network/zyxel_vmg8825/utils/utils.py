@@ -3,6 +3,8 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
+import traceback
+
 # utils
 from ansible.module_utils._text import to_text
 from ansible.module_utils.connection import Connection
@@ -36,6 +38,8 @@ def ansible_zyxel_dal_request(module, oid, method, data=None, oid_index=None):
         if reply_msg_multi_lang:
             result["reply_msg_multi_lang"] = reply_msg_multi_lang
 
+        # This is only useful if errors > 300 return a json body
+        # A test case is missing for that but for now I'll leave it in plac
         if response_code > 299:
             result["msg"] = "Error %d Msg %s req: %s" % (
                 response_code,
@@ -47,7 +51,7 @@ def ansible_zyxel_dal_request(module, oid, method, data=None, oid_index=None):
         return module.exit_json(**result)
 
     except ConnectionError as exc:
-        return module.fail_json(msg=to_text(exc, errors="surrogate_then_replace"))
+        return module.fail_json(msg=to_text(exc), exception=traceback.format_exc())
 
 
 def equal_dicts(d1, d2, ignore_keys):

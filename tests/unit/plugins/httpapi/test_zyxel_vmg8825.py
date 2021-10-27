@@ -243,3 +243,4 @@ class TestZyxelHttpApi(unittest.TestCase):
         self.assertTrue(
             "Server returned error response, code=403" in str(res.exception)
         )
+        self.assertEqual(res.exception.code, 403)

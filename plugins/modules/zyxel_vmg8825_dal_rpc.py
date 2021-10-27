@@ -25,7 +25,7 @@ options:
     description: HTTP method
     required: false
     type: str
-    default: get
+    default: GET
     choices:
     - GET
     - POST
@@ -72,7 +72,7 @@ def main():
             type="str",
             required=False,
             choices=["GET", "POST", "PUT", "PATCH", "DELETE"],
-            default="get",
+            default="GET",
         ),
         index=dict(type="int", required=False),
         data=dict(type="dict", required=False),

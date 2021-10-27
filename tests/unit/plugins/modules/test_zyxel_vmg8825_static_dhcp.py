@@ -9,7 +9,6 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.module_test_ut
 __metaclass__ = type
 
 from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
-    AnsibleFailJson,
     set_module_args,
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import (
@@ -22,9 +21,19 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
     module = zyxel_vmg8825_static_dhcp
 
     def test_module_fail_when_required_args_missing(self):
-        with self.assertRaises(AnsibleFailJson):
-            set_module_args({})
-            self.module.main()
+        set_module_args({})
+        self.execute_module(failed=True)
+
+    def test_403_failure(self):
+
+        self.register_connection_call(
+            method="GET", uri="/cgi-bin/DAL?oid=static_dhcp", status=403
+        )
+
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(failed=True)
+
+        self.assertIn("Server returned error response, code=403", result["msg"])
 
     def test_ensure_command_called_httpapi(self):
 
@@ -47,23 +56,23 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
             },
         )
 
-        result = self._run_module(self.module, {"state": "gathered"})
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
 
-        self.assertFalse(result["changed"])
-        self.assertIsNotNone(result["gathered"])
+        self.assertIsNotNone(result.get("gathered"))
 
-        data = result["gathered"][0]
+        data = result.get("gathered")[0]
 
-        self.assertFalse(result["changed"])
-        self.assertEqual(data["index"], 1)
-        self.assertEqual(data["br_wan"], "Default")
-        self.assertEqual(data["enable"], True)
-        self.assertEqual(data["mac_addr"], "01:02:03:04:05:06:01")
-        self.assertEqual(data["ip_addr"], "192.168.0.1")
+        self.assertEqual(data.get("index"), 1)
+        self.assertEqual(data.get("br_wan"), "Default")
+        self.assertEqual(data.get("enable"), True)
+        self.assertEqual(data.get("mac_addr"), "01:02:03:04:05:06:01")
+        self.assertEqual(data.get("ip_addr"), "192.168.0.1")
 
-        args = self.connection.send_request.call_args
-        self.assertEqual(args[1]["method"].upper(), "GET")
-        self.assertEqual(args[1]["path"], "/cgi-bin/DAL?oid=static_dhcp")
+        # check the last request sent
+        args, kwargs = self.connection.send_request.call_args
+        self.assertEqual(kwargs.get("method"), "GET")
+        self.assertEqual(kwargs.get("path"), "/cgi-bin/DAL?oid=static_dhcp")
 
     def test_update_with_same_info(self):
 
@@ -87,18 +96,17 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         )
 
         # get current config
-        result = self._run_module(self.module, {"state": "gathered"})
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
 
         data = result["gathered"]
 
-        self.assertFalse(result["changed"])
         self.assertEqual(data[0]["index"], 1)
 
         # update with same config
-        result = self._run_module(self.module, {"config": data})
-
         # config should not have changed as it is exactly the same
-        self.assertFalse(result["changed"])
+        set_module_args({"config": data})
+        result = self.execute_module(changed=False)
 
         # check requests that have been sent
         static_dhcp_calls = list(
@@ -133,16 +141,16 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         )
 
         # get current config
-        result = self._run_module(self.module, {"state": "gathered"})
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
 
         data = result["gathered"]
         del data[0]["index"]
 
         # update with same config
-        result = self._run_module(self.module, {"state": "overridden", "config": data})
-
         # config should not have changed as it is exactly the same
-        self.assertFalse(result["changed"])
+        set_module_args({"state": "overridden", "config": data})
+        result = self.execute_module(changed=False)
 
         # check requests that have been sent
         static_dhcp_calls = list(
@@ -190,11 +198,11 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         )
 
         # get current config
-        result = self._run_module(self.module, {"state": "gathered"})
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
 
         data = result["gathered"]
 
-        self.assertFalse(result["changed"])
         self.assertEqual(len(data), 1)
         self.assertEqual(data[0]["index"], 1)
 
@@ -209,10 +217,9 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         )
 
         # update device with new config
-        result = self._run_module(self.module, {"config": data})
-
         # config should have changed
-        self.assertTrue(result["changed"])
+        set_module_args({"config": data})
+        result = self.execute_module(changed=True)
 
         # check requests that have been sent
         static_dhcp_calls = list(
@@ -273,7 +280,8 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         )
 
         # get current config
-        result = self._run_module(self.module, {"state": "gathered"})
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
 
         data = result["gathered"]
 
@@ -281,10 +289,9 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         data.pop(0)
 
         # update device with new config
-        result = self._run_module(self.module, {"state": "overridden", "config": data})
-
         # config should have changed
-        self.assertTrue(result["changed"])
+        set_module_args({"state": "overridden", "config": data})
+        result = self.execute_module(changed=True)
 
         # check requests that have been sent
         static_dhcp_calls = list(
@@ -352,7 +359,8 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         )
 
         # get current config
-        result = self._run_module(self.module, {"state": "gathered"})
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
 
         data = result["gathered"]
 
@@ -362,10 +370,9 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         data.pop(0)
 
         # delete all entries
-        result = self._run_module(self.module, {"state": "overridden", "config": data})
-
         # config should have changed
-        self.assertTrue(result["changed"])
+        set_module_args({"state": "overridden", "config": data})
+        result = self.execute_module(changed=True)
 
         # check requests that have been sent
         static_dhcp_calls = list(
@@ -433,7 +440,8 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         )
 
         # get current config
-        result = self._run_module(self.module, {"state": "gathered"})
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
 
         data = result["gathered"]
 
@@ -441,10 +449,9 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         data[1]["ip_addr"] = "192.168.0.3"
 
         # update device with new config
-        result = self._run_module(self.module, {"config": data})
-
         # config should have changed
-        self.assertTrue(result["changed"])
+        set_module_args({"config": data})
+        result = self.execute_module(changed=True)
 
         # check requests that have been sent
         static_dhcp_calls = list(
@@ -497,9 +504,11 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         )
 
         # get current config
-        result = self._run_module(self.module, {"state": "gathered"})
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
 
         data = result["gathered"]
 
         # update device with new config
-        result = self._run_module(self.module, {"config": data})
+        set_module_args({"config": data})
+        result = self.execute_module(changed=False)

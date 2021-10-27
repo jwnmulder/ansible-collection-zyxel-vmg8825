@@ -41,7 +41,7 @@ def main():
 
     module = AnsibleModule(argument_spec=argument_specs, supports_check_mode=False)
 
-    return ansible_zyxel_dal_request(module, oid="PINGTEST", method="get")
+    return ansible_zyxel_dal_request(module, oid="PINGTEST", method="GET")
 
 
 if __name__ == "__main__":

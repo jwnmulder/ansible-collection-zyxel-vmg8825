@@ -1,6 +1,9 @@
 # https://docs.ansible.com/ansible/latest/dev_guide/testing_units_modules.html
 
 from __future__ import absolute_import, division, print_function
+from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
+    set_module_args,
+)
 
 
 __metaclass__ = type
@@ -30,18 +33,17 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
             },
         )
 
-        result = self._run_module(self.module, {})
+        set_module_args({})
+        result = self.execute_module(changed=False)
 
-        self.assertFalse(result["changed"])
-        # self.assertEquals(result["response"]["result"], "ZCFG_SUCCESS")
-        # self.assertIsNotNone(result["response"]["Object"])
-        self.assertEqual(result["result"], "ZCFG_SUCCESS")
-        self.assertIsNotNone(result["obj"])
+        self.assertEqual(result.get("result"), "ZCFG_SUCCESS")
+        self.assertIsNotNone(result.get("obj"))
 
-        args = self.connection.send_request.call_args
-        self.assertEqual(args[1]["method"].upper(), "GET")
-        self.assertEqual(args[1]["path"], "/cgi-bin/DAL?oid=PINGTEST")
+        # check the last request sent
+        args, kwargs = self.connection.send_request.call_args
+        self.assertEqual(kwargs.get("method"), "GET")
+        self.assertEqual(kwargs.get("path"), "/cgi-bin/DAL?oid=PINGTEST")
 
 
-# TODO Test that Zyxel reponses with a non SUCCESS result get logge in the module output
+# TODO Test that Zyxel reponses with a non SUCCESS result get logged in the module output
 # For example a failing logout

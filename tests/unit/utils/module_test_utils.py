@@ -6,8 +6,8 @@ __metaclass__ = type
 from ansible_collections.ansible.netcommon.tests.unit.compat import mock
 from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     AnsibleExitJson,
+    AnsibleFailJson,
     ModuleTestCase,
-    set_module_args,
 )
 from ansible.module_utils import basic
 
@@ -16,8 +16,13 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zy
 )
 
 import httpretty
+import io
 import json
 import logging
+
+# pylint: disable-all
+# pyright: reportMissingImports=false
+from ansible.module_utils.six.moves.urllib.error import HTTPError
 
 logger = logging.getLogger(__name__)
 
@@ -98,9 +103,12 @@ class ZyxelModuleTestCase(ModuleTestCase):
         )
 
         mocked_call = self.connection_calls[0]
+
         response_data = mocked_call.get("body")
         response_code = mocked_call.get("status")
-        http_response = mocked_response(response=response_data, status=response_code)
+        http_response = mocked_response(
+            response=response_data, status=response_code, url=path
+        )
 
         return http_response, http_response
 
@@ -124,7 +132,7 @@ class ZyxelModuleTestCase(ModuleTestCase):
         method="GET",
         uri="",
         status=200,
-        body=None,
+        body={},
         content_type="application/json",
     ):
 
@@ -165,12 +173,54 @@ class ZyxelModuleTestCase(ModuleTestCase):
             content_type=content_type,
         )
 
-    def _run_module(self, module, module_args):
-        set_module_args(module_args)
-        with self.assertRaises(AnsibleExitJson) as result:
-            module.main()
+    # def _run_module(self, module, module_args):
+    #     set_module_args(module_args)
+    #     with self.assertRaises(AnsibleExitJson) as result:
+    #         module.main()
 
-        return result.exception.args[0]
+    #     return result.exception.args[0]
+
+    def execute_module(
+        self, failed=False, changed=False, commands=None, sort=True, defaults=False
+    ):
+
+        self.load_fixtures(commands)
+
+        if failed:
+            result = self.failed()
+            self.assertTrue(result["failed"], result)
+        else:
+            result = self.changed(changed)
+            self.assertEqual(result["changed"], changed, result)
+
+        if commands is not None:
+            if sort:
+                self.assertEqual(
+                    sorted(commands), sorted(result["commands"]), result["commands"]
+                )
+            else:
+                self.assertEqual(commands, result["commands"], result["commands"])
+
+        return result
+
+    def failed(self):
+        with self.assertRaises(AnsibleFailJson) as exc:
+            self.module.main()
+
+        result = exc.exception.args[0]
+        self.assertTrue(result["failed"], result)
+        return result
+
+    def changed(self, changed=False):
+        with self.assertRaises(AnsibleExitJson) as exc:
+            self.module.main()
+
+        result = exc.exception.args[0]
+        self.assertEqual(result["changed"], changed, result)
+        return result
+
+    def load_fixtures(self, commands=None):
+        pass
 
 
 class FakeZyxelHttpApiPlugin(zyxel_vmg8825_requests.ZyxelHttpApiRequests):
@@ -210,15 +260,27 @@ class PropertyMock(mock.Mock):
         self(val)
 
 
-def mocked_response(response, status=200):
+def mocked_response(response, status=200, raise_for_status=True, url=None):
+
     response_text = json.dumps(response) if type(response) is dict else response
     response_bytes = response_text.encode() if response_text else "".encode()
 
-    response_mock = mock.Mock()
-    response_mock.status.return_value = status
-    # response_mock.code.return_value = status # TODO, make zyxel_ansible_api http_response agnostic
-    response_mock.code = status
-    response_mock.read.return_value = response_bytes
-    response_mock.headers = {"Content-Type": "application/json"}
+    headers = {"Content-Type": "application/json"}
 
-    return response_mock
+    if raise_for_status and status >= 300:
+
+        response_buffer = io.BytesIO(response_bytes)
+
+        return HTTPError(
+            url=url, code=status, msg=None, hdrs=headers, fp=response_buffer
+        )
+
+    else:
+
+        response_mock = mock.Mock()
+        response_mock.code = status
+        response_mock.status.return_value = status
+        response_mock.read.return_value = response_bytes
+        response_mock.headers = headers
+
+        return response_mock

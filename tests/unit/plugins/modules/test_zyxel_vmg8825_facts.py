@@ -11,7 +11,6 @@ __metaclass__ = type
 import pytest
 
 from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
-    AnsibleFailJson,
     set_module_args,
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import (
@@ -25,9 +24,8 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
 
     @pytest.mark.skip(reason="wip")
     def test_module_fail_when_required_args_missing(self):
-        with self.assertRaises(AnsibleFailJson):
-            set_module_args({})
-            self.module.main()
+        set_module_args({})
+        self.execute_module(failed=False)
 
     def test_ensure_command_called_httpapi(self):
 
@@ -50,18 +48,14 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
             },
         )
 
-        result = self._run_module(
-            self.module, {"gather_network_resources": ["static_dhcp"]}
-        )
+        set_module_args({"gather_network_resources": ["static_dhcp"]})
+        result = self.execute_module(changed=False)
 
-        self.assertFalse(result["changed"])
-        # self.assertEquals(result["response"]["result"], "ZCFG_SUCCESS")
-        # self.assertIsNotNone(result["response"]["Object"])
-        # self.assertEqual(result["result"], "ZCFG_SUCCESS")
         self.assertIsNotNone(
             result["ansible_facts"]["ansible_network_resources"]["static_dhcp"]
         )
 
-        args = self.connection.send_request.call_args
-        self.assertEqual(args[1]["method"].upper(), "GET")
-        self.assertEqual(args[1]["path"], "/cgi-bin/DAL?oid=static_dhcp")
+        # check the last request sent
+        args, kwargs = self.connection.send_request.call_args
+        self.assertEqual(kwargs.get("method"), "GET")
+        self.assertEqual(kwargs.get("path"), "/cgi-bin/DAL?oid=static_dhcp")

@@ -73,13 +73,12 @@ Parameters
                 </td>
                 <td>
                         <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                    <li>GET</li>
+                                    <li><div style="color: blue"><b>GET</b>&nbsp;&larr;</div></li>
                                     <li>POST</li>
                                     <li>PUT</li>
                                     <li>PATCH</li>
                                     <li>DELETE</li>
                         </ul>
-                        <b>Default:</b><br/><div style="color: blue">"get"</div>
                 </td>
                 <td>
                         <div>HTTP method</div>
