@@ -11,12 +11,10 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import (
     zyxel_vmg8825_dal_rpc,
 )
 
-from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.module_test_utils import (
-    ZyxelModuleTestCase,
-)
+from .zyxel_module import TestZyxelModule
 
 
-class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
+class TestZyxelModuleHttpApi(TestZyxelModule):
 
     module = zyxel_vmg8825_dal_rpc
 

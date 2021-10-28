@@ -2,9 +2,6 @@
 
 from __future__ import absolute_import, division, print_function
 
-from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.module_test_utils import (
-    ZyxelModuleTestCase,
-)
 
 __metaclass__ = type
 
@@ -15,8 +12,10 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import (
     zyxel_vmg8825_static_dhcp,
 )
 
+from .zyxel_module import TestZyxelModule
 
-class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
+
+class TestZyxelModuleHttpApi(TestZyxelModule):
 
     module = zyxel_vmg8825_static_dhcp
 
@@ -512,3 +511,317 @@ class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
         # update device with new config
         set_module_args({"config": data})
         result = self.execute_module(changed=False)
+
+    def test_static_dhcp_merged(self):
+
+        self.register_connection_call(
+            method="GET",
+            uri="/cgi-bin/DAL?oid=static_dhcp",
+            body={
+                "result": "ZCFG_SUCCESS",
+                "ReplyMsg": "BrWan",
+                "ReplyMsgMultiLang": "",
+                "Object": [
+                    {
+                        "Index": 1,
+                        "BrWan": "Default",
+                        "Enable": True,
+                        "MACAddr": "01:02:03:04:05:06:01",
+                        "IPAddr": "192.168.0.1",
+                    },
+                    {
+                        "Index": 2,
+                        "BrWan": "Default",
+                        "Enable": True,
+                        "MACAddr": "01:02:03:04:05:06:02",
+                        "IPAddr": "192.168.0.2",
+                    },
+                ],
+            },
+        )
+
+        self.register_connection_call(
+            method="PUT",
+            uri="/cgi-bin/DAL?oid=static_dhcp",
+            body={
+                "result": "ZCFG_SUCCESS",
+                "ReplyMsg": "BrWan",
+                "ReplyMsgMultiLang": "",
+                "sessionkey": "100000001",
+            },
+        )
+
+        # get current config
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
+
+        data = result["gathered"]
+
+        # update data
+        data[1]["ip_addr"] = "192.168.0.3"
+
+        # update device with new config
+        # config should have changed
+        set_module_args({"config": data, "state": "merged"})
+        result = self.execute_module(changed=True)
+
+        commands = [
+            {
+                "oid": "static_dhcp",
+                "method": "PUT",
+                "data": {
+                    "BrWan": "Default",
+                    "Enable": True,
+                    "IPAddr": "192.168.0.3",
+                    "Index": 2,
+                    "MACAddr": "01:02:03:04:05:06:02",
+                },
+            }
+        ]
+        self.execute_module(changed=True, commands=commands)
+
+    def test_static_dhcp_merged_idempotent(self):
+        self.register_connection_call(
+            method="GET",
+            uri="/cgi-bin/DAL?oid=static_dhcp",
+            body={
+                "result": "ZCFG_SUCCESS",
+                "ReplyMsg": "BrWan",
+                "ReplyMsgMultiLang": "",
+                "Object": [
+                    {
+                        "Index": 1,
+                        "BrWan": "Default",
+                        "Enable": True,
+                        "MACAddr": "01:02:03:04:05:06:01",
+                        "IPAddr": "192.168.0.1",
+                    },
+                    {
+                        "Index": 2,
+                        "BrWan": "Default",
+                        "Enable": True,
+                        "MACAddr": "01:02:03:04:05:06:02",
+                        "IPAddr": "192.168.0.2",
+                    },
+                ],
+            },
+        )
+
+        self.register_connection_call(
+            method="PUT",
+            uri="/cgi-bin/DAL?oid=static_dhcp",
+            body={
+                "result": "ZCFG_SUCCESS",
+                "ReplyMsg": "BrWan",
+                "ReplyMsgMultiLang": "",
+                "sessionkey": "100000001",
+            },
+        )
+
+        # get current config
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
+
+        data = result["gathered"]
+
+        # update device with new config
+        # config should have changed
+        set_module_args({"config": data, "state": "merged"})
+        self.execute_module(changed=False, commands=[])
+
+    # def test_eos_l3_interfaces_overridden(self):
+    #     set_module_args(
+    #         dict(
+    #             config=[
+    #                 dict(
+    #                     name="Ethernet2",
+    #                     ipv4=[dict(address="203.0.113.27/24")],
+    #                 ),
+    #                 dict(
+    #                     name="Management1",
+    #                     ipv4=[dict(address="dhcp")],
+    #                     ipv6=[dict(address="auto-config")],
+    #                 ),
+    #             ],
+    #             state="overridden",
+    #         )
+    #     )
+    #     commands = [
+    #         "interface Ethernet2",
+    #         "no ipv6 address 2001:db8::1/64",
+    #         "ip address 203.0.113.27/24",
+    #         "interface Ethernet1",
+    #         "no ip address",
+    #         "interface Vlan100",
+    #         "no ip address",
+    #         "interface Loopback99",
+    #         "no ip address",
+    #     ]
+    #     self.execute_module(changed=True, commands=commands)
+
+    # def test_eos_l3_interfaces_overridden_idempotent(self):
+    #     set_module_args(
+    #         dict(
+    #             config=[
+    #                 dict(
+    #                     name="Ethernet2", ipv6=[dict(address="2001:db8::1/64")]
+    #                 ),
+    #                 dict(
+    #                     name="Ethernet1",
+    #                     ipv4=[
+    #                         dict(address="192.0.2.12/24"),
+    #                         dict(address="192.87.33.4/24", secondary=True),
+    #                     ],
+    #                 ),
+    #                 dict(
+    #                     name="Management1",
+    #                     ipv4=[dict(address="dhcp")],
+    #                     ipv6=[dict(address="auto-config")],
+    #                 ),
+    #                 dict(
+    #                     name="Vlan100",
+    #                     ipv4=[dict(address="192.13.45.12/24", virtual=True)],
+    #                 ),
+    #                 dict(name="Loopback99", ipv4=[dict(address="1.1.1.1/24")]),
+    #             ],
+    #             state="overridden",
+    #         )
+    #     )
+    #     self.execute_module(changed=False, commands=[])
+
+    # def test_eos_l3_interfaces_replaced(self):
+    #     set_module_args(
+    #         dict(
+    #             config=[
+    #                 dict(
+    #                     name="Ethernet2",
+    #                     ipv4=[dict(address="203.0.113.27/24")],
+    #                 )
+    #             ],
+    #             state="replaced",
+    #         )
+    #     )
+    #     commands = [
+    #         "interface Ethernet2",
+    #         "ip address 203.0.113.27/24",
+    #         "no ipv6 address 2001:db8::1/64",
+    #     ]
+    #     self.execute_module(changed=True, commands=commands)
+
+    # def test_eos_l3_interfaces_replaced_idempotent(self):
+    #     set_module_args(
+    #         dict(
+    #             config=[
+    #                 dict(
+    #                     name="Ethernet2", ipv6=[dict(address="2001:db8::1/64")]
+    #                 ),
+    #                 dict(
+    #                     name="Ethernet1",
+    #                     ipv4=[
+    #                         dict(address="192.0.2.12/24"),
+    #                         dict(address="192.87.33.4/24", secondary=True),
+    #                     ],
+    #                 ),
+    #                 dict(
+    #                     name="Management1",
+    #                     ipv4=[dict(address="dhcp")],
+    #                     ipv6=[dict(address="auto-config")],
+    #                 ),
+    #                 dict(
+    #                     name="Vlan100",
+    #                     ipv4=[dict(address="192.13.45.12/24", virtual=True)],
+    #                 ),
+    #                 dict(name="Loopback99", ipv4=[dict(address="1.1.1.1/24")]),
+    #             ],
+    #             state="replaced",
+    #         )
+    #     )
+    #     self.execute_module(changed=False, commands=[])
+
+    # def test_eos_l3_interfaces_deleted(self):
+    #     set_module_args(
+    #         dict(
+    #             config=[
+    #                 dict(
+    #                     name="Ethernet2", ipv6=[dict(address="2001:db8::1/64")]
+    #                 ),
+    #                 dict(name="lo99", ipv4=[dict(address="1.1.1.1/24")]),
+    #             ],
+    #             state="deleted",
+    #         )
+    #     )
+    #     commands = [
+    #         "interface Ethernet2",
+    #         "no ipv6 address 2001:db8::1/64",
+    #         "interface Loopback99",
+    #         "no ip address",
+    #     ]
+    #     self.execute_module(changed=True, commands=commands)
+
+    # def test_eos_l3_interfaces_rendered(self):
+    #     set_module_args(
+    #         dict(
+    #             config=[
+    #                 dict(
+    #                     name="Ethernet1",
+    #                     ipv4=[dict(address="198.51.100.14/24")],
+    #                 ),
+    #                 dict(
+    #                     name="Ethernet2",
+    #                     ipv4=[dict(address="203.0.113.27/24")],
+    #                 ),
+    #             ],
+    #             state="rendered",
+    #         )
+    #     )
+    #     commands = [
+    #         "interface Ethernet1",
+    #         "ip address 198.51.100.14/24",
+    #         "interface Ethernet2",
+    #         "ip address 203.0.113.27/24",
+    #     ]
+    #     result = self.execute_module(changed=False)
+    #     self.assertEqual(
+    #         sorted(result["rendered"]), sorted(commands), result["rendered"]
+    #     )
+
+    # def test_eos_l3_interfaces_parsed(self):
+    #     commands = [
+    #         "interface Ethernet1",
+    #         "ip address 198.51.100.14/24",
+    #         "interface Ethernet2",
+    #         "ip address 203.0.113.27/24",
+    #     ]
+    #     parsed_str = "\n".join(commands)
+    #     set_module_args(dict(running_config=parsed_str, state="parsed"))
+    #     result = self.execute_module(changed=False)
+    #     parsed_list = [
+    #         {"name": "Ethernet1", "ipv4": [{"address": "198.51.100.14/24"}]},
+    #         {"name": "Ethernet2", "ipv4": [{"address": "203.0.113.27/24"}]},
+    #     ]
+    #     self.assertEqual(parsed_list, result["parsed"])
+
+    # def test_eos_l3_interfaces_gathered(self):
+    #     set_module_args(dict(state="gathered"))
+    #     result = self.execute_module(changed=False)
+    #     gather_list = [
+    #         {
+    #             "name": "Ethernet1",
+    #             "ipv4": [
+    #                 {"address": "192.0.2.12/24"},
+    #                 {"address": "192.87.33.4/24", "secondary": True},
+    #             ],
+    #         },
+    #         {"name": "Ethernet2", "ipv6": [{"address": "2001:db8::1/64"}]},
+    #         {
+    #             "name": "Management1",
+    #             "ipv4": [{"address": "dhcp"}],
+    #             "ipv6": [{"address": "auto-config"}],
+    #         },
+    #         {
+    #             "ipv4": [{"address": "192.13.45.12/24", "virtual": True}],
+    #             "name": "Vlan100",
+    #         },
+    #         {"ipv4": [{"address": "1.1.1.1/24"}], "name": "Loopback99"},
+    #     ]
+    #     self.assertEqual(gather_list, result["gathered"])

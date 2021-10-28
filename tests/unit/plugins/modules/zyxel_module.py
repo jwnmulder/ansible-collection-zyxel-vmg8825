@@ -19,6 +19,7 @@ import httpretty
 import io
 import json
 import logging
+import os
 
 # pylint: disable-all
 # pyright: reportMissingImports=false
@@ -26,8 +27,29 @@ from ansible.module_utils.six.moves.urllib.error import HTTPError
 
 logger = logging.getLogger(__name__)
 
+fixture_path = os.path.join(os.path.dirname(__file__), "fixtures")
+fixture_data = {}
 
-class ZyxelModuleTestCase(ModuleTestCase):
+
+def load_fixture(name):
+    path = os.path.join(fixture_path, name)
+
+    if path in fixture_data:
+        return fixture_data[path]
+
+    with open(path) as f:
+        data = f.read()
+
+    try:
+        data = json.loads(data)
+    except Exception:
+        pass
+
+    fixture_data[path] = data
+    return data
+
+
+class TestZyxelModule(ModuleTestCase):
     def setUp(self, connection_type="httpapi"):
         super().setUp()
 
@@ -221,6 +243,25 @@ class ZyxelModuleTestCase(ModuleTestCase):
 
     def load_fixtures(self, commands=None):
         pass
+
+    # def load_fixtures(self, commands=None):
+
+    #     def load_from_file(*args, **kwargs):
+    #         module, commands = args
+    #         output = list()
+
+    #         for item in commands:
+    #             try:
+    #                 obj = json.loads(item)
+    #                 command = obj['command']
+    #             except ValueError:
+    #                 command = item
+    #             filename = str(command).replace(' ', '_')
+    #             filename = filename.replace('/', '7')
+    #             output.append(load_fixture(filename))
+    #         return output
+
+    #     self.run_commands.side_effect = load_from_file
 
 
 class FakeZyxelHttpApiPlugin(zyxel_vmg8825_requests.ZyxelHttpApiRequests):

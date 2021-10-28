@@ -2,9 +2,6 @@
 
 from __future__ import absolute_import, division, print_function
 
-from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.module_test_utils import (
-    ZyxelModuleTestCase,
-)
 
 __metaclass__ = type
 
@@ -17,8 +14,10 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import (
     zyxel_vmg8825_facts,
 )
 
+from .zyxel_module import TestZyxelModule
 
-class TestZyxelModuleHttpApi(ZyxelModuleTestCase):
+
+class TestZyxelModuleHttpApi(TestZyxelModule):
 
     module = zyxel_vmg8825_facts
 

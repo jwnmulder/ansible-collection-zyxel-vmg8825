@@ -123,12 +123,25 @@ class ZyxelHttpApiRequests(object):
 
         logger.warning("handle_httperror, exc=%s", exc)
 
-        # just ignore HTTPErrors if they contain json data
         content_type = exc.headers.get("Content-Type")
-        if content_type != "application/json":
+        if content_type == "application/json":
+            # propogate exceptions to users as the response
+            # body might contain useful information
             return exc
 
+        # returning false will make Ansible raise an HTTPError
+        # which is than handled in send_request
         return False
+
+    # from
+    # def handle_httperror(self, exc):
+    #     """
+    #     propogate exceptions to users
+    #     :param exc: Exception
+    #     """
+    #     self.log('Exception thrown from handling http: ' + to_text(exc))
+
+    #     return exc
 
     def dal_get(self, oid):
         response_data, response_code = self.send_dal_request(
