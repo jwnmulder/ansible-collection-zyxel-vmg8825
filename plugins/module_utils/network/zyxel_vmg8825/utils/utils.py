@@ -48,6 +48,12 @@ def ansible_zyxel_dal_request(module, oid, method, data=None, oid_index=None):
             )
             return module.fail_json(result)
 
+        if not reply_msg:
+            warnings = [
+                "ReplyMsg is empty. This might indicate an invalid oid, oid=%s" % (oid)
+            ]
+            result["warnings"] = warnings
+
         return module.exit_json(**result)
 
     except ConnectionError as exc:
