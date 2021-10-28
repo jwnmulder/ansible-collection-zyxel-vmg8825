@@ -4,11 +4,9 @@
 [![GitHub Actions ansible-test status](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/workflows/ansible-test/badge.svg?branch=main)](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/actions/workflows/ansible-test.yml?query=branch%3Amain)
 [![GitHub Actions ci status](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/workflows/ci/badge.svg?branch=main)](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/actions/workflows/ci.yml?query=branch%3Amain)
 
-## Usage instructions
+The Ansible Zyxel collection includes a variety of Ansible content to help automate the management of Zyxel VMG8825 routers.
 
-TODO
-
-Collection tested on Zyxel VMG8825-T50
+This collection has been tested against Zyxel VMG8825-T50.
 
 For now only the zyxel_vmg8825_static_dhcp module has been tested. Others modules are work in progres
 
@@ -39,9 +37,46 @@ Name | Description
 
 <!--end collection content-->
 
-## Contributing to this collection
+## Installing this collection
 
-We're following the general Ansible contributor guidelines; see [Ansible Community Guide](https://docs.ansible.com/ansible/latest/community/index.html).
+You can install the Zyxel collection with the Ansible Galaxy CLI:
+
+```bash
+ansible-galaxy collection install git@github.com:jwnmulder/ansible-collection-zyxel-vmg8825.git
+```
+
+You can also include it in a `requirements.yml` file and install it with `ansible-galaxy collection install -r requirements.yml`, using the format:
+
+```yaml
+---
+collections:
+  - name: git@github.com:jwnmulder/ansible-collection-zyxel-vmg8825.git
+    type: git
+    version: main
+```
+
+## Using this collection
+
+This collection includes [network resource modules](https://docs.ansible.com/ansible/latest/network/user_guide/network_resource_modules.html).
+
+### Using modules from the Zyxel collection in your playbooks
+
+You can call modules by their Fully Qualified Collection Namespace (FQCN), such as `jwnmulder.zyxel_vmg8825_static_dhcp`.
+The following example task replaces configuration changes in the existing configuration on a Zyxel router, using the FQCN:
+
+```yaml
+---
+  - name: Configure static_dhcp
+    zyxel_vmg8825_static_dhcp:
+      config:
+        - br_wan: Default
+          enable: True
+          mac_addr: "01:01:01:01:01:02"
+          ip_addr: "192.168.0.2"
+      state: merged
+```
+
+## Contributing to this collection
 
 If you want to clone this repositority (or a fork of it) to improve it, you can proceed as follows:
 
@@ -50,10 +85,11 @@ If you want to clone this repositority (or a fork of it) to improve it, you can 
 3. In there, checkout this repository (or a fork) as `zyxel_vmg8825`
 4. In the zyxel_vmg8825 dir, run the following commands to setup a python venv
 
-        ```bash
-        bin/ensure-venv.sh
-        . .venv/bin/activate
-        ```
+    ```bash
+    bin/ensure-venv.sh
+    . .venv/bin/activate
+    ```
+
 5. In the zyxel_vmg8825 dir, run the following command 'ansible-galaxy collection install ansible.netcommon'
 6. Setup pre-commit by runnning `pre-commit install` in the zyxel_vmg8825 dir
 
@@ -61,7 +97,7 @@ If you want to clone this repositority (or a fork of it) to improve it, you can 
 
 Using ansible-test
 
-1. Copy inventory.networking.template to inventory.networking and modify accordingly
+1. Copy inventory.networking.template to inventory.networking and modify accordingly. You also need a Zyxel router. This is needed for the network-integration tests
 2. To run all tests: `./scripts/run-all-tests`
 
 ### ansible-test debugging tips
@@ -71,7 +107,7 @@ Using ansible-test
 ansible-test network-integration -v --debug
 ```
 
-### generate / update resource module configurations
+### Generate / update resource module configurations
 
 ```bash
 # https://github.com/ansible-network/cli_rm_builder
