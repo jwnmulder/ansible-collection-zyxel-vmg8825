@@ -28,6 +28,10 @@
     }
   ],
 
+  "pip_requirements": {
+    "fileMatch": ["\\.requirements.txt$"]
+  },
+
   "regexManagers": [
     {
       "fileMatch": ["(^|/)\\.pre-commit-config\\.yaml$"],
