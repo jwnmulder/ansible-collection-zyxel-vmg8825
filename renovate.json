@@ -29,7 +29,7 @@
   ],
 
   "pip_requirements": {
-    "fileMatch": ["\\.requirements.txt$"]
+    "fileMatch": ["tests/unit/requirements.txt", "\\.requirements.txt$"]
   },
 
   "regexManagers": [
