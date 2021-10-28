@@ -83,7 +83,7 @@ Parameters
                         </ul>
                 </td>
                 <td>
-                        <div>Enable</div>
+                        <div>True is the entry should be active</div>
                 </td>
             </tr>
             <tr>
@@ -99,7 +99,7 @@ Parameters
                 <td>
                 </td>
                 <td>
-                        <div>Index</div>
+                        <div>Index of the entry. Note that this field has no use in updating configuration. Entries are updated based on their mac_addr</div>
                 </td>
             </tr>
             <tr>
@@ -115,7 +115,7 @@ Parameters
                 <td>
                 </td>
                 <td>
-                        <div>IPAddr</div>
+                        <div>IP address</div>
                 </td>
             </tr>
             <tr>
@@ -131,7 +131,7 @@ Parameters
                 <td>
                 </td>
                 <td>
-                        <div>MACAddr</div>
+                        <div>MAC address. This is also used as the primary key for updating entries in the device. Changing a MAC address will result in deleting the old entry and adding a new one</div>
                 </td>
             </tr>
 
