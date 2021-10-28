@@ -34,7 +34,7 @@ options:
         type: int
       br_wan:
         description:
-        - BrWan
+        - BrWan. Most likely this will be the value 'Default'
         type: str
         default: Default
       enable:

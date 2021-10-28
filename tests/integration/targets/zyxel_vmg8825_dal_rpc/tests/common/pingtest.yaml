@@ -11,5 +11,6 @@
     that:
       - "result.changed == false"
       - "result.obj is defined"
+      - "result.reply_msg == 'DNSServer'"
 
 - debug: msg="END common/pingtest on connection={{ ansible_connection }}"

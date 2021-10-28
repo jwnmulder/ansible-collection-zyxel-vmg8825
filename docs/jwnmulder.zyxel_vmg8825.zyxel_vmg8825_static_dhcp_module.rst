@@ -63,7 +63,7 @@ Parameters
                         <b>Default:</b><br/><div style="color: blue">"Default"</div>
                 </td>
                 <td>
-                        <div>BrWan</div>
+                        <div>BrWan. Most likely this will be the value &#x27;Default&#x27;</div>
                 </td>
             </tr>
             <tr>
