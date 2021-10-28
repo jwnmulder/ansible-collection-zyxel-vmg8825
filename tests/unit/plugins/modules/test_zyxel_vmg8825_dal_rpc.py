@@ -45,7 +45,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
     def test_403_error(self):
 
         self.mock_http_request(
-            method="GET", uri="/cgi-bin/DAL?oid=PINGTEST", body={}, status=403
+            method="POST", uri="/cgi-bin/DAL?oid=PINGTEST", body={}, status=403
         )
 
         set_module_args({"oid": "PINGTEST", "method": "POST", "data": {}})

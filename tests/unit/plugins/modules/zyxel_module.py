@@ -93,7 +93,7 @@ class TestZyxelModule(ModuleTestCase):
                 "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.resource_module_base.get_resource_connection",
             )
 
-            self.connection_calls = []
+            self.http_request_mocks = []
 
             self.mock_socket_path = mock.patch.object(
                 basic.AnsibleModule,
@@ -123,30 +123,23 @@ class TestZyxelModule(ModuleTestCase):
             "request_handler, preparing mock data for: path=%s, kwargs=%s", path, kwargs
         )
 
-        mocked_call = self.connection_calls[0]
+        method = kwargs["method"]
+        matching_request_mocks = list(
+            filter(
+                lambda x: x["method"] == method and (path.find(x["uri"]) >= 0),
+                self.http_request_mocks,
+            )
+        )
 
-        response_data = mocked_call.get("body")
-        response_code = mocked_call.get("status")
+        request_mock = matching_request_mocks[0]
+
+        response_data = request_mock.get("body")
+        response_code = request_mock.get("status")
         http_response = mocked_response(
             response=response_data, status=response_code, url=path
         )
 
         return http_response, http_response
-
-    def get_connection_send_request(self, data, **kwargs):
-        # data = args[0]
-        logger.debug("request_handler, preparing mock data for: kwargs=%s", kwargs)
-
-        mocked_call = self.connection_calls[0]
-        response_data = mocked_call.get("body")
-        response_code = mocked_call.get("status")
-        # http_response = mocked_response(
-        #     response=response_data, status=response_code
-        # )
-
-        # should match return spec of <httpapi>zyxel_vmg8825.send_request
-        # return response_data, http_response
-        return response_data, response_code
 
     def mock_http_request(
         self,
@@ -163,7 +156,7 @@ class TestZyxelModule(ModuleTestCase):
         elif not isinstance(body, dict):
             body = json.load(body)
 
-        self.connection_calls.append(
+        self.http_request_mocks.append(
             {"method": method, "uri": uri, "status": status, "body": body}
         )
         # if http_method == HTTPMethod.POST:
