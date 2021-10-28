@@ -7,6 +7,8 @@
     "github>whitesource/merge-confidence:beta"
   ],
 
+  "ignorePaths": [],
+
   "vulnerabilityAlerts": {
     "addLabels": ["security"]
   },
@@ -27,10 +29,6 @@
       "versioning": "loose"
     }
   ],
-
-  "pip_requirements": {
-    "fileMatch": ["(^|/)tests/unit/requirements.txt$"]
-  },
 
   "regexManagers": [
     {
