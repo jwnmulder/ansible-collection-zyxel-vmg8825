@@ -25,7 +25,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
     def test_403_failure(self):
 
-        self.register_connection_call(
+        self.mock_http_request(
             method="GET", uri="/cgi-bin/DAL?oid=static_dhcp", status=403
         )
 
@@ -36,24 +36,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
     def test_ensure_command_called_httpapi(self):
 
-        self.register_connection_call(
-            method="GET",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "Object": [
-                    {
-                        "Index": 1,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:01",
-                        "IPAddr": "192.168.0.1",
-                    }
-                ],
-            },
-        )
+        self.mock_dal_request("static_dhcp", "GET")
 
         set_module_args({"state": "gathered"})
         result = self.execute_module(changed=False)
@@ -75,24 +58,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
     def test_update_with_same_info(self):
 
-        self.register_connection_call(
-            method="GET",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "Object": [
-                    {
-                        "Index": 1,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:01",
-                        "IPAddr": "192.168.0.1",
-                    }
-                ],
-            },
-        )
+        self.mock_dal_request("static_dhcp", "GET")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -120,24 +86,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
     def test_override_with_same_info_no_index_specified(self):
 
-        self.register_connection_call(
-            method="GET",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "Object": [
-                    {
-                        "Index": 1,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:01",
-                        "IPAddr": "192.168.0.1",
-                    }
-                ],
-            },
-        )
+        self.mock_dal_request("static_dhcp", "GET")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -164,37 +113,8 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
     def test_add_entry(self):
 
-        self.register_connection_call(
-            method="GET",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "Object": [
-                    {
-                        "Index": 1,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:01",
-                        "IPAddr": "192.168.0.1",
-                    }
-                ],
-            },
-        )
-
-        # {"Index":0,"BrWan":"Default","Enable":true,"MACAddr": "01:02:03:04:05:06:02","IPAddr":"192.168.0.2"}
-        # {"result":"ZCFG_SUCCESS","ReplyMsg":"BrWan","ReplyMsgMultiLang":"","sessionkey":991640825}
-        self.register_connection_call(
-            method="POST",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "sessionkey": "100000001",
-            },
-        )
+        self.mock_dal_request("static_dhcp", "GET")
+        self.mock_dal_request("static_dhcp", "POST")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -202,7 +122,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
         data = result["gathered"]
 
-        self.assertEqual(len(data), 1)
+        self.assertEqual(len(data), 2)
         self.assertEqual(data[0]["index"], 1)
 
         data.append(
@@ -210,8 +130,8 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 # "Index": 1,
                 "enable": True,
                 "br_wan": "Default",
-                "mac_addr": "01:02:03:04:05:06:02",
-                "ip_addr": "192.168.0.2",
+                "mac_addr": "01:02:03:04:05:06:03",
+                "ip_addr": "192.168.0.3",
             }
         )
 
@@ -241,42 +161,8 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         #     "oid": "static_dhcp",
         #     "oid_index": 2
         # },
-        self.register_connection_call(
-            method="GET",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "Object": [
-                    {
-                        "Index": 1,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:01",
-                        "IPAddr": "192.168.0.1",
-                    },
-                    {
-                        "Index": 2,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:02",
-                        "IPAddr": "192.168.0.2",
-                    },
-                ],
-            },
-        )
-
-        self.register_connection_call(
-            method="DELETE",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "sessionkey": "100000001",
-            },
-        )
+        self.mock_dal_request("static_dhcp", "GET")
+        self.mock_dal_request("static_dhcp", "DELETE")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -306,56 +192,8 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
     def test_delete_multiple_entries_should_occur_backwards(self):
 
-        self.register_connection_call(
-            method="GET",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "Object": [
-                    {
-                        "Index": 2,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:01",
-                        "IPAddr": "192.168.0.1",
-                    },
-                    {
-                        "Index": 4,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:02",
-                        "IPAddr": "192.168.0.2",
-                    },
-                    {
-                        "Index": 1,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:03",
-                        "IPAddr": "192.168.0.3",
-                    },
-                    {
-                        "Index": 3,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:04",
-                        "IPAddr": "192.168.0.4",
-                    },
-                ],
-            },
-        )
-
-        self.register_connection_call(
-            method="DELETE",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "sessionkey": "100000001",
-            },
-        )
+        self.mock_dal_request("static_dhcp", "GET", variant="deleteorder")
+        self.mock_dal_request("static_dhcp", "DELETE")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -401,42 +239,8 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
     def test_update_entry(self):
 
-        self.register_connection_call(
-            method="GET",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "Object": [
-                    {
-                        "Index": 1,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:01",
-                        "IPAddr": "192.168.0.1",
-                    },
-                    {
-                        "Index": 2,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:02",
-                        "IPAddr": "192.168.0.2",
-                    },
-                ],
-            },
-        )
-
-        self.register_connection_call(
-            method="PUT",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "sessionkey": "100000001",
-            },
-        )
+        self.mock_dal_request("static_dhcp", "GET")
+        self.mock_dal_request("static_dhcp", "PUT")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -469,38 +273,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
     def test_update_with_incomplete_entry_in_response(self):
 
-        self.register_connection_call(
-            method="GET",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "Object": [
-                    {
-                        "Index": 1,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:01",
-                        "IPAddr": "192.168.0.1",
-                    },
-                    {
-                        "Index": 2,
-                        "BrWan": "Default",
-                        "Enable": False,
-                        "MACAddr": "",
-                        "IPAddr": "",
-                    },
-                    {
-                        "Index": 3,
-                        "BrWan": "Default",
-                        "Enable": False,
-                        "MACAddr": "",
-                        "IPAddr": "",
-                    },
-                ],
-            },
-        )
+        self.mock_dal_request("static_dhcp", "GET", variant="incomplete_data")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -514,42 +287,8 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
     def test_static_dhcp_merged(self):
 
-        self.register_connection_call(
-            method="GET",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "Object": [
-                    {
-                        "Index": 1,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:01",
-                        "IPAddr": "192.168.0.1",
-                    },
-                    {
-                        "Index": 2,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:02",
-                        "IPAddr": "192.168.0.2",
-                    },
-                ],
-            },
-        )
-
-        self.register_connection_call(
-            method="PUT",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "sessionkey": "100000001",
-            },
-        )
+        self.mock_dal_request("static_dhcp", "GET")
+        self.mock_dal_request("static_dhcp", "PUT")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -581,42 +320,8 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=True, commands=commands)
 
     def test_static_dhcp_merged_idempotent(self):
-        self.register_connection_call(
-            method="GET",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "Object": [
-                    {
-                        "Index": 1,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:01",
-                        "IPAddr": "192.168.0.1",
-                    },
-                    {
-                        "Index": 2,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:02",
-                        "IPAddr": "192.168.0.2",
-                    },
-                ],
-            },
-        )
 
-        self.register_connection_call(
-            method="PUT",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "sessionkey": "100000001",
-            },
-        )
+        self.mock_dal_request("static_dhcp", "GET")
 
         # get current config
         set_module_args({"state": "gathered"})

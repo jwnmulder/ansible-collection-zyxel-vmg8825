@@ -20,16 +20,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
     def test_ensure_command_called_httpapi(self):
 
-        self.register_connection_call(
-            method="GET",
-            uri="/cgi-bin/DAL?oid=PINGTEST",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "DNSServer",
-                "ReplyMsgMultiLang": "",
-                "Object": [{"DiagnosticsState": "None"}],
-            },
-        )
+        self.mock_dal_request("PINGTEST", "GET")
 
         set_module_args({})
         result = self.execute_module(changed=False)

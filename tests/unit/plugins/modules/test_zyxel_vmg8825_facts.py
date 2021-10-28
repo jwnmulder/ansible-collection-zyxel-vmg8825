@@ -28,24 +28,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
     def test_ensure_command_called_httpapi(self):
 
-        self.register_connection_call(
-            method="GET",
-            uri="/cgi-bin/DAL?oid=static_dhcp",
-            body={
-                "result": "ZCFG_SUCCESS",
-                "ReplyMsg": "BrWan",
-                "ReplyMsgMultiLang": "",
-                "Object": [
-                    {
-                        "Index": 1,
-                        "BrWan": "Default",
-                        "Enable": True,
-                        "MACAddr": "01:02:03:04:05:06:01",
-                        "IPAddr": "192.168.0.1",
-                    }
-                ],
-            },
-        )
+        self.mock_dal_request("static_dhcp", "GET")
 
         set_module_args({"gather_network_resources": ["static_dhcp"]})
         result = self.execute_module(changed=False)

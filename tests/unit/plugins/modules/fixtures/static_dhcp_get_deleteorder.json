@@ -1,0 +1,35 @@
+{
+    "result": "ZCFG_SUCCESS",
+    "ReplyMsg": "BrWan",
+    "ReplyMsgMultiLang": "",
+    "Object": [
+        {
+            "Index": 2,
+            "BrWan": "Default",
+            "Enable": true,
+            "MACAddr": "01:02:03:04:05:06:01",
+            "IPAddr": "192.168.0.1"
+        },
+        {
+            "Index": 4,
+            "BrWan": "Default",
+            "Enable": true,
+            "MACAddr": "01:02:03:04:05:06:02",
+            "IPAddr": "192.168.0.2"
+        },
+        {
+            "Index": 1,
+            "BrWan": "Default",
+            "Enable": true,
+            "MACAddr": "01:02:03:04:05:06:03",
+            "IPAddr": "192.168.0.3"
+        },
+        {
+            "Index": 3,
+            "BrWan": "Default",
+            "Enable": true,
+            "MACAddr": "01:02:03:04:05:06:04",
+            "IPAddr": "192.168.0.4"
+        }
+    ]
+}

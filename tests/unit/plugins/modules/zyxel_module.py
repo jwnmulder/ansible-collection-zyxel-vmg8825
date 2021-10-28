@@ -15,7 +15,6 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zy
     zyxel_vmg8825_requests,
 )
 
-import httpretty
 import io
 import json
 import logging
@@ -149,16 +148,19 @@ class TestZyxelModule(ModuleTestCase):
         # return response_data, http_response
         return response_data, response_code
 
-    def register_connection_call(
+    def mock_http_request(
         self,
         method="GET",
         uri="",
         status=200,
         body={},
+        fixture_name=None,
         content_type="application/json",
     ):
 
-        if not isinstance(body, dict):
+        if fixture_name:
+            body = load_fixture(fixture_name)
+        elif not isinstance(body, dict):
             body = json.load(body)
 
         self.connection_calls.append(
@@ -175,32 +177,17 @@ class TestZyxelModule(ModuleTestCase):
         #         ResponseParams.STATUS_CODE: UNPROCESSABLE_ENTITY_STATUS
         #     }
 
-    def register_uri(
-        self,
-        method="GET",
-        uri="",
-        status=200,
-        body=None,
-        content_type="application/json",
-    ):
+    def mock_dal_request(self, oid, method="GET", status=200, variant=None):
 
-        if isinstance(body, dict):
-            body = json.dumps(body)
+        uri = "/cgi-bin/DAL?oid=%s" % (oid)
+        fixture_name = "%s_%s" % (oid.lower(), method.lower())
 
-        httpretty.register_uri(
-            method=method,
-            uri=self.mock_http_url + uri,
-            body=body,
-            status=status,
-            content_type=content_type,
-        )
+        if variant:
+            fixture_name = "%s_%s" % (fixture_name, variant)
 
-    # def _run_module(self, module, module_args):
-    #     set_module_args(module_args)
-    #     with self.assertRaises(AnsibleExitJson) as result:
-    #         module.main()
+        fixture_name = "%s.json" % (fixture_name)
 
-    #     return result.exception.args[0]
+        self.mock_http_request(method=method, uri=uri, fixture_name=fixture_name)
 
     def execute_module(
         self, failed=False, changed=False, commands=None, sort=True, defaults=False

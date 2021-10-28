@@ -1,0 +1,10 @@
+{
+    "result": "ZCFG_SUCCESS",
+    "ReplyMsg": "DNSServer",
+    "ReplyMsgMultiLang": "",
+    "Object": [
+        {
+            "DiagnosticsState": "None"
+        }
+    ]
+}
