@@ -1,3 +1,6 @@
+# urllib3
+
+# needed because ansible-test is otherwise throwing errors on branch 'devel' 
 jinja2
 
 httpretty==1.1.4
