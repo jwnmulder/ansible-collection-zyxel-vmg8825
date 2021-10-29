@@ -1,7 +1,4 @@
-# https://docs.ansible.com/ansible/latest/dev_guide/testing_units_modules.html
-
 from __future__ import absolute_import, division, print_function
-
 
 __metaclass__ = type
 
