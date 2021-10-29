@@ -54,6 +54,5 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertIn("Server returned error response, code=403", result["msg"])
 
 
-# 1. add tests for each state, see test_eos_l3_interfaces.py for example
 # 2. also check test_nso_action_not_action for response mocking
 # 3. See HTTPError error handing in ftd.py, line 230

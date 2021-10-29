@@ -5,8 +5,6 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-import pytest
-
 from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     set_module_args,
 )
@@ -20,11 +18,6 @@ from .zyxel_module import TestZyxelModule
 class TestZyxelModuleHttpApi(TestZyxelModule):
 
     module = zyxel_vmg8825_facts
-
-    @pytest.mark.skip(reason="wip")
-    def test_module_fail_when_required_args_missing(self):
-        set_module_args({})
-        self.execute_module(failed=False)
 
     def test_ensure_command_called_httpapi(self):
 
