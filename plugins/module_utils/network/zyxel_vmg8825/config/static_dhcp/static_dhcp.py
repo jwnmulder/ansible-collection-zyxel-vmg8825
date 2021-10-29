@@ -130,8 +130,10 @@ class Static_dhcp(ResourceModule):
         request = {
             "oid": rm_templates.static_dhcp.oid(),
             "method": method,
-            "data": data,
         }
+
+        if data:
+            request["data"] = data
 
         if oid_index:
             request["oid_index"] = oid_index

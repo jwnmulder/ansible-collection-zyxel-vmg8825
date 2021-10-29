@@ -167,6 +167,8 @@ Parameters
                                     <li>overridden</li>
                                     <li>deleted</li>
                                     <li>gathered</li>
+                                    <li>rendered</li>
+                                    <li>parsed</li>
                         </ul>
                 </td>
                 <td>

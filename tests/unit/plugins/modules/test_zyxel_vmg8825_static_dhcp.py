@@ -5,6 +5,8 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
+import json
+
 from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     set_module_args,
 )
@@ -18,6 +20,321 @@ from .zyxel_module import TestZyxelModule
 class TestZyxelModuleHttpApi(TestZyxelModule):
 
     module = zyxel_vmg8825_static_dhcp
+
+    def test_static_dhcp_merged(self):
+
+        self.mock_dal_request("static_dhcp", "GET")
+        self.mock_dal_request("static_dhcp", "PUT")
+        self.mock_dal_request("static_dhcp", "POST")
+
+        # get current config
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
+
+        data = result["gathered"]
+
+        # update data
+        data[1]["ip_addr"] = "192.168.0.3"
+        data.append(
+            {
+                "br_wan": "Default",
+                "enable": True,
+                "ip_addr": "192.168.0.4",
+                "mac_addr": "01:02:03:04:05:06:04",
+            }
+        )
+
+        # update device with new config
+        # config should have changed
+        set_module_args({"config": data, "state": "merged"})
+
+        commands = [
+            {
+                "oid": "static_dhcp",
+                "method": "PUT",
+                "data": {
+                    "BrWan": "Default",
+                    "Enable": True,
+                    "IPAddr": "192.168.0.3",
+                    "Index": 2,
+                    "MACAddr": "01:02:03:04:05:06:02",
+                },
+            },
+            {
+                "oid": "static_dhcp",
+                "method": "POST",
+                "data": {
+                    "BrWan": "Default",
+                    "Enable": True,
+                    "IPAddr": "192.168.0.4",
+                    "Index": None,
+                    "MACAddr": "01:02:03:04:05:06:04",
+                },
+            },
+        ]
+        self.execute_module(changed=True, commands=commands, sort=False)
+
+    def test_static_dhcp_merged_idempotent(self):
+
+        self.mock_dal_request("static_dhcp", "GET")
+
+        # get current config
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
+
+        data = result["gathered"]
+
+        # update device with new config
+        # config should not have changed
+        set_module_args({"config": data, "state": "merged"})
+        self.execute_module(changed=False, commands=[])
+
+    def test_static_dhcp_overridden(self):
+
+        self.mock_dal_request("static_dhcp", "GET")
+        self.mock_dal_request("static_dhcp", "PUT")
+        self.mock_dal_request("static_dhcp", "DELETE")
+
+        # get current config
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
+
+        data = result["gathered"]
+
+        # update data
+        data[0]["ip_addr"] = "192.168.0.4"  # update entry
+        data.pop(1)  # remove an entry
+
+        # update device with new config
+        # config should have changed
+        set_module_args({"config": data, "state": "overridden"})
+        commands = [
+            {"oid": "static_dhcp", "method": "DELETE", "oid_index": 2},
+            {
+                "oid": "static_dhcp",
+                "method": "PUT",
+                "data": {
+                    "BrWan": "Default",
+                    "Enable": True,
+                    "IPAddr": "192.168.0.4",
+                    "Index": 1,
+                    "MACAddr": "01:02:03:04:05:06:01",
+                },
+            },
+        ]
+
+        self.execute_module(changed=True, commands=commands, sort=False)
+
+    def test_static_dhcp_overridden_idempotent(self):
+
+        self.mock_dal_request("static_dhcp", "GET")
+
+        # get current config
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
+
+        data = result["gathered"]
+
+        # update device with new config
+        # config should not have changed
+        set_module_args({"config": data, "state": "overridden"})
+        self.execute_module(changed=False, commands=[])
+
+    def test_static_dhcp_replaced(self):
+
+        self.mock_dal_request("static_dhcp", "GET")
+        self.mock_dal_request("static_dhcp", "PUT")
+
+        # get current config
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
+
+        data = result["gathered"]
+
+        # state=replaced will only update the provided subsections
+        # we test this by removing one entry
+        data.pop(1)
+
+        # update data
+        data[0]["ip_addr"] = "192.168.0.4"
+
+        # update device with new config
+        # config should have changed
+        set_module_args({"config": data, "state": "replaced"})
+        commands = [
+            {
+                "oid": "static_dhcp",
+                "method": "PUT",
+                "data": {
+                    "BrWan": "Default",
+                    "Enable": True,
+                    "IPAddr": "192.168.0.4",
+                    "Index": 1,
+                    "MACAddr": "01:02:03:04:05:06:01",
+                },
+            }
+        ]
+
+        self.execute_module(changed=True, commands=commands, sort=False)
+
+    def test_static_dhcp_replaced_idempotent(self):
+
+        self.mock_dal_request("static_dhcp", "GET")
+
+        # get current config
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
+
+        data = result["gathered"]
+
+        # state=replaced will only update the provided subsections
+        # we test this by removing one entry
+        data.pop(0)
+
+        # update device with new config
+        # config should not have changed
+        set_module_args({"config": data, "state": "replaced"})
+        self.execute_module(changed=False, commands=[])
+
+    def test_static_dhcp_deleted(self):
+
+        self.mock_dal_request("static_dhcp", "GET")
+        self.mock_dal_request("static_dhcp", "DELETE")
+
+        # get current config
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
+
+        data = result["gathered"]
+
+        # delete an entry
+        data.pop(0)
+
+        # update device with new config
+        # config should have changed
+        set_module_args({"config": data, "state": "deleted"})
+        commands = [
+            {"oid": "static_dhcp", "method": "DELETE", "oid_index": 2},
+        ]
+
+        self.execute_module(changed=True, commands=commands, sort=False)
+
+    def test_static_dhcp_rendered(self):
+
+        data = [
+            {
+                "br_wan": "Default",
+                "enable": True,
+                "index": 1,
+                "ip_addr": "192.168.0.1",
+                "mac_addr": "01:02:03:04:05:06:01",
+            },
+            {
+                "br_wan": "Default",
+                "enable": True,
+                "index": 2,
+                "ip_addr": "192.168.02",
+                "mac_addr": "01:02:03:04:05:06:02",
+            },
+        ]
+        set_module_args({"config": data, "state": "rendered"})
+        commands = [
+            {
+                "oid": "static_dhcp",
+                "method": "POST",
+                "data": {
+                    "BrWan": "Default",
+                    "Enable": True,
+                    "IPAddr": "192.168.0.1",
+                    "Index": 1,
+                    "MACAddr": "01:02:03:04:05:06:01",
+                },
+            },
+            {
+                "oid": "static_dhcp",
+                "method": "POST",
+                "data": {
+                    "BrWan": "Default",
+                    "Enable": True,
+                    "IPAddr": "192.168.02",
+                    "Index": 2,
+                    "MACAddr": "01:02:03:04:05:06:02",
+                },
+            },
+        ]
+        result = self.execute_module(changed=False)
+        self.assertEqual(result["rendered"], commands, result["rendered"])
+
+    def test_static_dhcp_parsed(self):
+        commands = [
+            {
+                "BrWan": "Default",
+                "Enable": True,
+                "IPAddr": "192.168.0.1",
+                "Index": 1,
+                "MACAddr": "01:02:03:04:05:06:01",
+            },
+            {
+                "BrWan": "Default",
+                "Enable": True,
+                "IPAddr": "192.168.02",
+                "Index": 2,
+                "MACAddr": "01:02:03:04:05:06:02",
+            },
+        ]
+        parsed_str = json.dumps(commands)
+        set_module_args(dict(running_config=parsed_str, state="parsed"))
+        result = self.execute_module(changed=False)
+
+        parsed_list = [
+            {
+                "br_wan": "Default",
+                "enable": True,
+                "index": 1,
+                "ip_addr": "192.168.0.1",
+                "mac_addr": "01:02:03:04:05:06:01",
+            },
+            {
+                "br_wan": "Default",
+                "enable": True,
+                "index": 2,
+                "ip_addr": "192.168.02",
+                "mac_addr": "01:02:03:04:05:06:02",
+            },
+        ]
+        self.assertEqual(parsed_list, result["parsed"])
+
+    def test_static_dhcp_gathered(self):
+
+        self.mock_dal_request("static_dhcp", "GET")
+
+        # get current config
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
+
+        gather_list = [
+            {
+                "br_wan": "Default",
+                "enable": True,
+                "ip_addr": "192.168.0.1",
+                "index": 1,
+                "mac_addr": "01:02:03:04:05:06:01",
+            },
+            {
+                "br_wan": "Default",
+                "enable": True,
+                "ip_addr": "192.168.0.2",
+                "index": 2,
+                "mac_addr": "01:02:03:04:05:06:02",
+            },
+        ]
+
+        self.assertEqual(gather_list, result["gathered"])
+
+        # check the last request sent
+        args, kwargs = self.connection.send_request.call_args
+        self.assertEqual(kwargs.get("method"), "GET")
+        self.assertEqual(kwargs.get("path"), "/cgi-bin/DAL?oid=static_dhcp")
 
     def test_module_fail_when_required_args_missing(self):
         set_module_args({})
@@ -34,57 +351,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
         self.assertIn("Server returned error response, code=403", result["msg"])
 
-    def test_ensure_command_called_httpapi(self):
-
-        self.mock_dal_request("static_dhcp", "GET")
-
-        set_module_args({"state": "gathered"})
-        result = self.execute_module(changed=False)
-
-        self.assertIsNotNone(result.get("gathered"))
-
-        data = result.get("gathered")[0]
-
-        self.assertEqual(data.get("index"), 1)
-        self.assertEqual(data.get("br_wan"), "Default")
-        self.assertEqual(data.get("enable"), True)
-        self.assertEqual(data.get("mac_addr"), "01:02:03:04:05:06:01")
-        self.assertEqual(data.get("ip_addr"), "192.168.0.1")
-
-        # check the last request sent
-        args, kwargs = self.connection.send_request.call_args
-        self.assertEqual(kwargs.get("method"), "GET")
-        self.assertEqual(kwargs.get("path"), "/cgi-bin/DAL?oid=static_dhcp")
-
-    def test_update_with_same_info(self):
-
-        self.mock_dal_request("static_dhcp", "GET")
-
-        # get current config
-        set_module_args({"state": "gathered"})
-        result = self.execute_module(changed=False)
-
-        data = result["gathered"]
-
-        self.assertEqual(data[0]["index"], 1)
-
-        # update with same config
-        # config should not have changed as it is exactly the same
-        set_module_args({"config": data})
-        result = self.execute_module(changed=False)
-
-        # check requests that have been sent
-        static_dhcp_calls = list(
-            filter(
-                lambda x: x[1]["method"] != "GET",
-                self.connection.send_request.call_args_list,
-            )
-        )
-
-        # no PUT/POST/DELETE
-        self.assertEqual(len(static_dhcp_calls), 0)
-
-    def test_override_with_same_info_no_index_specified(self):
+    def test_overridden_with_same_info_no_index_specified(self):
 
         self.mock_dal_request("static_dhcp", "GET")
 
@@ -122,12 +389,8 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
         data = result["gathered"]
 
-        self.assertEqual(len(data), 2)
-        self.assertEqual(data[0]["index"], 1)
-
         data.append(
             {
-                # "Index": 1,
                 "enable": True,
                 "br_wan": "Default",
                 "mac_addr": "01:02:03:04:05:06:03",
@@ -154,13 +417,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
     def test_delete_entry(self):
 
-        # TODO: data: null can be removed
-        # {
-        #     "data": null,
-        #     "method": "DELETE",
-        #     "oid": "static_dhcp",
-        #     "oid_index": 2
-        # },
         self.mock_dal_request("static_dhcp", "GET")
         self.mock_dal_request("static_dhcp", "DELETE")
 
@@ -283,250 +539,4 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
         # update device with new config
         set_module_args({"config": data})
-        result = self.execute_module(changed=False)
-
-    def test_static_dhcp_merged(self):
-
-        self.mock_dal_request("static_dhcp", "GET")
-        self.mock_dal_request("static_dhcp", "PUT")
-
-        # get current config
-        set_module_args({"state": "gathered"})
-        result = self.execute_module(changed=False)
-
-        data = result["gathered"]
-
-        # update data
-        data[1]["ip_addr"] = "192.168.0.3"
-
-        # update device with new config
-        # config should have changed
-        set_module_args({"config": data, "state": "merged"})
-        result = self.execute_module(changed=True)
-
-        commands = [
-            {
-                "oid": "static_dhcp",
-                "method": "PUT",
-                "data": {
-                    "BrWan": "Default",
-                    "Enable": True,
-                    "IPAddr": "192.168.0.3",
-                    "Index": 2,
-                    "MACAddr": "01:02:03:04:05:06:02",
-                },
-            }
-        ]
-        self.execute_module(changed=True, commands=commands)
-
-    def test_static_dhcp_merged_idempotent(self):
-
-        self.mock_dal_request("static_dhcp", "GET")
-
-        # get current config
-        set_module_args({"state": "gathered"})
-        result = self.execute_module(changed=False)
-
-        data = result["gathered"]
-
-        # update device with new config
-        # config should have changed
-        set_module_args({"config": data, "state": "merged"})
-        self.execute_module(changed=False, commands=[])
-
-    # def test_eos_l3_interfaces_overridden(self):
-    #     set_module_args(
-    #         dict(
-    #             config=[
-    #                 dict(
-    #                     name="Ethernet2",
-    #                     ipv4=[dict(address="203.0.113.27/24")],
-    #                 ),
-    #                 dict(
-    #                     name="Management1",
-    #                     ipv4=[dict(address="dhcp")],
-    #                     ipv6=[dict(address="auto-config")],
-    #                 ),
-    #             ],
-    #             state="overridden",
-    #         )
-    #     )
-    #     commands = [
-    #         "interface Ethernet2",
-    #         "no ipv6 address 2001:db8::1/64",
-    #         "ip address 203.0.113.27/24",
-    #         "interface Ethernet1",
-    #         "no ip address",
-    #         "interface Vlan100",
-    #         "no ip address",
-    #         "interface Loopback99",
-    #         "no ip address",
-    #     ]
-    #     self.execute_module(changed=True, commands=commands)
-
-    # def test_eos_l3_interfaces_overridden_idempotent(self):
-    #     set_module_args(
-    #         dict(
-    #             config=[
-    #                 dict(
-    #                     name="Ethernet2", ipv6=[dict(address="2001:db8::1/64")]
-    #                 ),
-    #                 dict(
-    #                     name="Ethernet1",
-    #                     ipv4=[
-    #                         dict(address="192.0.2.12/24"),
-    #                         dict(address="192.87.33.4/24", secondary=True),
-    #                     ],
-    #                 ),
-    #                 dict(
-    #                     name="Management1",
-    #                     ipv4=[dict(address="dhcp")],
-    #                     ipv6=[dict(address="auto-config")],
-    #                 ),
-    #                 dict(
-    #                     name="Vlan100",
-    #                     ipv4=[dict(address="192.13.45.12/24", virtual=True)],
-    #                 ),
-    #                 dict(name="Loopback99", ipv4=[dict(address="1.1.1.1/24")]),
-    #             ],
-    #             state="overridden",
-    #         )
-    #     )
-    #     self.execute_module(changed=False, commands=[])
-
-    # def test_eos_l3_interfaces_replaced(self):
-    #     set_module_args(
-    #         dict(
-    #             config=[
-    #                 dict(
-    #                     name="Ethernet2",
-    #                     ipv4=[dict(address="203.0.113.27/24")],
-    #                 )
-    #             ],
-    #             state="replaced",
-    #         )
-    #     )
-    #     commands = [
-    #         "interface Ethernet2",
-    #         "ip address 203.0.113.27/24",
-    #         "no ipv6 address 2001:db8::1/64",
-    #     ]
-    #     self.execute_module(changed=True, commands=commands)
-
-    # def test_eos_l3_interfaces_replaced_idempotent(self):
-    #     set_module_args(
-    #         dict(
-    #             config=[
-    #                 dict(
-    #                     name="Ethernet2", ipv6=[dict(address="2001:db8::1/64")]
-    #                 ),
-    #                 dict(
-    #                     name="Ethernet1",
-    #                     ipv4=[
-    #                         dict(address="192.0.2.12/24"),
-    #                         dict(address="192.87.33.4/24", secondary=True),
-    #                     ],
-    #                 ),
-    #                 dict(
-    #                     name="Management1",
-    #                     ipv4=[dict(address="dhcp")],
-    #                     ipv6=[dict(address="auto-config")],
-    #                 ),
-    #                 dict(
-    #                     name="Vlan100",
-    #                     ipv4=[dict(address="192.13.45.12/24", virtual=True)],
-    #                 ),
-    #                 dict(name="Loopback99", ipv4=[dict(address="1.1.1.1/24")]),
-    #             ],
-    #             state="replaced",
-    #         )
-    #     )
-    #     self.execute_module(changed=False, commands=[])
-
-    # def test_eos_l3_interfaces_deleted(self):
-    #     set_module_args(
-    #         dict(
-    #             config=[
-    #                 dict(
-    #                     name="Ethernet2", ipv6=[dict(address="2001:db8::1/64")]
-    #                 ),
-    #                 dict(name="lo99", ipv4=[dict(address="1.1.1.1/24")]),
-    #             ],
-    #             state="deleted",
-    #         )
-    #     )
-    #     commands = [
-    #         "interface Ethernet2",
-    #         "no ipv6 address 2001:db8::1/64",
-    #         "interface Loopback99",
-    #         "no ip address",
-    #     ]
-    #     self.execute_module(changed=True, commands=commands)
-
-    # def test_eos_l3_interfaces_rendered(self):
-    #     set_module_args(
-    #         dict(
-    #             config=[
-    #                 dict(
-    #                     name="Ethernet1",
-    #                     ipv4=[dict(address="198.51.100.14/24")],
-    #                 ),
-    #                 dict(
-    #                     name="Ethernet2",
-    #                     ipv4=[dict(address="203.0.113.27/24")],
-    #                 ),
-    #             ],
-    #             state="rendered",
-    #         )
-    #     )
-    #     commands = [
-    #         "interface Ethernet1",
-    #         "ip address 198.51.100.14/24",
-    #         "interface Ethernet2",
-    #         "ip address 203.0.113.27/24",
-    #     ]
-    #     result = self.execute_module(changed=False)
-    #     self.assertEqual(
-    #         sorted(result["rendered"]), sorted(commands), result["rendered"]
-    #     )
-
-    # def test_eos_l3_interfaces_parsed(self):
-    #     commands = [
-    #         "interface Ethernet1",
-    #         "ip address 198.51.100.14/24",
-    #         "interface Ethernet2",
-    #         "ip address 203.0.113.27/24",
-    #     ]
-    #     parsed_str = "\n".join(commands)
-    #     set_module_args(dict(running_config=parsed_str, state="parsed"))
-    #     result = self.execute_module(changed=False)
-    #     parsed_list = [
-    #         {"name": "Ethernet1", "ipv4": [{"address": "198.51.100.14/24"}]},
-    #         {"name": "Ethernet2", "ipv4": [{"address": "203.0.113.27/24"}]},
-    #     ]
-    #     self.assertEqual(parsed_list, result["parsed"])
-
-    # def test_eos_l3_interfaces_gathered(self):
-    #     set_module_args(dict(state="gathered"))
-    #     result = self.execute_module(changed=False)
-    #     gather_list = [
-    #         {
-    #             "name": "Ethernet1",
-    #             "ipv4": [
-    #                 {"address": "192.0.2.12/24"},
-    #                 {"address": "192.87.33.4/24", "secondary": True},
-    #             ],
-    #         },
-    #         {"name": "Ethernet2", "ipv6": [{"address": "2001:db8::1/64"}]},
-    #         {
-    #             "name": "Management1",
-    #             "ipv4": [{"address": "dhcp"}],
-    #             "ipv6": [{"address": "auto-config"}],
-    #         },
-    #         {
-    #             "ipv4": [{"address": "192.13.45.12/24", "virtual": True}],
-    #             "name": "Vlan100",
-    #         },
-    #         {"ipv4": [{"address": "1.1.1.1/24"}], "name": "Loopback99"},
-    #     ]
-    #     self.assertEqual(gather_list, result["gathered"])
+        self.execute_module(changed=False)

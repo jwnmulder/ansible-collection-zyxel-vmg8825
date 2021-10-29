@@ -67,6 +67,8 @@ options:
     - overridden
     - deleted
     - gathered
+    - rendered
+    - parsed
     default: merged
 """
 

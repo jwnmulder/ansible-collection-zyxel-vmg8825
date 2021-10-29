@@ -131,6 +131,11 @@ class TestZyxelModule(ModuleTestCase):
             )
         )
 
+        if not matching_request_mocks:
+            raise ValueError(
+                "No request mock found for method=%s, path=%s" % (method, path)
+            )
+
         request_mock = matching_request_mocks[0]
 
         response_data = request_mock.get("body")
@@ -154,7 +159,7 @@ class TestZyxelModule(ModuleTestCase):
         if fixture_name:
             body = load_fixture(fixture_name)
         elif not isinstance(body, dict):
-            body = json.load(body)
+            body = json.loads(body)
 
         self.http_request_mocks.append(
             {"method": method, "uri": uri, "status": status, "body": body}

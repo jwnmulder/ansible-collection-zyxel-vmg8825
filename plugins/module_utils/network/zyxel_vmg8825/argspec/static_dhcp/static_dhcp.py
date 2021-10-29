@@ -45,7 +45,15 @@ class Static_dhcpArgs(object):  # pylint: disable=R0903
         "running_config": {"type": "str"},
         "state": {
             "type": "str",
-            "choices": ["merged", "replaced", "overridden", "deleted", "gathered"],
+            "choices": [
+                "merged",
+                "replaced",
+                "overridden",
+                "deleted",
+                "gathered",
+                "rendered",
+                "parsed",
+            ],
             "default": "merged",
         },
     }  # pylint: disable=C0301
