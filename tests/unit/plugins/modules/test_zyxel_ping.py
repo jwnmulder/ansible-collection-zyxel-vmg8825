@@ -32,7 +32,3 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         args, kwargs = self.connection.send_request.call_args
         self.assertEqual(kwargs.get("method"), "GET")
         self.assertEqual(kwargs.get("path"), "/cgi-bin/DAL?oid=PINGTEST")
-
-
-# TODO Test that Zyxel reponses with a non SUCCESS result get logged in the module output
-# For example a failing logout
