@@ -127,31 +127,37 @@ class Static_dhcp(ResourceModule):
             )
 
     def add_zyxel_dal_command(self, method, data=None, oid_index=None):
-        request = {
-            "oid": rm_templates.static_dhcp.oid(),
-            "method": method,
-        }
 
-        if data:
-            request["data"] = data
+        if self.state == "rendered":
+            self.commands.append(data)
 
-        if oid_index:
-            request["oid_index"] = oid_index
-
-        if self.commands and method == "DELETE":
-            # deletes must happen first and in reverse orde
-            # higest indexes are to be deleted first as indexes
-            # keep changing while adding or deleting entries on a Zyxel device
-            closests_higher = None
-            for x in self.commands:
-                if x["method"] == "DELETE":
-                    index = x["oid_index"]
-                    if index > oid_index:
-                        closests_higher = x
-
-            index = 0
-            if closests_higher:
-                index = self.commands.index(closests_higher) + 1
-            self.commands.insert(index, request)
         else:
-            self.commands.append(request)
+
+            request = {
+                "oid": rm_templates.static_dhcp.oid(),
+                "method": method,
+            }
+
+            if data:
+                request["data"] = data
+
+            if oid_index:
+                request["oid_index"] = oid_index
+
+            if self.commands and method == "DELETE":
+                # deletes must happen first and in reverse orde
+                # higest indexes are to be deleted first as indexes
+                # keep changing while adding or deleting entries on a Zyxel device
+                closests_higher = None
+                for x in self.commands:
+                    if x["method"] == "DELETE":
+                        index = x["oid_index"]
+                        if index > oid_index:
+                            closests_higher = x
+
+                index = 0
+                if closests_higher:
+                    index = self.commands.index(closests_higher) + 1
+                self.commands.insert(index, request)
+            else:
+                self.commands.append(request)

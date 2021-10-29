@@ -238,32 +238,24 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
             },
         ]
         set_module_args({"config": data, "state": "rendered"})
-        commands = [
+        expected = [
             {
-                "oid": "static_dhcp",
-                "method": "POST",
-                "data": {
-                    "BrWan": "Default",
-                    "Enable": True,
-                    "IPAddr": "192.168.0.1",
-                    "Index": 1,
-                    "MACAddr": "01:02:03:04:05:06:01",
-                },
+                "BrWan": "Default",
+                "Enable": True,
+                "IPAddr": "192.168.0.1",
+                "Index": 1,
+                "MACAddr": "01:02:03:04:05:06:01",
             },
             {
-                "oid": "static_dhcp",
-                "method": "POST",
-                "data": {
-                    "BrWan": "Default",
-                    "Enable": True,
-                    "IPAddr": "192.168.02",
-                    "Index": 2,
-                    "MACAddr": "01:02:03:04:05:06:02",
-                },
+                "BrWan": "Default",
+                "Enable": True,
+                "IPAddr": "192.168.02",
+                "Index": 2,
+                "MACAddr": "01:02:03:04:05:06:02",
             },
         ]
         result = self.execute_module(changed=False)
-        self.assertEqual(result["rendered"], commands, result["rendered"])
+        self.assertEqual(result["rendered"], expected, result["rendered"])
 
     def test_static_dhcp_parsed(self):
         commands = [
