@@ -9,8 +9,9 @@
 - block:
     - name: Ensure test entry is not present
       jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
-        config: &test_entries
-          - enable: True
+        config:
+          - &test_entry
+            enable: True
             protocol: TCP
             description: Ansible network-integration test
             interface: IP.Interface.7
@@ -37,8 +38,17 @@
 
     - name: Apply test configuration (this will be reverted)
       jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
-        config: *test_entries
+        config:
+          - *test_entry
         state: merged
+      register: result
+
+    - name: Update test configuration (this will be reverted)
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
+        config:
+          - <<: *test_entry
+            description: Ansible network-integration test updated
+        state: replaced
       register: result
 
     - name: Assert that changes are applied

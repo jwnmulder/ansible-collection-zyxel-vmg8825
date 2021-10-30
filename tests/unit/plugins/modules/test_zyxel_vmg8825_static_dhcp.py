@@ -42,6 +42,9 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
             }
         )
 
+        # without index, Index will be determined based on mac_addr
+        del data[1]["index"]
+
         # update device with new config
         # config should have changed
         set_module_args({"config": data, "state": "merged"})
@@ -103,6 +106,9 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         data[0]["ip_addr"] = "192.168.0.4"  # update entry
         data.pop(1)  # remove an entry
 
+        # without index, Index will be determined based on mac_addr
+        del data[0]["index"]
+
         # update device with new config
         # config should have changed
         set_module_args({"config": data, "state": "overridden"})
@@ -155,6 +161,9 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
         # update data
         data[0]["ip_addr"] = "192.168.0.4"
+
+        # without index, Index will be determined based on mac_addr
+        del data[0]["index"]
 
         # update device with new config
         # config should have changed
@@ -496,6 +505,9 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
         # update data
         data[1]["ip_addr"] = "192.168.0.3"
+
+        # without index, Index will be determined based on mac_addr
+        del data[1]["index"]
 
         # update device with new config
         # config should have changed

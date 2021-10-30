@@ -83,6 +83,13 @@ class Static_dhcp(ResourceModule):
             entry.get("mac_addr") or entry.get("index"): entry for entry in self.have
         }
 
+        # if empty, populate 'index' based based on haved
+        for key, value in wantd.items():
+            have = haved.get(key)
+            have_index = have.get("index") if have else None
+            if have_index and not value.get("index"):
+                value["index"] = have_index
+
         # if state is merged, merge want onto have and then compare
         if self.state == "merged":
             wantd = dict_merge(haved, wantd)
