@@ -51,7 +51,7 @@ You can also include it in a `requirements.yml` file and install it with `ansibl
 ```yaml
 ---
 collections:
-  - name: git@github.com:jwnmulder/ansible-collection-zyxel-vmg8825.git
+  - name: https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825.git
     type: git
     version: main
 ```
