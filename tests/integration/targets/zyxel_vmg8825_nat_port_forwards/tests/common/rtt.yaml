@@ -1,0 +1,57 @@
+---
+- debug:
+    msg: "Start round trip integration tests on connection={{ ansible_connection }}"
+    # round trip test case.
+    # This involves a merge operation,
+    # followed by gather_facts,
+    # a merge update with additional configuration,
+    # and then reverting back to the base configuration using the previously gathered facts with the state set to overridden.
+- block:
+    - name: Ensure test entry is not present
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
+        config: &test_entries
+          - enable: True
+            protocol: TCP
+            description: Ansible network-integration test
+            interface: IP.Interface.7
+            external_port_start: 9999
+            external_port_end: 9999
+            internal_port_start: 9999
+            internal_port_end: 9999
+            internal_client: "{{ test_zyxel_ip_prefix }}.123"
+            originating_ip_address: "{{ test_zyxel_ip_prefix }}.1"
+        state: deleted
+
+    - name: Get base config from test device
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
+        state: gathered
+      register: base_config
+
+    - name: Gather static_dhcp facts
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts:
+        gather_subset:
+          - "!all"
+          - "!min"
+        gather_network_resources:
+          - nat_port_forwards
+
+    - name: Apply test configuration (this will be reverted)
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
+        config: *test_entries
+        state: merged
+      register: result
+
+    - name: Assert that changes are applied
+      assert:
+        that:
+          - "result.changed == true"
+
+    - name: Revert back to base configuration
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
+        config: "{{ ansible_facts['network_resources']['nat_port_forwards'] }}"
+        state: overridden
+      register: revert
+
+    - assert:
+        that:
+          - "base_config['gathered'] | symmetric_difference(revert['after']) | length == 0"

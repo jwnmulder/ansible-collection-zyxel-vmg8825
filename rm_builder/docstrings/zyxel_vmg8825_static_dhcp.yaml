@@ -17,24 +17,27 @@ options:
         - Index of the entry. Note that this field has no use in updating configuration.
           Entries are updated based on their mac_addr
         type: int
+      enable:
+        description:
+        - True is the entry should be active
+        type: bool
       br_wan:
         description:
         - BrWan. Most likely this will be the value 'Default'
         type: str
         default: Default
-      enable:
-        description:
-        - True is the entry should be active
-        type: bool
       mac_addr:
         description:
-        - MAC address. This is also used as the primary key for updating entries in the device.
-          Changing a MAC address will result in deleting the old entry and adding a new one
+        - MAC address.
+        - This is also used as the primary key for updating entries in the device.
+          Changing this value will result in deleting the old entry and adding a new one
         type: str
+        required: true
       ip_addr:
         description:
         - IP address
         type: str
+        required: true
   running_config:
     description:
     - This option is used only with state I(parsed).

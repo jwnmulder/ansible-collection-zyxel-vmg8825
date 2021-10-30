@@ -5,7 +5,7 @@
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """
-The module file for zyxel_vmg8825_static_dhcp
+The module file for zyxel_vmg8825_nat_port_forwards
 """
 
 from __future__ import absolute_import, division, print_function
@@ -13,14 +13,14 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 DOCUMENTATION = """
-module: zyxel_vmg8825_static_dhcp
-short_description: 'Manages static_dhcp entries of zyxel_vmg8825'
-description: 'Manages static_dhcp entries of zyxel_vmg8825'
+module: zyxel_vmg8825_nat_port_forwards
+short_description: 'Manages nat port forward entries of zyxel_vmg8825'
+description: 'Manages nat port forward entries of zyxel_vmg8825'
 version_added: '1.0.0'
 author: Jan-Willem Mulder (@jwnmulder)
 notes:
   - Tested against Zyxel VMG8825-T50
-  - Configuration is merged using the 'mac_addr' value and not the 'index' value
+  # - Configuration is merged using the 'mac_addr' value and not the 'index' value
 options:
   config:
     description: The provided configuration
@@ -29,30 +29,68 @@ options:
     suboptions:
       index:
         description:
-        - Index of the entry. Note that this field has no use in updating configuration.
-          Entries are updated based on their mac_addr
+        - Index of the entry
         type: int
+        required: false
       enable:
         description:
         - True is the entry should be active
         type: bool
-      br_wan:
+        default: True
+      protocol:
         description:
-        - BrWan. Most likely this will be the value 'Default'
+        - Protocol
         type: str
-        default: Default
-      mac_addr:
+        choices:
+          - TCP
+          - UDP
+          - TCP_UDP
+        default: TCP
+      description:
         description:
-        - MAC address.
+        - Service Name
+        type: str
+        required: true
+      interface:
+        description:
+        - Wan Interface.
+        - Dynamic reference to one of VD_Internet/ETH_Ethernet/ADSL_Internet
+        - IP.Interface.7
+        type: str
+        required: true
+      external_port_start:
+        description:
+        - Start Port
         - This is also used as the primary key for updating entries in the device.
           Changing this value will result in deleting the old entry and adding a new one
-        type: str
+        type: int
         required: true
-      ip_addr:
+      external_port_end:
         description:
-        - IP address
+        - End Port. If only ony port is to be opened, set this to the same value as Start Port
+        type: int
+        required: true
+      internal_port_start:
+        description:
+        - Translation Start Port
+        type: int
+        required: true
+      internal_port_end:
+        description:
+        - Translation End Port
+        type: int
+        required: true
+      internal_client:
+        description:
+        - Server IP Address. IP address to which traffic should be forwarded
         type: str
         required: true
+      originating_ip_address:
+        description:
+        - Originating IP Address
+        type: str
+        required: false
+      # X_ZYXEL_AutoDetectWanStatus": false
   running_config:
     description:
     - This option is used only with state I(parsed).
@@ -76,144 +114,7 @@ options:
 """
 
 EXAMPLES = """
-# Using replaced
 
-# Before state:
-# -------------
-#
-# DAL?oid=static_dhcp
-# [
-#   {
-#     "Index": 1,
-#     "BrWan": "Default",
-#     "Enable": true,
-#     "MACAddr": "01:01:01:01:01:01",
-#     "IPAddr": "192.168.0.1"
-#   },
-# ]
-
-- name: Configure static_dhcp
-  zyxel_vmg8825_static_dhcp:
-    config:
-      - br_wan: Default
-        enable: True
-        mac_addr: "01:01:01:01:01:01"
-        ip_addr: "192.168.0.2"
-    state: replaced
-
-# DAL?oid=static_dhcp
-# [
-#   {
-#     "Index": 1,
-#     "BrWan": "Default",
-#     "Enable": true,
-#     "MACAddr": "01:01:01:01:01:01",
-#     "IPAddr": "192.168.0.2"
-#   },
-# ]
-
-# Using deleted
-
-# Before state:
-# -------------
-#
-# DAL?oid=static_dhcp
-# [
-#   {
-#     "Index": 1,
-#     "BrWan": "Default",
-#     "Enable": true,
-#     "MACAddr": "01:01:01:01:01:01",
-#     "IPAddr": "192.168.0.1"
-#   },
-# ]
-
-- name: Configure static_dhcp
-  zyxel_vmg8825_static_dhcp:
-    state: deleted
-
-# DAL?oid=static_dhcp
-# [
-# ]
-
-# Using merged
-
-# Before state:
-# -------------
-#
-# DAL?oid=static_dhcp
-# [
-#   {
-#     "Index": 1,
-#     "BrWan": "Default",
-#     "Enable": true,
-#     "MACAddr": "01:01:01:01:01:01",
-#     "IPAddr": "192.168.0.1"
-#   },
-# ]
-
-- name: Configure static_dhcp
-  zyxel_vmg8825_static_dhcp:
-    config:
-      - br_wan: Default
-        enable: True
-        mac_addr: "01:01:01:01:01:02"
-        ip_addr: "192.168.0.2"
-    state: merged
-
-# DAL?oid=static_dhcp
-# [
-#   {
-#     "Index": 1,
-#     "BrWan": "Default",
-#     "Enable": true,
-#     "MACAddr": "01:01:01:01:01:01",
-#     "IPAddr": "192.168.0.1"
-#   },
-#   {
-#     "Index": 2,
-#     "BrWan": "Default",
-#     "Enable": true,
-#     "MACAddr": "01:01:01:01:01:02",
-#     "IPAddr": "192.168.0.2"
-#   },
-# ]
-
-# Using overridden
-
-# Before state:
-# -------------
-#
-# DAL?oid=static_dhcp
-# [
-#   {
-#     "Index": 1,
-#     "BrWan": "Default",
-#     "Enable": true,
-#     "MACAddr": "01:01:01:01:01:01",
-#     "IPAddr": "192.168.0.1"
-#   },
-# ]
-
-- name: Configure static_dhcp
-  zyxel_vmg8825_static_dhcp:
-    config:
-      - br_wan: Default
-        enable: True
-        mac_addr: "01:01:01:01:01:02"
-        ip_addr: "192.168.0.2"
-    state: replaced
-
-# DAL?oid=static_dhcp
-# [
-#   {
-#     "Index": 1,
-#     "BrWan": "Default",
-#     "Enable": true,
-#     "MACAddr": "01:01:01:01:01:02",
-#     "IPAddr": "192.168.0.2"
-#   },
-# ]
 """
 
 RETURN = """
@@ -264,11 +165,11 @@ parsed:
 """
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.static_dhcp.static_dhcp import (
-    Static_dhcpArgs,
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.nat_port_forwards.nat_port_forwards import (
+    Nat_port_forwardsArgs,
 )
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.config.static_dhcp.static_dhcp import (
-    Static_dhcp,
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.config.nat_port_forwards.nat_port_forwards import (
+    Nat_port_forwards,
 )
 
 
@@ -279,7 +180,7 @@ def main():
     :returns: the result form module invocation
     """
     module = AnsibleModule(
-        argument_spec=Static_dhcpArgs.argument_spec,
+        argument_spec=Nat_port_forwardsArgs.argument_spec,
         mutually_exclusive=[["config", "running_config"]],
         required_if=[
             ["state", "merged", ["config"]],
@@ -291,7 +192,7 @@ def main():
         supports_check_mode=True,
     )
 
-    result = Static_dhcp(module).execute_module()
+    result = Nat_port_forwards(module).execute_module()
     module.exit_json(**result)
 
 

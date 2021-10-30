@@ -16,13 +16,17 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.f
 )
 
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.facts.static_dhcp.static_dhcp import (
-    static_dhcpFacts,
+    Static_dhcpFacts,
 )
 
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.facts.nat_port_forwards.nat_port_forwards import (
+    Nat_port_forwardsFacts,
+)
 
 FACT_LEGACY_SUBSETS = {}
 FACT_RESOURCE_SUBSETS = dict(
-    static_dhcp=static_dhcpFacts,
+    static_dhcp=Static_dhcpFacts,
+    nat_port_forwards=Nat_port_forwardsFacts,
 )
 
 

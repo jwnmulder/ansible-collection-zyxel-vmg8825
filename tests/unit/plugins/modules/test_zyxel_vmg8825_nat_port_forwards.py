@@ -8,7 +8,7 @@ from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     set_module_args,
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import (
-    zyxel_vmg8825_static_dhcp,
+    zyxel_vmg8825_nat_port_forwards,
 )
 
 from .zyxel_module import TestZyxelModule
@@ -16,13 +16,13 @@ from .zyxel_module import TestZyxelModule
 
 class TestZyxelModuleHttpApi(TestZyxelModule):
 
-    module = zyxel_vmg8825_static_dhcp
+    module = zyxel_vmg8825_nat_port_forwards
 
-    def test_static_dhcp_merged(self):
+    def test_nat_port_forwards_merged(self):
 
-        self.mock_dal_request("static_dhcp", "GET")
-        self.mock_dal_request("static_dhcp", "PUT")
-        self.mock_dal_request("static_dhcp", "POST")
+        self.mock_dal_request("nat", "GET")
+        self.mock_dal_request("nat", "PUT")
+        self.mock_dal_request("nat", "POST")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -31,13 +31,18 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         data = result["gathered"]
 
         # update data
-        data[1]["ip_addr"] = "192.168.0.3"
+        data[1]["description"] = "updated service name"
         data.append(
             {
-                "br_wan": "Default",
                 "enable": True,
-                "ip_addr": "192.168.0.4",
-                "mac_addr": "01:02:03:04:05:06:04",
+                "protocol": "TCP",
+                "description": "app forward port 21",
+                "interface": "IP.Interface.7",
+                "external_port_start": 21,
+                "external_port_end": 21,
+                "internal_port_start": 21,
+                "internal_port_end": 21,
+                "internal_client": "192.168.0.2",
             }
         )
 
@@ -47,33 +52,46 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
         commands = [
             {
-                "oid": "static_dhcp",
+                "oid": "nat",
                 "method": "PUT",
                 "data": {
-                    "BrWan": "Default",
-                    "Enable": True,
-                    "IPAddr": "192.168.0.3",
                     "Index": 2,
-                    "MACAddr": "01:02:03:04:05:06:02",
+                    "Enable": True,
+                    "Protocol": "TCP",
+                    "Description": "updated service name",
+                    "Interface": "IP.Interface.7",
+                    "ExternalPortStart": 80,
+                    "ExternalPortEnd": 80,
+                    "InternalPortStart": 80,
+                    "InternalPortEnd": 80,
+                    "InternalClient": "192.168.0.2",
+                    "OriginatingIpAddress": None,
                 },
             },
             {
-                "oid": "static_dhcp",
+                "oid": "nat",
                 "method": "POST",
                 "data": {
-                    "BrWan": "Default",
-                    "Enable": True,
-                    "IPAddr": "192.168.0.4",
                     "Index": None,
-                    "MACAddr": "01:02:03:04:05:06:04",
+                    "Enable": True,
+                    "Protocol": "TCP",
+                    "Description": "app forward port 21",
+                    "Interface": "IP.Interface.7",
+                    "ExternalPortStart": 21,
+                    "ExternalPortEnd": 21,
+                    "InternalPortStart": 21,
+                    "InternalPortEnd": 21,
+                    "InternalClient": "192.168.0.2",
+                    "OriginatingIpAddress": None,
                 },
             },
         ]
+
         self.execute_module(changed=True, commands=commands, sort=False)
 
-    def test_static_dhcp_merged_idempotent(self):
+    def test_nat_port_forwards_merged_idempotent(self):
 
-        self.mock_dal_request("static_dhcp", "GET")
+        self.mock_dal_request("nat", "GET")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -86,11 +104,11 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         set_module_args({"config": data, "state": "merged"})
         self.execute_module(changed=False, commands=[])
 
-    def test_static_dhcp_overridden(self):
+    def test_nat_port_forwards_overridden(self):
 
-        self.mock_dal_request("static_dhcp", "GET")
-        self.mock_dal_request("static_dhcp", "PUT")
-        self.mock_dal_request("static_dhcp", "DELETE")
+        self.mock_dal_request("nat", "GET")
+        self.mock_dal_request("nat", "PUT")
+        self.mock_dal_request("nat", "DELETE")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -99,32 +117,39 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         data = result["gathered"]
 
         # update data
-        data[0]["ip_addr"] = "192.168.0.4"  # update entry
+        data[0]["description"] = "updated service name"
         data.pop(1)  # remove an entry
 
         # update device with new config
         # config should have changed
         set_module_args({"config": data, "state": "overridden"})
         commands = [
-            {"oid": "static_dhcp", "method": "DELETE", "oid_index": 2},
+            {"oid": "nat", "method": "DELETE", "oid_index": 2},
             {
-                "oid": "static_dhcp",
+                "oid": "nat",
                 "method": "PUT",
                 "data": {
-                    "BrWan": "Default",
-                    "Enable": True,
-                    "IPAddr": "192.168.0.4",
                     "Index": 1,
-                    "MACAddr": "01:02:03:04:05:06:01",
+                    "Enable": True,
+                    "Protocol": "TCP",
+                    "Description": "updated service name",
+                    "Interface": "IP.Interface.7",
+                    "ExternalPortStart": 443,
+                    "ExternalPortEnd": 443,
+                    "InternalPortStart": 443,
+                    "InternalPortEnd": 443,
+                    "InternalClient": "192.168.0.2",
+                    "OriginatingIpAddress": "192.168.0.1",
+                    # TODO, missing X_ZYXEL_AutoDetectWanStatus, not sure if this is an issue
                 },
             },
         ]
 
         self.execute_module(changed=True, commands=commands, sort=False)
 
-    def test_static_dhcp_overridden_idempotent(self):
+    def test_nat_port_forwards_overridden_idempotent(self):
 
-        self.mock_dal_request("static_dhcp", "GET")
+        self.mock_dal_request("nat", "GET")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -137,10 +162,10 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         set_module_args({"config": data, "state": "overridden"})
         self.execute_module(changed=False, commands=[])
 
-    def test_static_dhcp_replaced(self):
+    def test_nat_port_forwards_replaced(self):
 
-        self.mock_dal_request("static_dhcp", "GET")
-        self.mock_dal_request("static_dhcp", "PUT")
+        self.mock_dal_request("nat", "GET")
+        self.mock_dal_request("nat", "PUT")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -153,30 +178,36 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         data.pop(1)
 
         # update data
-        data[0]["ip_addr"] = "192.168.0.4"
+        data[0]["description"] = "updated service name"
 
         # update device with new config
         # config should have changed
         set_module_args({"config": data, "state": "replaced"})
         commands = [
             {
-                "oid": "static_dhcp",
+                "oid": "nat",
                 "method": "PUT",
                 "data": {
-                    "BrWan": "Default",
-                    "Enable": True,
-                    "IPAddr": "192.168.0.4",
                     "Index": 1,
-                    "MACAddr": "01:02:03:04:05:06:01",
+                    "Enable": True,
+                    "Protocol": "TCP",
+                    "Description": "updated service name",
+                    "Interface": "IP.Interface.7",
+                    "ExternalPortStart": 443,
+                    "ExternalPortEnd": 443,
+                    "InternalPortStart": 443,
+                    "InternalPortEnd": 443,
+                    "InternalClient": "192.168.0.2",
+                    "OriginatingIpAddress": "192.168.0.1",
                 },
-            }
+            },
         ]
 
         self.execute_module(changed=True, commands=commands, sort=False)
 
-    def test_static_dhcp_replaced_idempotent(self):
+    def test_nat_port_forwards_replaced_idempotent(self):
 
-        self.mock_dal_request("static_dhcp", "GET")
+        self.mock_dal_request("nat", "GET")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -193,10 +224,10 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         set_module_args({"config": data, "state": "replaced"})
         self.execute_module(changed=False, commands=[])
 
-    def test_static_dhcp_deleted(self):
+    def test_nat_port_forwards_deleted(self):
 
-        self.mock_dal_request("static_dhcp", "GET")
-        self.mock_dal_request("static_dhcp", "DELETE")
+        self.mock_dal_request("nat", "GET")
+        self.mock_dal_request("nat", "DELETE")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -211,64 +242,99 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         # config should have changed
         set_module_args({"config": data, "state": "deleted"})
         commands = [
-            {"oid": "static_dhcp", "method": "DELETE", "oid_index": 2},
+            {"oid": "nat", "method": "DELETE", "oid_index": 2},
         ]
 
         self.execute_module(changed=True, commands=commands, sort=False)
 
-    def test_static_dhcp_rendered(self):
+    def test_nat_port_forwards_rendered(self):
 
         data = [
             {
-                "br_wan": "Default",
-                "enable": True,
                 "index": 1,
-                "ip_addr": "192.168.0.1",
-                "mac_addr": "01:02:03:04:05:06:01",
+                "enable": True,
+                "protocol": "TCP",
+                "description": "app forward port 443",
+                "interface": "IP.Interface.7",
+                "external_port_start": 443,
+                "external_port_end": 443,
+                "internal_port_start": 443,
+                "internal_port_end": 443,
+                "internal_client": "192.168.0.2",
+                "originating_ip_address": "192.168.0.1",
             },
             {
-                "br_wan": "Default",
-                "enable": True,
                 "index": 2,
-                "ip_addr": "192.168.02",
-                "mac_addr": "01:02:03:04:05:06:02",
+                "enable": True,
+                "protocol": "TCP",
+                "description": "app forward port 80",
+                "interface": "IP.Interface.7",
+                "external_port_start": 80,
+                "external_port_end": 80,
+                "internal_port_start": 80,
+                "internal_port_end": 80,
+                "internal_client": "192.168.0.2",
             },
         ]
         set_module_args({"config": data, "state": "rendered"})
         expected = [
             {
-                "BrWan": "Default",
-                "Enable": True,
-                "IPAddr": "192.168.0.1",
                 "Index": 1,
-                "MACAddr": "01:02:03:04:05:06:01",
+                "Enable": True,
+                "Protocol": "TCP",
+                "Description": "app forward port 443",
+                "Interface": "IP.Interface.7",
+                "ExternalPortStart": 443,
+                "ExternalPortEnd": 443,
+                "InternalPortStart": 443,
+                "InternalPortEnd": 443,
+                "InternalClient": "192.168.0.2",
+                "OriginatingIpAddress": "192.168.0.1",
             },
             {
-                "BrWan": "Default",
-                "Enable": True,
-                "IPAddr": "192.168.02",
                 "Index": 2,
-                "MACAddr": "01:02:03:04:05:06:02",
+                "Enable": True,
+                "Protocol": "TCP",
+                "Description": "app forward port 80",
+                "Interface": "IP.Interface.7",
+                "ExternalPortStart": 80,
+                "ExternalPortEnd": 80,
+                "InternalPortStart": 80,
+                "InternalPortEnd": 80,
+                "InternalClient": "192.168.0.2",
+                "OriginatingIpAddress": None,
             },
         ]
         result = self.execute_module(changed=False)
         self.assertEqual(result["rendered"], expected, result["rendered"])
 
-    def test_static_dhcp_parsed(self):
+    def test_nat_port_forwards_parsed(self):
         commands = [
             {
-                "BrWan": "Default",
-                "Enable": True,
-                "IPAddr": "192.168.0.1",
                 "Index": 1,
-                "MACAddr": "01:02:03:04:05:06:01",
+                "Enable": True,
+                "Protocol": "TCP",
+                "Description": "app forward port 443",
+                "Interface": "IP.Interface.7",
+                "ExternalPortStart": 443,
+                "ExternalPortEnd": 443,
+                "InternalPortStart": 443,
+                "InternalPortEnd": 443,
+                "InternalClient": "192.168.0.2",
+                "OriginatingIpAddress": None,
             },
             {
-                "BrWan": "Default",
-                "Enable": True,
-                "IPAddr": "192.168.02",
                 "Index": 2,
-                "MACAddr": "01:02:03:04:05:06:02",
+                "Enable": True,
+                "Protocol": "TCP",
+                "Description": "app forward port 80",
+                "Interface": "IP.Interface.7",
+                "ExternalPortStart": 80,
+                "ExternalPortEnd": 80,
+                "InternalPortStart": 80,
+                "InternalPortEnd": 80,
+                "InternalClient": "192.168.0.2",
+                "OriginatingIpAddress": None,
             },
         ]
         parsed_str = json.dumps(commands)
@@ -277,25 +343,35 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
         parsed_list = [
             {
-                "br_wan": "Default",
-                "enable": True,
                 "index": 1,
-                "ip_addr": "192.168.0.1",
-                "mac_addr": "01:02:03:04:05:06:01",
+                "enable": True,
+                "protocol": "TCP",
+                "description": "app forward port 443",
+                "interface": "IP.Interface.7",
+                "external_port_start": 443,
+                "external_port_end": 443,
+                "internal_port_start": 443,
+                "internal_port_end": 443,
+                "internal_client": "192.168.0.2",
             },
             {
-                "br_wan": "Default",
-                "enable": True,
                 "index": 2,
-                "ip_addr": "192.168.02",
-                "mac_addr": "01:02:03:04:05:06:02",
+                "enable": True,
+                "protocol": "TCP",
+                "description": "app forward port 80",
+                "interface": "IP.Interface.7",
+                "external_port_start": 80,
+                "external_port_end": 80,
+                "internal_port_start": 80,
+                "internal_port_end": 80,
+                "internal_client": "192.168.0.2",
             },
         ]
         self.assertEqual(parsed_list, result["parsed"])
 
-    def test_static_dhcp_gathered(self):
+    def test_nat_port_forwards_gathered(self):
 
-        self.mock_dal_request("static_dhcp", "GET")
+        self.mock_dal_request("nat", "GET")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -303,18 +379,29 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
         gather_list = [
             {
-                "br_wan": "Default",
-                "enable": True,
-                "ip_addr": "192.168.0.1",
                 "index": 1,
-                "mac_addr": "01:02:03:04:05:06:01",
+                "enable": True,
+                "protocol": "TCP",
+                "description": "app forward port 443",
+                "interface": "IP.Interface.7",
+                "external_port_start": 443,
+                "external_port_end": 443,
+                "internal_port_start": 443,
+                "internal_port_end": 443,
+                "internal_client": "192.168.0.2",
+                "originating_ip_address": "192.168.0.1",
             },
             {
-                "br_wan": "Default",
-                "enable": True,
-                "ip_addr": "192.168.0.2",
                 "index": 2,
-                "mac_addr": "01:02:03:04:05:06:02",
+                "enable": True,
+                "protocol": "TCP",
+                "description": "app forward port 80",
+                "interface": "IP.Interface.7",
+                "external_port_start": 80,
+                "external_port_end": 80,
+                "internal_port_start": 80,
+                "internal_port_end": 80,
+                "internal_client": "192.168.0.2",
             },
         ]
 
@@ -323,7 +410,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         # check the last request sent
         args, kwargs = self.connection.send_request.call_args
         self.assertEqual(kwargs.get("method"), "GET")
-        self.assertEqual(kwargs.get("path"), "/cgi-bin/DAL?oid=static_dhcp")
+        self.assertEqual(kwargs.get("path"), "/cgi-bin/DAL?oid=nat")
 
     def test_module_fail_when_required_args_missing(self):
         set_module_args({})
@@ -331,9 +418,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
     def test_403_failure(self):
 
-        self.mock_http_request(
-            method="GET", uri="/cgi-bin/DAL?oid=static_dhcp", status=403
-        )
+        self.mock_http_request(method="GET", uri="/cgi-bin/DAL?oid=nat", status=403)
 
         set_module_args({"state": "gathered"})
         result = self.execute_module(failed=True)
@@ -342,7 +427,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
     def test_overridden_with_same_info_no_index_specified(self):
 
-        self.mock_dal_request("static_dhcp", "GET")
+        self.mock_dal_request("nat", "GET")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -369,8 +454,8 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
     def test_add_entry(self):
 
-        self.mock_dal_request("static_dhcp", "GET")
-        self.mock_dal_request("static_dhcp", "POST")
+        self.mock_dal_request("nat", "GET")
+        self.mock_dal_request("nat", "POST")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -381,9 +466,14 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         data.append(
             {
                 "enable": True,
-                "br_wan": "Default",
-                "mac_addr": "01:02:03:04:05:06:03",
-                "ip_addr": "192.168.0.3",
+                "protocol": "TCP",
+                "description": "app forward port 21",
+                "interface": "IP.Interface.7",
+                "external_port_start": 21,
+                "external_port_end": 21,
+                "internal_port_start": 21,
+                "internal_port_end": 21,
+                "internal_client": "192.168.0.2",
             }
         )
 
@@ -396,7 +486,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         http_calls = list(
             filter(
                 lambda x: x[1]["method"] != "GET"
-                and (x[1]["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
+                and (x[1]["path"].find("/cgi-bin/DAL?oid=nat") >= 0),
                 self.connection.send_request.call_args_list,
             )
         )
@@ -406,8 +496,8 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
     def test_delete_entry(self):
 
-        self.mock_dal_request("static_dhcp", "GET")
-        self.mock_dal_request("static_dhcp", "DELETE")
+        self.mock_dal_request("nat", "GET")
+        self.mock_dal_request("nat", "DELETE")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -427,7 +517,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         http_calls = list(
             filter(
                 lambda x: x[1]["method"] != "GET"
-                and (x[1]["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
+                and (x[1]["path"].find("/cgi-bin/DAL?oid=nat") >= 0),
                 self.connection.send_request.call_args_list,
             )
         )
@@ -437,8 +527,8 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
     def test_delete_multiple_entries_should_occur_backwards(self):
 
-        self.mock_dal_request("static_dhcp", "GET", variant="deleteorder")
-        self.mock_dal_request("static_dhcp", "DELETE")
+        self.mock_dal_request("nat", "GET", variant="deleteorder")
+        self.mock_dal_request("nat", "DELETE")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -460,7 +550,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         http_calls = list(
             filter(
                 lambda x: x[1]["method"] != "GET"
-                and (x[1]["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
+                and (x[1]["path"].find("/cgi-bin/DAL?oid=nat") >= 0),
                 self.connection.send_request.call_args_list,
             )
         )
@@ -472,20 +562,14 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
         # If deletes would start at index=1, index=2 will not exist anymore on the remote device.
         # Assert that deletes happen form the higest index to the lowest
-        self.assertEqual(
-            http_calls[0][1]["path"], "/cgi-bin/DAL?oid=static_dhcp&Index=4"
-        )
-        self.assertEqual(
-            http_calls[1][1]["path"], "/cgi-bin/DAL?oid=static_dhcp&Index=2"
-        )
-        self.assertEqual(
-            http_calls[2][1]["path"], "/cgi-bin/DAL?oid=static_dhcp&Index=1"
-        )
+        self.assertEqual(http_calls[0][1]["path"], "/cgi-bin/DAL?oid=nat&Index=4")
+        self.assertEqual(http_calls[1][1]["path"], "/cgi-bin/DAL?oid=nat&Index=2")
+        self.assertEqual(http_calls[2][1]["path"], "/cgi-bin/DAL?oid=nat&Index=1")
 
     def test_update_entry(self):
 
-        self.mock_dal_request("static_dhcp", "GET")
-        self.mock_dal_request("static_dhcp", "PUT")
+        self.mock_dal_request("nat", "GET")
+        self.mock_dal_request("nat", "PUT")
 
         # get current config
         set_module_args({"state": "gathered"})
@@ -494,7 +578,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         data = result["gathered"]
 
         # update data
-        data[1]["ip_addr"] = "192.168.0.3"
+        data[1]["description"] = "updated service name"
 
         # update device with new config
         # config should have changed
@@ -505,7 +589,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         http_calls = list(
             filter(
                 lambda x: x[1]["method"] != "GET"
-                and (x[1]["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
+                and (x[1]["path"].find("/cgi-bin/DAL?oid=nat") >= 0),
                 self.connection.send_request.call_args_list,
             )
         )
@@ -514,11 +598,11 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertEqual(http_calls[0][1]["method"], "PUT")
 
         request_data = http_calls[0][0][0]
-        self.assertEqual(request_data["IPAddr"], "192.168.0.3")
+        self.assertEqual(request_data["Description"], "updated service name")
 
     def test_update_with_incomplete_entry_in_response(self):
 
-        self.mock_dal_request("static_dhcp", "GET", variant="incomplete_data")
+        self.mock_dal_request("nat", "GET", variant="incomplete_data")
 
         # get current config
         set_module_args({"state": "gathered"})

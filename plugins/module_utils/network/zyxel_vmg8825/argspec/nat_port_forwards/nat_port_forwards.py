@@ -23,23 +23,33 @@ __metaclass__ = type
 #############################################
 
 """
-The arg spec for the zyxel_vmg8825_static_dhcp module
+The arg spec for the zyxel_vmg8825_nat_port_forwards module
 """
 
 
-class Static_dhcpArgs(object):  # pylint: disable=R0903
-    """The arg spec for the zyxel_vmg8825_static_dhcp module"""
+class Nat_port_forwardsArgs(object):  # pylint: disable=R0903
+    """The arg spec for the zyxel_vmg8825_nat_port_forwards module"""
 
     argument_spec = {
         "config": {
             "type": "list",
             "elements": "dict",
             "options": {
-                "index": {"type": "int"},
-                "enable": {"type": "bool"},
-                "br_wan": {"type": "str", "default": "Default"},
-                "mac_addr": {"type": "str", "required": True},
-                "ip_addr": {"type": "str", "required": True},
+                "index": {"type": "int", "required": False},
+                "enable": {"type": "bool", "default": True},
+                "protocol": {
+                    "type": "str",
+                    "choices": ["TCP", "UDP", "TCP_UDP"],
+                    "default": "TCP",
+                },
+                "description": {"type": "str", "required": True},
+                "interface": {"type": "str", "required": True},
+                "external_port_start": {"type": "int", "required": True},
+                "external_port_end": {"type": "int", "required": True},
+                "internal_port_start": {"type": "int", "required": True},
+                "internal_port_end": {"type": "int", "required": True},
+                "internal_client": {"type": "str", "required": True},
+                "originating_ip_address": {"type": "str", "required": False},
             },
         },
         "running_config": {"type": "str"},

@@ -1,0 +1,14 @@
+---
+- debug: msg="START common/basic on connection={{ ansible_connection }}"
+
+- name: zyxel_vmg8825_nat_port_forwards gathered
+  zyxel_vmg8825_nat_port_forwards:
+    state: gathered
+  register: result
+
+- assert:
+    that:
+      - "result.changed == false"
+      - "result.gathered[0] is defined"
+
+- debug: msg="END common/basic on connection={{ ansible_connection }}"

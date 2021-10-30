@@ -1,0 +1,37 @@
+{
+    "result": "ZCFG_SUCCESS",
+    "ReplyMsg": "InternalClient",
+    "ReplyMsgMultiLang": "",
+    "Object": [
+        {
+            "Enable": true,
+            "Protocol": "TCP",
+            "Description": "app forward port 443",
+            "Interface": "IP.Interface.7",
+            "ExternalPortStart": 443,
+            "ExternalPortEnd": 443,
+            "InternalPortStart": 443,
+            "InternalPortEnd": 443,
+            "InternalClient": "192.168.0.2",
+            "SetOriginatingIP": true,
+            "OriginatingIpAddress": "192.168.0.1",
+            "Index": 1,
+            "X_ZYXEL_AutoDetectWanStatus": false
+        },
+        {
+            "Enable": true,
+            "Protocol": "TCP",
+            "Description": "app forward port 80",
+            "Interface": "IP.Interface.7",
+            "ExternalPortStart": 80,
+            "ExternalPortEnd": 80,
+            "InternalPortStart": 80,
+            "InternalPortEnd": 80,
+            "InternalClient": "192.168.0.2",
+            "SetOriginatingIP": false,
+            "OriginatingIpAddress": "",
+            "Index": 2,
+            "X_ZYXEL_AutoDetectWanStatus": false
+        }
+    ]
+}

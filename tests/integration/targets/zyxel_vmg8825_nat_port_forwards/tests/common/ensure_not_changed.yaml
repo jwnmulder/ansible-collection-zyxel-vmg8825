@@ -1,0 +1,18 @@
+---
+- debug: msg="START common/ensure_not_changed on connection={{ ansible_connection }}"
+
+- name: grab facts
+  zyxel_vmg8825_facts:
+    gather_subset: min
+    gather_network_resources: nat_port_forwards
+
+- name: Update nat_port_forwards with same info
+  zyxel_vmg8825_nat_port_forwards:
+    config: "{{ ansible_network_resources['nat_port_forwards'] }}"
+  register: result
+
+- name: Ensure config did not change.
+  assert:
+    that: not result.changed
+
+- debug: msg="END common/ensure_not_changed on connection={{ ansible_connection }}"

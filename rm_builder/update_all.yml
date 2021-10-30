@@ -20,3 +20,4 @@
         loop_var: i
       loop:
         - { resource: 'static_dhcp' }
+        - { resource: 'nat_port_forwards' }

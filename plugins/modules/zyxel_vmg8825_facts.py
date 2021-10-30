@@ -51,6 +51,7 @@ options:
     choices:
       - all
       - static_dhcp
+      - nat_port_forwards
 """
 
 EXAMPLES = """
@@ -66,6 +67,7 @@ EXAMPLES = """
       - "!min"
     gather_network_resources:
       - static_dhcp
+      - nat_port_forwards
 
 # Do not collect static_dhcp facts
 - zyxel_vmg8825_facts:

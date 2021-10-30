@@ -47,6 +47,7 @@ Parameters
                         <ul style="margin: 0; padding: 0"><b>Choices:</b>
                                     <li>all</li>
                                     <li>static_dhcp</li>
+                                    <li>nat_port_forwards</li>
                         </ul>
                 </td>
                 <td>
@@ -93,6 +94,7 @@ Examples
           - "!min"
         gather_network_resources:
           - static_dhcp
+          - nat_port_forwards
 
     # Do not collect static_dhcp facts
     - zyxel_vmg8825_facts:

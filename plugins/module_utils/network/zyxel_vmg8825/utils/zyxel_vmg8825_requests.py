@@ -105,9 +105,9 @@ class ZyxelHttpApiRequests(object):
             dal_reply_msg_multi_lang = response_data.get("ReplyMsgMultiLang")
 
             msg = (
-                "Server returned non successful DAL response, result=%s, ReplyMsg=%s,"
-                " ReplyMsgMultiLang=%s"
-                % (dal_result, dal_reply_msg, dal_reply_msg_multi_lang)
+                "Server returned non successful DAL response, http_code=%s, result=%s,"
+                " ReplyMsg=%s, ReplyMsgMultiLang=%s"
+                % (response_code, dal_result, dal_reply_msg, dal_reply_msg_multi_lang)
             )
             raise ConnectionError(
                 msg,

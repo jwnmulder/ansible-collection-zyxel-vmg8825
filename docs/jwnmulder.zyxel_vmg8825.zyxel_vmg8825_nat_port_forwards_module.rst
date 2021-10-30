@@ -1,11 +1,11 @@
-.. _jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_module:
+.. _jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards_module:
 
 
-*************************************************
-jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp
-*************************************************
+*******************************************************
+jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards
+*******************************************************
 
-**Manages static_dhcp entries of zyxel_vmg8825**
+**Manages nat port forward entries of zyxel_vmg8825**
 
 
 Version added: 1.0.0
@@ -17,7 +17,7 @@ Version added: 1.0.0
 
 Synopsis
 --------
-- Manages static_dhcp entries of zyxel_vmg8825
+- Manages nat port forward entries of zyxel_vmg8825
 
 
 
@@ -53,17 +53,17 @@ Parameters
                     <td class="elbow-placeholder"></td>
                 <td colspan="1">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>br_wan</b>
+                    <b>description</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">string</span>
+                         / <span style="color: red">required</span>
                     </div>
                 </td>
                 <td>
-                        <b>Default:</b><br/><div style="color: blue">"Default"</div>
                 </td>
                 <td>
-                        <div>BrWan. Most likely this will be the value &#x27;Default&#x27;</div>
+                        <div>Service Name</div>
                 </td>
             </tr>
             <tr>
@@ -79,11 +79,46 @@ Parameters
                 <td>
                         <ul style="margin: 0; padding: 0"><b>Choices:</b>
                                     <li>no</li>
-                                    <li>yes</li>
+                                    <li><div style="color: blue"><b>yes</b>&nbsp;&larr;</div></li>
                         </ul>
                 </td>
                 <td>
                         <div>True is the entry should be active</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>external_port_end</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">integer</span>
+                         / <span style="color: red">required</span>
+                    </div>
+                </td>
+                <td>
+                </td>
+                <td>
+                        <div>End Port. If only ony port is to be opened, set this to the same value as Start Port</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>external_port_start</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">integer</span>
+                         / <span style="color: red">required</span>
+                    </div>
+                </td>
+                <td>
+                </td>
+                <td>
+                        <div>Start Port</div>
+                        <div>This is also used as the primary key for updating entries in the device. Changing this value will result in deleting the old entry and adding a new one</div>
                 </td>
             </tr>
             <tr>
@@ -99,14 +134,14 @@ Parameters
                 <td>
                 </td>
                 <td>
-                        <div>Index of the entry. Note that this field has no use in updating configuration. Entries are updated based on their mac_addr</div>
+                        <div>Index of the entry</div>
                 </td>
             </tr>
             <tr>
                     <td class="elbow-placeholder"></td>
                 <td colspan="1">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>ip_addr</b>
+                    <b>interface</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">string</span>
@@ -116,14 +151,16 @@ Parameters
                 <td>
                 </td>
                 <td>
-                        <div>IP address</div>
+                        <div>Wan Interface.</div>
+                        <div>Dynamic reference to one of VD_Internet/ETH_Ethernet/ADSL_Internet</div>
+                        <div>IP.Interface.7</div>
                 </td>
             </tr>
             <tr>
                     <td class="elbow-placeholder"></td>
                 <td colspan="1">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>mac_addr</b>
+                    <b>internal_client</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">string</span>
@@ -133,8 +170,78 @@ Parameters
                 <td>
                 </td>
                 <td>
-                        <div>MAC address.</div>
-                        <div>This is also used as the primary key for updating entries in the device. Changing this value will result in deleting the old entry and adding a new one</div>
+                        <div>Server IP Address. IP address to which traffic should be forwarded</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>internal_port_end</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">integer</span>
+                         / <span style="color: red">required</span>
+                    </div>
+                </td>
+                <td>
+                </td>
+                <td>
+                        <div>Translation End Port</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>internal_port_start</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">integer</span>
+                         / <span style="color: red">required</span>
+                    </div>
+                </td>
+                <td>
+                </td>
+                <td>
+                        <div>Translation Start Port</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>originating_ip_address</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">string</span>
+                    </div>
+                </td>
+                <td>
+                </td>
+                <td>
+                        <div>Originating IP Address</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>protocol</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">string</span>
+                    </div>
+                </td>
+                <td>
+                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
+                                    <li><div style="color: blue"><b>TCP</b>&nbsp;&larr;</div></li>
+                                    <li>UDP</li>
+                                    <li>TCP_UDP</li>
+                        </ul>
+                </td>
+                <td>
+                        <div>Protocol</div>
                 </td>
             </tr>
 
@@ -187,153 +294,9 @@ Notes
 
 .. note::
    - Tested against Zyxel VMG8825-T50
-   - Configuration is merged using the 'mac_addr' value and not the 'index' value
 
 
 
-Examples
---------
-
-.. code-block:: yaml
-
-    # Using replaced
-
-    # Before state:
-    # -------------
-    #
-    # DAL?oid=static_dhcp
-    # [
-    #   {
-    #     "Index": 1,
-    #     "BrWan": "Default",
-    #     "Enable": true,
-    #     "MACAddr": "01:01:01:01:01:01",
-    #     "IPAddr": "192.168.0.1"
-    #   },
-    # ]
-
-    - name: Configure static_dhcp
-      zyxel_vmg8825_static_dhcp:
-        config:
-          - br_wan: Default
-            enable: True
-            mac_addr: "01:01:01:01:01:01"
-            ip_addr: "192.168.0.2"
-        state: replaced
-
-    # DAL?oid=static_dhcp
-    # [
-    #   {
-    #     "Index": 1,
-    #     "BrWan": "Default",
-    #     "Enable": true,
-    #     "MACAddr": "01:01:01:01:01:01",
-    #     "IPAddr": "192.168.0.2"
-    #   },
-    # ]
-
-    # Using deleted
-
-    # Before state:
-    # -------------
-    #
-    # DAL?oid=static_dhcp
-    # [
-    #   {
-    #     "Index": 1,
-    #     "BrWan": "Default",
-    #     "Enable": true,
-    #     "MACAddr": "01:01:01:01:01:01",
-    #     "IPAddr": "192.168.0.1"
-    #   },
-    # ]
-
-    - name: Configure static_dhcp
-      zyxel_vmg8825_static_dhcp:
-        state: deleted
-
-    # DAL?oid=static_dhcp
-    # [
-    # ]
-
-    # Using merged
-
-    # Before state:
-    # -------------
-    #
-    # DAL?oid=static_dhcp
-    # [
-    #   {
-    #     "Index": 1,
-    #     "BrWan": "Default",
-    #     "Enable": true,
-    #     "MACAddr": "01:01:01:01:01:01",
-    #     "IPAddr": "192.168.0.1"
-    #   },
-    # ]
-
-    - name: Configure static_dhcp
-      zyxel_vmg8825_static_dhcp:
-        config:
-          - br_wan: Default
-            enable: True
-            mac_addr: "01:01:01:01:01:02"
-            ip_addr: "192.168.0.2"
-        state: merged
-
-    # DAL?oid=static_dhcp
-    # [
-    #   {
-    #     "Index": 1,
-    #     "BrWan": "Default",
-    #     "Enable": true,
-    #     "MACAddr": "01:01:01:01:01:01",
-    #     "IPAddr": "192.168.0.1"
-    #   },
-    #   {
-    #     "Index": 2,
-    #     "BrWan": "Default",
-    #     "Enable": true,
-    #     "MACAddr": "01:01:01:01:01:02",
-    #     "IPAddr": "192.168.0.2"
-    #   },
-    # ]
-
-    # Using overridden
-
-    # Before state:
-    # -------------
-    #
-    # DAL?oid=static_dhcp
-    # [
-    #   {
-    #     "Index": 1,
-    #     "BrWan": "Default",
-    #     "Enable": true,
-    #     "MACAddr": "01:01:01:01:01:01",
-    #     "IPAddr": "192.168.0.1"
-    #   },
-    # ]
-
-    - name: Configure static_dhcp
-      zyxel_vmg8825_static_dhcp:
-        config:
-          - br_wan: Default
-            enable: True
-            mac_addr: "01:01:01:01:01:02"
-            ip_addr: "192.168.0.2"
-        state: replaced
-
-    # DAL?oid=static_dhcp
-    # [
-    #   {
-    #     "Index": 1,
-    #     "BrWan": "Default",
-    #     "Enable": true,
-    #     "MACAddr": "01:01:01:01:01:02",
-    #     "IPAddr": "192.168.0.2"
-    #   },
-    # ]
 
 
 
