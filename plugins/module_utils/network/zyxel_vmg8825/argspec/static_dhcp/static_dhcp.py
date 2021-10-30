@@ -36,7 +36,7 @@ class Static_dhcpArgs(object):  # pylint: disable=R0903
             "elements": "dict",
             "options": {
                 "index": {"type": "int"},
-                "enable": {"type": "bool"},
+                "enable": {"type": "bool", "default": True},
                 "br_wan": {"type": "str", "default": "Default"},
                 "mac_addr": {"type": "str", "required": True},
                 "ip_addr": {"type": "str", "required": True},

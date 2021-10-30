@@ -36,6 +36,7 @@ options:
         description:
         - True is the entry should be active
         type: bool
+        default: true
       br_wan:
         description:
         - BrWan. Most likely this will be the value 'Default'
