@@ -43,7 +43,7 @@ Name | Description
 You can install the Zyxel collection with the Ansible Galaxy CLI:
 
 ```bash
-ansible-galaxy collection install git@github.com:jwnmulder/ansible-collection-zyxel-vmg8825.git
+ansible-galaxy collection install https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825.git
 ```
 
 You can also include it in a `requirements.yml` file and install it with `ansible-galaxy collection install -r requirements.yml`, using the format:
