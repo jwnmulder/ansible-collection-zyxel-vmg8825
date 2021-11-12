@@ -25,6 +25,7 @@ options:
       br_wan:
         description:
         - BrWan. Most likely this will be the value 'Default'
+        - On Zyxel VMG8825 this matches with IpIfacePath=IP.Interface.1, Type=LAN, Name=Default
         type: str
         default: Default
       mac_addr:
