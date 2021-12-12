@@ -118,7 +118,7 @@ ansible-playbook -e rm_dest=$(pwd) rm_builder/generate_all.yml
 ansible-playbook -e rm_dest=$(pwd) rm_builder/update_all.yml
 ```
 
-## Whish list
+## Wish list
 
 ### status
 
