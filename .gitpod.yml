@@ -1,7 +1,7 @@
 checkoutLocation: "ansible_collections/jwnmulder/zyxel_vmg8825"
 tasks:
   - before: |
-      gp env -e PYTHONPATH=../../../:$PYTHONPATH
+      gp env -e PYTHONPATH=../../../
       gp env -e ANSIBLE_COLLECTIONS_PATH=/workspace/ansible_collections
   - init: |
       pip3 install -r requirements.txt
