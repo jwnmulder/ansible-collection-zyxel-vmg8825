@@ -1,7 +1,6 @@
 tasks:
   - init: |
-      export PIP_USER=no
-      scripts/ensure-venv.sh
+      pip3 install -r requirements.txt
 
 vscode:
   extensions:
