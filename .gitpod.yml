@@ -1,5 +1,6 @@
 tasks:
   - init: |
+      export PIP_USER=no
       scripts/ensure-venv.sh
 
 vscode:
