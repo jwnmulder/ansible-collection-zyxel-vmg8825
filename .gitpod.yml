@@ -5,13 +5,11 @@ tasks:
       export PYTHONPATH=../../../
       export ANSIBLE_COLLECTIONS_PATHS=/workspace/ansible_collections
       EOT
-
-      . ~/.bashrc.d/99-environment
   - init: |
       pip3 install -r requirements.txt
       pip3 install pre-commit
 
-      #export ANSIBLE_COLLECTIONS_PATHS=/workspace/ansible_collections
+      . ~/.bashrc.d/99-environment
       ansible-galaxy collection install --upgrade ansible.netcommon -p "./../../"
 
 vscode:
