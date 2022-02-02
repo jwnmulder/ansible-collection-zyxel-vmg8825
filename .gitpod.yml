@@ -1,0 +1,7 @@
+tasks:
+  - init: |
+      scripts/ensure-venv.sh
+
+vscode:
+  extensions:
+    - ms-python.python
