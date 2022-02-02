@@ -6,7 +6,7 @@ tasks:
       export ANSIBLE_COLLECTIONS_PATHS=/workspace/ansible_collections
       EOT
 
-      #. ~/.bashrc.d/99-environment
+      . ~/.bashrc.d/99-environment
   - init: |
       pip3 install -r requirements.txt
       pip3 install pre-commit
