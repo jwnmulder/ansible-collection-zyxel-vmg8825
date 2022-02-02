@@ -1,6 +1,10 @@
+checkoutLocation: "ansible_collections/jwnmulder/zyxel_vmg8825"
+workspaceLocation: "."
 tasks:
   - init: |
       pip3 install -r requirements.txt
+      pip3 install pre-commit
+      ansible-galaxy collection install --upgrade ansible.netcommon -p "./../../"
 
 vscode:
   extensions:
