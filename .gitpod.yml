@@ -1,5 +1,5 @@
 checkoutLocation: "ansible_collections/jwnmulder/zyxel_vmg8825"
-workspaceLocation: "."
+workspaceLocation: "ansible_collections/jwnmulder/zyxel_vmg8825"
 tasks:
   - init: |
       pip3 install -r requirements.txt
