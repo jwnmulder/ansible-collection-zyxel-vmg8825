@@ -7,7 +7,7 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 author: Jan-Willem Mulder (@jwnmulder)
-httpapi: zyxel_vmg8825
+name: zyxel_vmg8825
 short_description: HttpApi Plugin for Zyxel VMG 8825
 description:
 - plugin that uses the Zyxel Web REST interface to manage the router.
