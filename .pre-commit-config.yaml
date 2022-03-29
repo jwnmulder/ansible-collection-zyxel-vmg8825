@@ -48,6 +48,10 @@ repos:
           - --quiet
           - --experimental-string-processing
         files: ^(plugins|tests)/.+\.py$
+        # TODO: When pycln resolves the issue
+        # with click (to be precise, when the typer
+        # dep fixes their issue with click), we should remove this
+        additional_dependencies: ["click==8.0.4"]
 
   - repo: https://gitlab.com/pycqa/flake8
     rev: 4.0.1
