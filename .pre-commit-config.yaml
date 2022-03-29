@@ -34,6 +34,10 @@ repos:
           - tests
           - --exclude
           - (\.eggs|\.git|\.hg|\.mypy_cache|__pycache__|\.nox|\.tox|\.venv|\.svn|buck-out|build|dist|output)/
+        # TODO: When pycln resolves the issue
+        # with click (to be precise, when the typer
+        # dep fixes their issue with click), we should remove this
+        additional_dependencies: ["click==8.0.4"]
 
   - repo: https://github.com/psf/black
     rev: 22.1.0
