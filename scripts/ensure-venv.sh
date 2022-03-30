@@ -8,7 +8,7 @@ VIRTUAL_ENV_DIR=$(readlink -f "${1:-.venv}")
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 ROOT_DIR=$(readlink -f "${SCRIPT_DIR}/..")
 
-# We might already be in a python virtual venv, in that case, skip installing pip
+# We might already be in a python virtual venv, in that case, skip upgrading pip
 if [ ! -v VIRTUAL_ENV ]; then
     python3 -m pip install --user --upgrade pip
 fi
