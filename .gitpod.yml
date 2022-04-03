@@ -19,8 +19,8 @@ tasks:
       ansible-galaxy collection install --upgrade ansible.netcommon ansible.utils -p "./../../"
 
       # install pre-commit git hooks and pre initialize environments
-      pre-commit install
       pre-commit
+      pre-commit install
 
 vscode:
   extensions:
