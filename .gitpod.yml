@@ -10,7 +10,10 @@ tasks:
       pip3 install pre-commit
 
       . ~/.bashrc.d/99-environment
-      ansible-galaxy collection install --upgrade ansible.netcommon -p "./../../"
+
+      scripts/ensure-venv.sh
+      pip install pre-commit
+      ansible-galaxy collection install --upgrade ansible.netcommon ansible.utils -p "./../../"
 
 vscode:
   extensions:
