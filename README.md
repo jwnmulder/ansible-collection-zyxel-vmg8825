@@ -90,7 +90,7 @@ If you want to clone this repositority (or a fork of it) to improve it, you can 
 4. In the zyxel_vmg8825 dir, run the following commands to setup a python venv
 
     ```bash
-    bin/ensure-venv.sh
+    scripts/ensure-venv.sh
     . .venv/bin/activate
     ```
 

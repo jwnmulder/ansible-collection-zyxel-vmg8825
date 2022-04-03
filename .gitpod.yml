@@ -12,6 +12,8 @@ tasks:
       . ~/.bashrc.d/99-environment
 
       scripts/ensure-venv.sh
+      . .venv/bin/activate
+
       pip install pre-commit
       ansible-galaxy collection install --upgrade ansible.netcommon ansible.utils -p "./../../"
 
