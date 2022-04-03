@@ -13,7 +13,13 @@ tasks:
 
       pip install -r requirements.txt
       pip install pre-commit
+
+      # install ansible-galaxy dependencies
       ansible-galaxy collection install --upgrade ansible.netcommon ansible.utils -p "./../../"
+
+      # install pre-commit git hooks and pre initialize environments
+      pre-commit install
+      pre-commit
 
 vscode:
   extensions:
