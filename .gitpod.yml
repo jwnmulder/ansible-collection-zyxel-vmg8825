@@ -6,14 +6,12 @@ tasks:
       export ANSIBLE_COLLECTIONS_PATHS=/workspace/ansible_collections
       EOT
   - init: |
-      pip3 install -r requirements.txt
-      pip3 install pre-commit
-
       . ~/.bashrc.d/99-environment
 
       scripts/ensure-venv.sh
       . .venv/bin/activate
 
+      pip install -r requirements.txt
       pip install pre-commit
       ansible-galaxy collection install --upgrade ansible.netcommon ansible.utils -p "./../../"
 
