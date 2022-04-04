@@ -1,10 +1,10 @@
 checkoutLocation: "ansible_collections/jwnmulder/zyxel_vmg8825"
 tasks:
   - before: |
-      # cat <<EOT >> ~/.bashrc.d/99-environment
+      cat <<EOT >> ~/.bashrc.d/99-environment
       # export PYTHONPATH=../../../
       # export ANSIBLE_COLLECTIONS_PATHS=/workspace/ansible_collections
-      # EOT
+      EOT
   - init: |
       # . ~/.bashrc.d/99-environment
 
