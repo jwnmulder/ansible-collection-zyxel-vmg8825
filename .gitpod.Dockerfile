@@ -6,4 +6,6 @@ RUN sudo apt-get update \
         direnv \
     && sudo rm -rf /var/lib/apt/lists/*
 
-RUN echo 'eval "$(direnv hook bash)"' > /home/gitpod/.bashrc.d/direnv.bashrc
+RUN echo 'eval "$(direnv hook bash)"' > /home/gitpod/.bashrc.d/300-direnv.bashrc
+
+RUN if ! grep -q "export PIP_USER=no" "$HOME/.bashrc"; then printf '%s\n' "export PIP_USER=no" >> "$HOME/.bashrc"; fi
