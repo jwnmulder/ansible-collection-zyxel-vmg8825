@@ -1,4 +1,8 @@
+image:
+  file: .gitpod.Dockerfile
+
 checkoutLocation: "ansible_collections/jwnmulder/zyxel_vmg8825"
+
 tasks:
   - before: |
       cat <<EOT >> ~/.bashrc.d/99-environment
