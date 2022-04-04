@@ -5,29 +5,11 @@ checkoutLocation: "ansible_collections/jwnmulder/zyxel_vmg8825"
 
 tasks:
   - before: |
-      cat <<EOT >> ~/.bashrc.d/99-environment
-      # export PYTHONPATH=../../../
-      # export ANSIBLE_COLLECTIONS_PATHS=/workspace/ansible_collections
-      EOT
+      cd ..
+      direnv allow zyxel_vmg8825
   - init: |
-      # . ~/.bashrc.d/99-environment
-
-      # scripts/ensure-venv.sh
-      # . .venv/bin/activate
-
-      direnv allow
-
       python3 -m pip install --upgrade pip
       pip install pre-commit
-      
-      # pip install -r requirements.txt
-
-      # install ansible-galaxy dependencies
-      # ansible-galaxy collection install --upgrade ansible.netcommon ansible.utils -p "./../../"
-
-      # install pre-commit git hooks and pre initialize environments
-      # pre-commit
-      # pre-commit install
 
 vscode:
   extensions:
