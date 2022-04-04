@@ -15,8 +15,11 @@ tasks:
       # scripts/ensure-venv.sh
       # . .venv/bin/activate
 
+      direnv allow
+
       python3 -m pip install --upgrade pip
       pip install pre-commit
+      
       # pip install -r requirements.txt
 
       # install ansible-galaxy dependencies
