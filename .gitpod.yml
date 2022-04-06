@@ -8,6 +8,7 @@ tasks:
       cd ..
       direnv allow zyxel_vmg8825
   - init: |
+      set -x
       direnv allow
       python3 -m pip install --upgrade pip
       python3 -m pip install pre-commit
