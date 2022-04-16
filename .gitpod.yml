@@ -5,8 +5,11 @@ checkoutLocation: "ansible_collections/jwnmulder/zyxel_vmg8825"
 
 tasks:
   - before: |
+      echo 'eval "$(direnv hook bash)"' > $HOME/.bashrc.d/300-direnv.bashrc
+      
       cd ..
       direnv allow zyxel_vmg8825
+
   - init: |
       direnv allow
       python3 -m pip install --upgrade pip

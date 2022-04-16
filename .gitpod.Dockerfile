@@ -8,7 +8,7 @@ RUN sudo apt-get update \
 
 USER gitpod
 
-RUN echo 'eval "$(direnv hook bash)"' > $HOME/.bashrc.d/300-direnv.bashrc
+# RUN echo 'eval "$(direnv hook bash)"' > $HOME/.bashrc.d/300-direnv.bashrc
 
 RUN if ! grep -q "export PIP_USER=no" "$HOME/.bashrc"; then printf '%s\n' "export PIP_USER=no" >> "$HOME/.bashrc"; fi
 
