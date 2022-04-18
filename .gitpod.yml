@@ -9,7 +9,9 @@ tasks:
       
       cd ..
       ls
+      echo pre-direnv
       direnv allow zyxel_vmg8825
+      echo post-direnv
 
   - init: |
       direnv allow
