@@ -8,6 +8,7 @@ tasks:
       echo 'eval "$(direnv hook bash)"' > $HOME/.bashrc.d/300-direnv.bashrc
       
       cd ..
+      ls
       direnv allow zyxel_vmg8825
 
   - init: |
