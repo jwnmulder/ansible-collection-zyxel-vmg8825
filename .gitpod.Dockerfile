@@ -1,10 +1,10 @@
 FROM gitpod/workspace-full
 
 # Install custom tools, runtime, etc.
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends \
     direnv \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && sudo apt-get clean \
+    && sudo rm -rf /var/lib/apt/lists/*
 
 # USER gitpod
 
