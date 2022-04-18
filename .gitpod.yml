@@ -5,7 +5,7 @@ checkoutLocation: "ansible_collections/jwnmulder/zyxel_vmg8825"
 
 tasks:
   - before: |
-      echo 'eval "$(direnv hook bash)"' > $HOME/.bashrc.d/300-direnv.bashrc
+      # echo 'eval "$(direnv hook bash)"' > $HOME/.bashrc.d/300-direnv.bashrc
       
       cd ..
       ls
