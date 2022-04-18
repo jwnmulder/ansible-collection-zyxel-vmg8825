@@ -15,10 +15,10 @@ tasks:
 
   - init: |
       direnv allow
-      python3 -m pip install --upgrade pip
-      python3 -m pip install pre-commit
+      direnv exec python3 -m pip install --upgrade pip
+      direnv exec python3 -m pip install pre-commit
 
-      pre-commit
+      direnv exec pre-commit
 
 vscode:
   extensions:
