@@ -11,10 +11,13 @@ tasks:
 
   - init: |
       direnv allow
+      
       direnv exec . python3 -m pip install --upgrade pip
       direnv exec . python3 -m pip install pre-commit
 
       direnv exec . pre-commit
+
+      eval "$(direnv hook bash)"
 
 vscode:
   extensions:
