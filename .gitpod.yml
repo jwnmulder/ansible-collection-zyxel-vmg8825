@@ -16,7 +16,7 @@ tasks:
       bash -c 'direnv exec zyxel_vmg8825 python3 -m pip install --upgrade pip'
       bash -c 'direnv exec zyxel_vmg8825 python3 -m pip install pre-commit'
 
-      bash -c 'direnv exec zyxel_vmg8825 pre-commit'
+      direnv exec zyxel_vmg8825 bash -c 'cd zyxel_vmg8825 && pre-commit'
 
       cd zyxel_vmg8825
 
