@@ -4,21 +4,19 @@ image:
 checkoutLocation: "ansible_collections/jwnmulder/zyxel_vmg8825"
 
 tasks:
-  - before: |
-      cd ..
-      direnv allow zyxel_vmg8825
-
   - init: |
       cd ..
 
-      bash -c 'direnv allow zyxel_vmg8825'
+      direnv allow zyxel_vmg8825
       
-      bash -c 'direnv exec zyxel_vmg8825 python3 -m pip install --upgrade pip'
-      bash -c 'direnv exec zyxel_vmg8825 python3 -m pip install pre-commit'
+      direnv exec zyxel_vmg8825 python3 -m pip install --upgrade pip
+      direnv exec zyxel_vmg8825 python3 -m pip install pre-commit
 
       direnv exec zyxel_vmg8825 bash -c 'cd zyxel_vmg8825 && pre-commit'
 
       cd zyxel_vmg8825
+
+      direnv allow
 
 vscode:
   extensions:
