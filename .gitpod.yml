@@ -17,6 +17,8 @@ tasks:
       cd zyxel_vmg8825
 
       direnv allow
+    env:
+      PRE_COMMIT_HOME: /workspace/.cache/pre-commit
 
 vscode:
   extensions:
