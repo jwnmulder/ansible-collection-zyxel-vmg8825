@@ -9,7 +9,7 @@ tasks:
       direnv allow zyxel_vmg8825
 
   - init: |
-      direnv allow
+      bash -c 'direnv allow'
       
       bash -c 'direnv exec . python3 -m pip install --upgrade pip'
       bash -c 'direnv exec . python3 -m pip install pre-commit'
