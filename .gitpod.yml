@@ -5,9 +5,8 @@ checkoutLocation: "ansible_collections/jwnmulder/zyxel_vmg8825"
 
 tasks:
   - before: |
+      cd ..
       direnv allow zyxel_vmg8825
-
-      echo 'eval "$(direnv hook bash)"' > $HOME/.bashrc.d/300-direnv.bashrc
 
   - init: |
       direnv allow
@@ -16,8 +15,6 @@ tasks:
       direnv exec . python3 -m pip install pre-commit
 
       direnv exec . pre-commit
-
-      eval "$(direnv hook bash)"
 
 vscode:
   extensions:
