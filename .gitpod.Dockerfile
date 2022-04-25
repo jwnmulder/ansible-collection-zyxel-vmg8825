@@ -8,4 +8,4 @@ RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends \
 
 USER gitpod
 
-RUN echo 'eval "$(direnv hook bash)"' > /home/gitpod/.bashrc/.bashrc.d/300-direnv.bashrc
+RUN echo 'eval "$(direnv hook bash)"' > /home/gitpod/.bashrc.d/300-direnv.bashrc
