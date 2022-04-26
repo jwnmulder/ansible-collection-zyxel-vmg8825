@@ -4,15 +4,17 @@ image:
 checkoutLocation: "ansible_collections/jwnmulder/zyxel_vmg8825"
 
 tasks:
-  - init: |
+  - env:
+      PRE_COMMIT_HOME: /workspace/.cache/pre-commit
+    init: |
       direnv allow
       
       direnv exec . python3 -m pip install --upgrade pip
       direnv exec . python3 -m pip install pre-commit
 
       direnv exec . bash -c 'pre-commit'
-    env:
-      PRE_COMMIT_HOME: /workspace/.cache/pre-commit
+    command: |
+      direnv allow
 
 vscode:
   extensions:
