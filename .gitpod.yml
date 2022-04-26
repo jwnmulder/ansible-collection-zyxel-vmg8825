@@ -13,9 +13,16 @@ tasks:
       direnv exec . python3 -m pip install pre-commit
 
       direnv exec . bash -c 'pre-commit'
+
+      # Setting PYTHONPATH ensures that ansible is able to correctly find this
+      # collection during unit testing in vscode
+      grep -s -q 'PYTHONPATH' '.env' || echo "PYTHONPATH=../../../" >> .env
+
     command: |
       direnv allow
 
 vscode:
   extensions:
     - ms-python.python
+    - DavidAnson.vscode-markdownlint
+    - redhat.ansible
