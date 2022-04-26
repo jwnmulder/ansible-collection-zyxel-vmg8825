@@ -14,7 +14,7 @@ tasks:
     env:
       PRE_COMMIT_HOME: /workspace/.cache/pre-commit
 
-  - command: direnv allow
+  # - command: direnv allow
 
 vscode:
   extensions:
