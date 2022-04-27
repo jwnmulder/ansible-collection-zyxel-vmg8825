@@ -7,8 +7,10 @@ __metaclass__ = type
 
 import logging
 import pytest
+import unittest
 
-from ansible_collections.ansible.netcommon.tests.unit.compat import mock, unittest
+from unittest import mock
+
 from ansible.module_utils.connection import ConnectionError
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825 import (
     HttpApi,

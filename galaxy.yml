@@ -2,7 +2,7 @@
 
 namespace: jwnmulder
 name: zyxel_vmg8825
-version: 0.1.0
+version: 0.2.0
 readme: README.md
 authors:
   - Jan-Willem Mulder (@jwnmulder)
@@ -12,9 +12,9 @@ tags:
   - zyxel
   - zyxel_vmg8825
 dependencies:
-  ansible.netcommon: '>=2.0.1'
+  ansible.netcommon: '>=2.5.1'
 repository: https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825
-#documentation: https://github.com/ansible-collection-migration/community.REPO_NAME/tree/main/docs
+# documentation: https://github.com/ansible-collection-migration/community.REPO_NAME/tree/main/docs
 homepage: https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825
 issues: https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825
 build_ignore:
