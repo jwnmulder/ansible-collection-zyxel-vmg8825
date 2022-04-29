@@ -8,7 +8,7 @@ on:
   schedule:
     - cron: '0 6 * * *'
 env:
-  NAMESPACE: jwnmulder
+  NAMESPACE: kokobana
   COLLECTION_NAME: zyxel_vmg8825
 
 jobs:
@@ -45,7 +45,7 @@ jobs:
       #       ~/.cache/pip
       #       ~/.local/lib/python${{ matrix.python }}
       #       ~/.ansible/collection
-      #     key: ${{ runner.os }}-packages-${{ matrix.python }}-${{ hashFiles('./ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
+      #     key: ${{ runner.os }}-packages-${{ matrix.python }}-${{ hashFiles('./ansible_collections/kokobana/zyxel_vmg8825/.github/requirements.txt') }}
       #     #restore-keys: |
       #     #  ${{ runner.os }}-packages-${{ matrix.python }}-
       #     #  ${{ runner.os }}-packages-
@@ -102,7 +102,7 @@ jobs:
       #       ~/.cache/pip
       #       ~/.local/lib/python${{ matrix.python }}
       #       ~/.ansible/collection
-      #     key: ${{ runner.os }}-packages-${{ matrix.python }}-${{ hashFiles('./ansible_collections/jwnmulder/zyxel_vmg8825/.github/requirements.txt') }}
+      #     key: ${{ runner.os }}-packages-${{ matrix.python }}-${{ hashFiles('./ansible_collections/kokobana/zyxel_vmg8825/.github/requirements.txt') }}
       #     #restore-keys: |
       #     #  ${{ runner.os }}-packages-${{ matrix.python }}-
       #     #  ${{ runner.os }}-packages-

@@ -1,6 +1,6 @@
 # See https://docs.ansible.com/ansible/latest/dev_guide/collections_galaxy_meta.html
 
-namespace: jwnmulder
+namespace: kokobana
 name: zyxel_vmg8825
 version: 0.2.0
 readme: README.md
@@ -13,10 +13,10 @@ tags:
   - zyxel_vmg8825
 dependencies:
   ansible.netcommon: '>=2.5.1'
-repository: https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825
+repository: https://github.com/kokobana/ansible-collection-zyxel-vmg8825
 # documentation: https://github.com/ansible-collection-migration/community.REPO_NAME/tree/main/docs
-homepage: https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825
-issues: https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825
+homepage: https://github.com/kokobana/ansible-collection-zyxel-vmg8825
+issues: https://github.com/kokobana/ansible-collection-zyxel-vmg8825
 build_ignore:
 # https://docs.ansible.com/ansible/devel/dev_guide/developing_collections.html#ignoring-files-and-folders
   - .gitignore

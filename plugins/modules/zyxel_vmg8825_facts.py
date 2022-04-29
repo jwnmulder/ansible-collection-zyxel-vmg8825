@@ -85,10 +85,10 @@ RETURN = """
 """
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.facts.facts import (
+from ansible_collections.kokobana.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.facts.facts import (
     FactsArgs,
 )
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.facts.facts import (
+from ansible_collections.kokobana.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.facts.facts import (
     Facts,
 )
 

@@ -9,7 +9,7 @@
       vars:
         copyright: "Copyright {{ ansible_date_time.year }}"
         version_added: "1.0.0"
-        collection_org: "jwnmulder"
+        collection_org: "kokobana"
         collection_name: "zyxel_vmg8825"
         network_os: "zyxel_vmg8825"
         transport: "httpapi"

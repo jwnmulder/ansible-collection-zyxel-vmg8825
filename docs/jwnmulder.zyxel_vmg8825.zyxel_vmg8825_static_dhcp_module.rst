@@ -1,8 +1,8 @@
-.. _jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_module:
+.. _kokobana.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_module:
 
 
 *************************************************
-jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp
+kokobana.zyxel_vmg8825.zyxel_vmg8825_static_dhcp
 *************************************************
 
 **Manages static_dhcp entries of zyxel_vmg8825**

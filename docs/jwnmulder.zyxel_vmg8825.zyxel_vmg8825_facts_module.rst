@@ -1,8 +1,8 @@
-.. _jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts_module:
+.. _kokobana.zyxel_vmg8825.zyxel_vmg8825_facts_module:
 
 
 *******************************************
-jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts
+kokobana.zyxel_vmg8825.zyxel_vmg8825_facts
 *******************************************
 
 **Get facts about zyxel_vmg8825 devices.**

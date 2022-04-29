@@ -1,9 +1,9 @@
 # Zyxel VMG8825 Ansible Collection
 
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825)
-[![GitHub Actions pre-commit status](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/workflows/pre-commit/badge.svg?branch=main)](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/actions/workflows/pre-commit.yml?query=branch%3Amain)
-[![GitHub Actions ansible-test status](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/workflows/ansible-test/badge.svg?branch=main)](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/actions/workflows/ansible-test.yml?query=branch%3Amain)
-[![GitHub Actions ci status](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/workflows/ci/badge.svg?branch=main)](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/actions/workflows/ci.yml?query=branch%3Amain)
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-ready--to--code-908a85?logo=gitpod)](https://gitpod.io/#https://github.com/kokobana/ansible-collection-zyxel-vmg8825)
+[![GitHub Actions pre-commit status](https://github.com/kokobana/ansible-collection-zyxel-vmg8825/workflows/pre-commit/badge.svg?branch=main)](https://github.com/kokobana/ansible-collection-zyxel-vmg8825/actions/workflows/pre-commit.yml?query=branch%3Amain)
+[![GitHub Actions ansible-test status](https://github.com/kokobana/ansible-collection-zyxel-vmg8825/workflows/ansible-test/badge.svg?branch=main)](https://github.com/kokobana/ansible-collection-zyxel-vmg8825/actions/workflows/ansible-test.yml?query=branch%3Amain)
+[![GitHub Actions ci status](https://github.com/kokobana/ansible-collection-zyxel-vmg8825/workflows/ci/badge.svg?branch=main)](https://github.com/kokobana/ansible-collection-zyxel-vmg8825/actions/workflows/ci.yml?query=branch%3Amain)
 
 The Ansible Zyxel collection includes a variety of Ansible content to help automate the management of Zyxel VMG8825 routers.
 
@@ -28,16 +28,16 @@ PEP440 is the schema used to describe the versions of Ansible.
 ### Httpapi plugins
 Name | Description
 --- | ---
-[jwnmulder.zyxel_vmg8825.zyxel_vmg8825](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_vmg8825_httpapi.rst)|HttpApi Plugin for Zyxel VMG 8825
+[kokobana.zyxel_vmg8825.zyxel_vmg8825](https://github.com/kokobana/ansible-collection-zyxel-vmg8825/blob/main/docs/kokobana.zyxel_vmg8825.zyxel_vmg8825_httpapi.rst)|HttpApi Plugin for Zyxel VMG 8825
 
 ### Modules
 Name | Description
 --- | ---
-[jwnmulder.zyxel_vmg8825.zyxel_vmg8825_dal_rpc](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_vmg8825_dal_rpc_module.rst)|Zyxel Module for interacting with the Zyxel DAL API
-[jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts_module.rst)|Get facts about zyxel_vmg8825 devices.
-[jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards_module.rst)|Manages nat port forward entries of zyxel_vmg8825
-[jwnmulder.zyxel_vmg8825.zyxel_vmg8825_ping](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_vmg8825_ping_module.rst)|Zyxel Module for sending PINGTEST
-[jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp](https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/docs/jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_module.rst)|Manages static_dhcp entries of zyxel_vmg8825
+[kokobana.zyxel_vmg8825.zyxel_vmg8825_dal_rpc](https://github.com/kokobana/ansible-collection-zyxel-vmg8825/blob/main/docs/kokobana.zyxel_vmg8825.zyxel_vmg8825_dal_rpc_module.rst)|Zyxel Module for interacting with the Zyxel DAL API
+[kokobana.zyxel_vmg8825.zyxel_vmg8825_facts](https://github.com/kokobana/ansible-collection-zyxel-vmg8825/blob/main/docs/kokobana.zyxel_vmg8825.zyxel_vmg8825_facts_module.rst)|Get facts about zyxel_vmg8825 devices.
+[kokobana.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards](https://github.com/kokobana/ansible-collection-zyxel-vmg8825/blob/main/docs/kokobana.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards_module.rst)|Manages nat port forward entries of zyxel_vmg8825
+[kokobana.zyxel_vmg8825.zyxel_vmg8825_ping](https://github.com/kokobana/ansible-collection-zyxel-vmg8825/blob/main/docs/kokobana.zyxel_vmg8825.zyxel_vmg8825_ping_module.rst)|Zyxel Module for sending PINGTEST
+[kokobana.zyxel_vmg8825.zyxel_vmg8825_static_dhcp](https://github.com/kokobana/ansible-collection-zyxel-vmg8825/blob/main/docs/kokobana.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_module.rst)|Manages static_dhcp entries of zyxel_vmg8825
 
 <!--end collection content-->
 
@@ -46,7 +46,7 @@ Name | Description
 You can install the Zyxel collection with the Ansible Galaxy CLI:
 
 ```bash
-ansible-galaxy collection install https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825.git
+ansible-galaxy collection install https://github.com/kokobana/ansible-collection-zyxel-vmg8825.git
 ```
 
 You can also include it in a `requirements.yml` file and install it with `ansible-galaxy collection install -r requirements.yml`, using the format:
@@ -54,7 +54,7 @@ You can also include it in a `requirements.yml` file and install it with `ansibl
 ```yaml
 ---
 collections:
-  - name: https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825.git
+  - name: https://github.com/kokobana/ansible-collection-zyxel-vmg8825.git
     type: git
     version: main
 ```
@@ -65,7 +65,7 @@ This collection includes [network resource modules](https://docs.ansible.com/ans
 
 ### Using modules from the Zyxel collection in your playbooks
 
-You can call modules by their Fully Qualified Collection Namespace (FQCN), such as `jwnmulder.zyxel_vmg8825_static_dhcp`.
+You can call modules by their Fully Qualified Collection Namespace (FQCN), such as `kokobana.zyxel_vmg8825_static_dhcp`.
 The following example task replaces configuration changes in the existing configuration on a Zyxel router, using the FQCN:
 
 ```yaml
@@ -85,7 +85,7 @@ The following example task replaces configuration changes in the existing config
 If you want to clone this repositority (or a fork of it) to improve it, you can proceed as follows:
 
 1. Strongly recommended, ensure `pre-commit` and `direnv` are installed
-2. Create a directory `ansible_collections/jwnmulder`
+2. Create a directory `ansible_collections/kokobana`
 3. In there, checkout this repository (or a fork) as `zyxel_vmg8825`
 4. In the zyxel_vmg8825 dir, run the following commands to setup a python venv
 

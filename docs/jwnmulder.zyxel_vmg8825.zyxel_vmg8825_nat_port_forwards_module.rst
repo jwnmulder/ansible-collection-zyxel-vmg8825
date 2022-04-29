@@ -1,8 +1,8 @@
-.. _jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards_module:
+.. _kokobana.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards_module:
 
 
 *******************************************************
-jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards
+kokobana.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards
 *******************************************************
 
 **Manages nat port forward entries of zyxel_vmg8825**
