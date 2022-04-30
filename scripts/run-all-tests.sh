@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 set -euf -o pipefail
-set -x
 
+echo "Running pre-commit"
 pre-commit run --all-files
 
 # Check that ../../ is named 'ansible_collections'.
@@ -16,15 +16,22 @@ fi
 # Set ANSIBLE_COLLECTIONS_PATHS to avoid some warnings
 export ANSIBLE_COLLECTIONS_PATHS="$collections_dir"
 
+echo "Running ansible-galaxy collection install" 
 ansible-galaxy collection install --upgrade ansible.netcommon -p "$collections_dir"
 
+echo "ansible-test units"
 ansible-test units -v --color --docker
+
+echo "ansible-test sanity"
 ansible-test sanity -v --color --docker
 
-# This doesn't work as ansible-test is having issues with finding the default inventory.networking file
-# ansible-test network-integration -v --color --docker
+NETWORK_INVENTORY_FILE="tests/integration/inventory.networking"
+if [ ! -f "$NETWORK_INVENTORY_FILE" ]; then
+    echo "Skipping ansible-test network-integration as '$NETWORK_INVENTORY_FILE' does not exist"
+else
+    echo "Running ansible-test network-integration using '$NETWORK_INVENTORY_FILE'"
+    ansible-test network-integration -v --color --docker
 
-# '--venv --inventory' is temporarily needed. probably it will be fixed in stable-2.12
-ansible-test network-integration -v --color --venv --inventory "$(pwd)"/tests/integration/inventory.networking
-
-# ansible-test network-integration -v --venv  --inventory "$(pwd)"/tests/integration/inventory.networking --debug zyxel_vmg8825_dal_rpc --testcase pingtest
+    # ansible-test network-integration -v --color --venv --inventory "$(pwd)/$NETWORK_INVENTORY_FILE"
+    # ansible-test network-integration -v --color --venv  --inventory "$(pwd)"/tests/integration/inventory.networking --debug zyxel_vmg8825_dal_rpc --testcase pingtest
+fi
