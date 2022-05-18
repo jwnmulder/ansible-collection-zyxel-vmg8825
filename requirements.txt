@@ -1,7 +1,7 @@
 ansible-core==2.13.0
 # https://github.com/ansible/ansible/archive/devel.tar.gz
 
-ansible-lint==6.2.0
+ansible-lint==6.2.1
 
 # For unit testing in vscode
 pytest
