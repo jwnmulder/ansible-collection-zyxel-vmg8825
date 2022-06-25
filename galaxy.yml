@@ -1,12 +1,10 @@
-# See https://docs.ansible.com/ansible/latest/dev_guide/collections_galaxy_meta.html
-
 namespace: kokobana
 name: zyxel_vmg8825
 version: 0.2.0
 readme: README.md
 authors:
   - Jan-Willem Mulder (@jwnmulder)
-description: ""
+description: 'A variety of Ansible modules to help automate the management of Zyxel VMG8825 routers'
 license_file: LICENSE
 tags:
   - zyxel
@@ -14,10 +12,14 @@ tags:
 dependencies:
   ansible.netcommon: '>=2.5.1'
 repository: https://github.com/kokobana/ansible-collection-zyxel-vmg8825
-# documentation: https://github.com/ansible-collection-migration/community.REPO_NAME/tree/main/docs
+documentation: https://github.com/kokobana/ansible-collection-zyxel-vmg8825/blob/main/README.md
 homepage: https://github.com/kokobana/ansible-collection-zyxel-vmg8825
-issues: https://github.com/kokobana/ansible-collection-zyxel-vmg8825
+issues: https://github.com/kokobana/ansible-collection-zyxel-vmg8825/issues
 build_ignore:
-# https://docs.ansible.com/ansible/devel/dev_guide/developing_collections.html#ignoring-files-and-folders
-  - .gitignore
-  - changelogs/.plugin-cache.yaml
+  - '.*'
+  - '*.tar.gz'
+  - 'changelogs/.plugin-cache.yaml'
+  - 'rm_builder'
+  - 'scripts'
+  - 'renovate.json'
+  - '**/inventory.networking'
