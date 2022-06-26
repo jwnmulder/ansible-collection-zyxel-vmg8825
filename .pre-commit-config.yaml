@@ -83,7 +83,7 @@ repos:
         name: antsibull-changelog
         entry: antsibull-changelog generate
         language: python
-        files: changelogs/.*
+        files: 'changelogs/.*'
         pass_filenames: false
         additional_dependencies:
           - antsibull-changelog==0.15.0
