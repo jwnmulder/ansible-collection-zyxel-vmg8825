@@ -96,6 +96,11 @@ If you want to clone this repositority (or a fork of it) to improve it, you can 
 
 5. In the zyxel_vmg8825 dir, run the following command 'ansible-galaxy collection install ansible.netcommon'
 6. Setup pre-commit by runnning `pre-commit install` in the zyxel_vmg8825 dir
+7. To ensure vscode can run pytest, add the following to your .env file
+
+    ```text
+    PYTHONPATH=../../../
+    ```
 
 ### ansible-test
 
