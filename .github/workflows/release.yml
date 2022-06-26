@@ -1,9 +1,10 @@
 name: release
 
 on:
-  release:
-    types:
-      - published
+  # release:
+  #   types:
+  #     - published
+  workflow_dispatch:
 
 jobs:
   release:
@@ -12,18 +13,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Wait on tests
-        uses: lewagon/wait-on-check-action@v0.2
-        with:
-          ref: ${{ github.ref }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 10
-          running-workflow-name: 'ansible-test'
+      # - name: Wait on tests
+      #   uses: lewagon/wait-on-check-action@v0.2
+      #   with:
+      #     ref: ${{ github.ref }}
+      #     repo-token: ${{ secrets.GITHUB_TOKEN }}
+      #     wait-interval: 10
+      #     running-workflow-name: 'ansible-test'
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.10
+          python-version: '3.9'
 
       - name: Ensure that `version:` in `galaxy.yml` matches `GITHUB_REF`
         id: version
@@ -40,6 +41,19 @@ jobs:
       - name: Build ansible collection
         run: |
           ansible-galaxy collection build
+
+      - name: Create Release
+        id: create_release
+        uses: ncipollo/release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag: ${{ steps.version.outputs.version }}
+          name: Release ${{ steps.version.outputs.version }}
+          body: |
+            **Changelog**: https://github.com/kokobana/ansible-collection-zyxel-vmg8825/blob/main/CHANGELOG.rst
+          draft: false
+          prerelease: true
 
       - name: Publish ansible collection
         run: |
