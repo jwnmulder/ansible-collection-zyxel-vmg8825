@@ -18,12 +18,12 @@ jobs:
           ref: ${{ github.ref }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 10
-          running-workflow-name: 'ci'
+          running-workflow-name: 'ansible-test'
 
-      - name: Set up Python 3.8
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: 3.10
 
       - name: Ensure that `version:` in `galaxy.yml` matches `GITHUB_REF`
         id: version
@@ -31,23 +31,11 @@ jobs:
           [ "$(cat galaxy.yml | grep version: | awk '{print $2}')" = $(awk -F '/' '{print substr($3, 2)}' <<< ${GITHUB_REF}) ] || exit 1
           echo ::set-output name=version::$(awk -F '/' '{print substr($3, 2)}' <<< ${GITHUB_REF})
 
-      - name: Cache packages
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/pip
-            ~/.local/lib/python3.8
-            ~/.ansible/collection
-          key: ${{ runner.os }}-packages-3.8-${{ hashFiles('ansible_collections/kokobana/zyxel_vmg8825/.github/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-packages-3.8-
-            ${{ runner.os }}-packages-
-            ${{ runner.os }}-
-
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip wheel
-          python -m pip install -r .github/requirements.txt --user
+          python -m pip install --upgrade pip
+          python -m pip install wheel
+          python -m pip install ansible-core
 
       - name: Build ansible collection
         run: |
@@ -55,5 +43,4 @@ jobs:
 
       - name: Publish ansible collection
         run: |
-          echo todo
-          # ansible-galaxy collection publish --api-key ${{ secrets.GALAXY_API_KEY }} "./kokobana-zyxel_vmg8825-${{ steps.version.outputs.version }}.tar.gz"
+          ansible-galaxy collection publish --api-key ${{ secrets.GALAXY_API_KEY }} "./kokobana-zyxel_vmg8825-${{ steps.version.outputs.version }}.tar.gz"
