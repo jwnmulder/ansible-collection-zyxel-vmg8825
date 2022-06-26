@@ -20,6 +20,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        python:
+          - 3.10
         ansible:
           - stable-2.10
           - stable-2.11
@@ -38,7 +40,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: ${{ matrix.python }}
 
       # - name: Cache packages
       #   uses: actions/cache@v2
@@ -60,7 +62,13 @@ jobs:
         run: ansible-galaxy collection install ansible.netcommon ansible.utils -p .
 
       - name: Run sanity tests
-        run: ansible-test sanity --docker -v --color
+        run: |
+          if [ "${{ matrix.ansible }}" != "stable-2.10" -a "${{ matrix.ansible }}" != "stable-2.11" ]; then
+            # ansible 2.12 uses tests/config.yml to determine the min python version
+            ansible-test sanity --docker -v --color
+          else
+            ansible-test sanity --docker -v --color --python ${{ matrix.python }}
+          fi
         working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
   units:
@@ -97,7 +105,13 @@ jobs:
 
       # Run the unit tests
       - name: Run unit test
-        run: ansible-test units -v --color --docker --coverage
+        run: |
+          if [ "${{ matrix.ansible }}" != "stable-2.10" -a "${{ matrix.ansible }}" != "stable-2.11" ]; then
+            # ansible>=2.12 uses tests/config.yml to determine the min python version
+            ansible-test units -v --color --docker --coverage
+          else
+            ansible-test units -v --color --docker --coverage --python ${{ matrix.python }}
+          fi
         working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
       #   # ansible-test support producing code coverage date
