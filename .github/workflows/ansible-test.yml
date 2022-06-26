@@ -77,6 +77,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        python:
+          - '3.9'
         ansible:
           - stable-2.10
           - stable-2.11
