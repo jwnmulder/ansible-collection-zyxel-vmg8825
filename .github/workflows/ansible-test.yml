@@ -2,6 +2,9 @@ name: ansible-test
 on:
   # Run CI against all pushes (direct commits, also merged PRs), Pull Requests
   push:
+    branches:
+      - main
+      - stable-*
   pull_request:
   # Run CI once per day (at 06:00 UTC)
   # This ensures that even if there haven't been commits that we are still testing against latest version of ansible-test for each ansible-base version
@@ -17,8 +20,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python:
-          - 3.8
         ansible:
           - stable-2.10
           - stable-2.11
@@ -37,7 +38,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python }}
+          python-version: '3.10'
 
       # - name: Cache packages
       #   uses: actions/cache@v2
@@ -59,13 +60,7 @@ jobs:
         run: ansible-galaxy collection install ansible.netcommon ansible.utils -p .
 
       - name: Run sanity tests
-        run: |
-          if [ "${{ matrix.ansible }}" != "stable-2.10" -a "${{ matrix.ansible }}" != "stable-2.11" ]; then
-            # ansible 2.12 uses tests/config.yml to determine the min python version
-            ansible-test sanity --docker -v --color
-          else
-            ansible-test sanity --docker -v --color --python ${{ matrix.python }}
-          fi
+        run: ansible-test sanity --docker -v --color
         working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
   units:
@@ -74,8 +69,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python:
-          - 3.8
         ansible:
           - stable-2.10
           - stable-2.11
@@ -94,20 +87,7 @@ jobs:
         with:
           # it is just required to run that once as "ansible-test units" in the docker image
           # will run on all python versions it supports.
-          python-version: ${{ matrix.python }}
-
-      # - name: Cache packages
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: |
-      #       ~/.cache/pip
-      #       ~/.local/lib/python${{ matrix.python }}
-      #       ~/.ansible/collection
-      #     key: ${{ runner.os }}-packages-${{ matrix.python }}-${{ hashFiles('./ansible_collections/kokobana/zyxel_vmg8825/.github/requirements.txt') }}
-      #     #restore-keys: |
-      #     #  ${{ runner.os }}-packages-${{ matrix.python }}-
-      #     #  ${{ runner.os }}-packages-
-      #     #  ${{ runner.os }}-
+          python-version: '3.10'
 
       - name: Install ansible-base (${{ matrix.ansible }})
         run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
@@ -115,14 +95,9 @@ jobs:
       - name: Install collection dependencies
         run: ansible-galaxy collection install ansible.netcommon ansible.utils -p .
 
+      # Run the unit tests
       - name: Run unit test
-        run: |
-          if [ "${{ matrix.ansible }}" != "stable-2.10" -a "${{ matrix.ansible }}" != "stable-2.11" ]; then
-            # ansible>=2.12 uses tests/config.yml to determine the min python version
-            ansible-test units -v --color --docker --coverage
-          else
-            ansible-test units -v --color --docker --coverage --python ${{ matrix.python }}
-          fi
+        run: ansible-test units -v --color --docker --coverage
         working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
       #   # ansible-test support producing code coverage date

@@ -3,7 +3,7 @@ name: release
 on:
   release:
     types:
-      - released
+      - published
 
 jobs:
   release:
@@ -24,6 +24,12 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.8
+
+      - name: Ensure that `version:` in `galaxy.yml` matches `GITHUB_REF`
+        id: version
+        run: |
+          [ "$(cat galaxy.yml | grep version: | awk '{print $2}')" = $(awk -F '/' '{print substr($3, 2)}' <<< ${GITHUB_REF}) ] || exit 1
+          echo ::set-output name=version::$(awk -F '/' '{print substr($3, 2)}' <<< ${GITHUB_REF})
 
       - name: Cache packages
         uses: actions/cache@v3
@@ -46,3 +52,8 @@ jobs:
       - name: Build ansible collection
         run: |
           ansible-galaxy collection build
+
+      - name: Publish ansible collection
+        run: |
+          echo todo
+          # ansible-galaxy collection publish --api-key ${{ secrets.GALAXY_API_KEY }} "./kokobana-zyxel_vmg8825-${{ steps.version.outputs.version }}.tar.gz"
