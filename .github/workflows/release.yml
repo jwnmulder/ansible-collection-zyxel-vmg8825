@@ -42,19 +42,6 @@ jobs:
         run: |
           ansible-galaxy collection build
 
-      - name: Create Release
-        id: create_release
-        uses: ncipollo/release-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag: ${{ steps.version.outputs.version }}
-          name: Release ${{ steps.version.outputs.version }}
-          body: |
-            **Changelog**: https://github.com/kokobana/ansible-collection-zyxel-vmg8825/blob/main/CHANGELOG.rst
-          draft: false
-          prerelease: true
-
       - name: Publish ansible collection
         run: |
           ansible-galaxy collection publish --api-key ${{ secrets.GALAXY_API_KEY }} "./kokobana-zyxel_vmg8825-${{ steps.version.outputs.version }}.tar.gz"
