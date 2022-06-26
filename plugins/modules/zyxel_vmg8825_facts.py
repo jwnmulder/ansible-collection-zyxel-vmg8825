@@ -17,13 +17,13 @@ DOCUMENTATION = """
 module: zyxel_vmg8825_facts
 author: Jan-Willem Mulder (@jwnmulder)
 short_description: Get facts about zyxel_vmg8825 devices.
-version_added: "1.0.0"
 description:
   - Collects facts from network devices running the zyxel_vmg8825 operating
     system. This module places the facts gathered in the fact tree keyed by the
     respective resource name.  The facts module will always collect a
     base set of facts from the device and can enable or disable
     collection of additional facts.
+version_added: "0.1.0"
 options:
   gather_subset:
     description:

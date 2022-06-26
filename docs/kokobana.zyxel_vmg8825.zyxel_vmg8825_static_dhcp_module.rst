@@ -8,7 +8,7 @@ kokobana.zyxel_vmg8825.zyxel_vmg8825_static_dhcp
 **Manages static_dhcp entries of zyxel_vmg8825**
 
 
-Version added: 1.0.0
+Version added: 0.1.0
 
 .. contents::
    :local:

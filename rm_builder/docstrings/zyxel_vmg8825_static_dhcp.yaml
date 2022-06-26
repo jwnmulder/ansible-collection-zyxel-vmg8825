@@ -1,7 +1,7 @@
 module: zyxel_vmg8825_static_dhcp
 short_description: 'Manages static_dhcp entries of zyxel_vmg8825'
 description: 'Manages static_dhcp entries of zyxel_vmg8825'
-version_added: '1.0.0'
+version_added: '0.1.0'
 author: Jan-Willem Mulder (@jwnmulder)
 notes:
   - Tested against Zyxel VMG8825-T50

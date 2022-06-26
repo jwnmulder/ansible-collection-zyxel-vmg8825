@@ -16,6 +16,7 @@ author: Jan-Willem Mulder (@jwnmulder)
 short_description: Zyxel Module for interacting with the Zyxel DAL API
 description:
   - This module can be used to send dal cfg commands to the Zyxel router
+version_added: "0.1.0"
 options:
   oid:
     type: str

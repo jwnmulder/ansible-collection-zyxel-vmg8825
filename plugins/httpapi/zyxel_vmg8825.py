@@ -12,7 +12,7 @@ short_description: HttpApi Plugin for Zyxel VMG 8825
 description:
 - plugin that uses the Zyxel Web REST interface to manage the router.
   Main usecase is to send commands on the /DAL interface
-version_added: 1.0.0
+version_added: 0.1.0
 """
 import base64
 import json

@@ -8,7 +8,7 @@ kokobana.zyxel_vmg8825.zyxel_vmg8825_facts
 **Get facts about zyxel_vmg8825 devices.**
 
 
-Version added: 1.0.0
+Version added: 0.1.0
 
 .. contents::
    :local:

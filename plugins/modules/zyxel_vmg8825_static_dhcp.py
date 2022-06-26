@@ -14,10 +14,10 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 module: zyxel_vmg8825_static_dhcp
+author: Jan-Willem Mulder (@jwnmulder)
 short_description: 'Manages static_dhcp entries of zyxel_vmg8825'
 description: 'Manages static_dhcp entries of zyxel_vmg8825'
-version_added: '1.0.0'
-author: Jan-Willem Mulder (@jwnmulder)
+version_added: '0.1.0'
 notes:
   - Tested against Zyxel VMG8825-T50
   - Configuration is merged using the 'mac_addr' value and not the 'index' value

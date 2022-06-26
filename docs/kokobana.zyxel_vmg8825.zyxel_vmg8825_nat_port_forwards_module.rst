@@ -8,7 +8,7 @@ kokobana.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards
 **Manages nat port forward entries of zyxel_vmg8825**
 
 
-Version added: 1.0.0
+Version added: 0.2.0
 
 .. contents::
    :local:

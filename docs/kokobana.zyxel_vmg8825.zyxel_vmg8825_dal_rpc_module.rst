@@ -8,6 +8,7 @@ kokobana.zyxel_vmg8825.zyxel_vmg8825_dal_rpc
 **Zyxel Module for interacting with the Zyxel DAL API**
 
 
+Version added: 0.1.0
 
 .. contents::
    :local:

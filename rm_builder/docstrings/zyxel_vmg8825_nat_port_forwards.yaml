@@ -1,7 +1,7 @@
 module: zyxel_vmg8825_nat_port_forwards
 short_description: 'Manages nat port forward entries of zyxel_vmg8825'
 description: 'Manages nat port forward entries of zyxel_vmg8825'
-version_added: '1.0.0'
+version_added: '0.2.0'
 author: Jan-Willem Mulder (@jwnmulder)
 notes:
   - Tested against Zyxel VMG8825-T50

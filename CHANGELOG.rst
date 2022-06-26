@@ -30,4 +30,5 @@ New Modules
 -----------
 
 - zyxel_vmg8825_dal_rpc - Zyxel Module for interacting with the Zyxel DAL API
+- zyxel_vmg8825_facts - Get facts about zyxel_vmg8825 devices
 - zyxel_vmg8825_static_dhcp - Manages static_dhcp entries of zyxel_vmg8825
