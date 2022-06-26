@@ -2,7 +2,7 @@ ancestor: null
 releases:
   0.1.0:
     changes:
-      release_summary: Initial release containing the zyxel_vmg8825_static_dhcp module - test2
+      release_summary: Initial release containing the zyxel_vmg8825_static_dhcp module
     modules:
     - description: Zyxel Module for interacting with the Zyxel DAL API
       name: zyxel_vmg8825_dal_rpc
