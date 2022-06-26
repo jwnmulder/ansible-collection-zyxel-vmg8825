@@ -1,20 +1,19 @@
+ancestor: null
 releases:
   0.1.0:
     changes:
-      release_summary: |
-        Initial release containing the zyxel_vmg8825_static_dhcp module
+      release_summary: Initial release containing the zyxel_vmg8825_static_dhcp module
     modules:
-    - description: Manages static_dhcp entries of zyxel_vmg8825
-      name: zyxel_vmg8825_static_dhcp
-      namespace: ''
     - description: Zyxel Module for interacting with the Zyxel DAL API
       name: zyxel_vmg8825_dal_rpc
+      namespace: ''
+    - description: Manages static_dhcp entries of zyxel_vmg8825
+      name: zyxel_vmg8825_static_dhcp
       namespace: ''
     release_date: '2021-10-17'
   0.2.0:
     changes:
-      release_summary: |
-        Added zyxel_vmg8825_nat_port_forwards module
+      release_summary: Added zyxel_vmg8825_nat_port_forwards module
     modules:
     - description: Manages nat port forward entries of zyxel_vmg8825
       name: zyxel_vmg8825_nat_port_forwards

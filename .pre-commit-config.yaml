@@ -37,7 +37,8 @@ repos:
         # TODO: When pycln resolves the issue
         # with click (to be precise, when the typer
         # dep fixes their issue with click), we should remove this
-        additional_dependencies: ["click==8.0.4"]
+        additional_dependencies:
+          - click==8.0.4
 
   - repo: https://github.com/psf/black
     rev: 22.3.0
@@ -51,7 +52,8 @@ repos:
         # TODO: When pycln resolves the issue
         # with click (to be precise, when the typer
         # dep fixes their issue with click), we should remove this
-        additional_dependencies: ["click==8.0.4"]
+        additional_dependencies:
+          - click==8.0.4
 
   - repo: https://gitlab.com/pycqa/flake8
     rev: 4.0.1
@@ -74,3 +76,14 @@ repos:
     rev: 1.0.0
     hooks:
       - id: update-docs
+
+  - repo: local
+    hooks:
+    -   id: generate-changelog
+        name: antsibull-changelog
+        entry: antsibull-changelog generate
+        language: python
+        files: changelogs/.*
+        pass_filenames: false
+        additional_dependencies:
+          - antsibull-changelog==0.15.0

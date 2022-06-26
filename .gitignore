@@ -1,5 +1,6 @@
 tests/output
 tests/integration/inventory.networking
+changelogs/.plugin-cache.yaml
 
 tmp
 
