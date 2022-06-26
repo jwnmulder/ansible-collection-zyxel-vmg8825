@@ -79,7 +79,7 @@ repos:
 
   - repo: local
     hooks:
-    -   id: generate-changelog
+      - id: generate-changelog
         name: antsibull-changelog
         entry: antsibull-changelog generate
         language: python
