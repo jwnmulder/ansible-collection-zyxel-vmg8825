@@ -29,7 +29,7 @@ jobs:
       - name: Ensure that `version:` in `galaxy.yml` matches `GITHUB_REF`
         id: version
         run: |
-          [ "$(cat galaxy.yml | grep version: | awk '{print $2}')" = $(awk -F '/' '{print substr($3, 2)}' <<< ${GITHUB_REF}) ] || exit 1
+          [ "$(cat galaxy.yml | grep version: | awk '{print $2}')" = $(awk -F '/' '{print substr($3, 1)}' <<< ${GITHUB_REF}) ] || exit 1
           echo ::set-output name=version::$(awk -F '/' '{print substr($3, 2)}' <<< ${GITHUB_REF})
 
       - name: Install dependencies
