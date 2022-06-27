@@ -24,6 +24,6 @@ tasks:
 vscode:
   extensions:
     - ms-python.python
-    - redhat.vscode-yaml
     - redhat.ansible
     - DavidAnson.vscode-markdownlint
+    - ms-azuretools.vscode-docker

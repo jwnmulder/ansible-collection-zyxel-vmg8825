@@ -1,7 +1,9 @@
 {
     "files.associations": {
         "**/tests/integration/targets/**/*.yaml": "ansible",
-        "**/rm_builders/*.yaml": "ansible"
+        "**/rm_builders/*.yaml": "ansible",
+        "*.yaml": "yaml",
+        "*.yml": "yaml"
     },
     "python.testing.pytestArgs": [
         "-s",
