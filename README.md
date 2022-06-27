@@ -45,7 +45,7 @@ Name | Description
 You can install the Zyxel collection with the Ansible Galaxy CLI:
 
 ```bash
-ansible-galaxy collection install https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825.git
+ansible-galaxy collection install jwnmulder.zyxel_vmg8825
 ```
 
 You can also include it in a `requirements.yml` file and install it with `ansible-galaxy collection install -r requirements.yml`, using the format:
@@ -53,9 +53,7 @@ You can also include it in a `requirements.yml` file and install it with `ansibl
 ```yaml
 ---
 collections:
-  - name: https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825.git
-    type: git
-    version: main
+  - jwnmulder.zyxel_vmg8825
 ```
 
 ## Using this collection
@@ -64,13 +62,13 @@ This collection includes [network resource modules](https://docs.ansible.com/ans
 
 ### Using modules from the Zyxel collection in your playbooks
 
-You can call modules by their Fully Qualified Collection Namespace (FQCN), such as `jwnmulder.zyxel_vmg8825_static_dhcp`.
+You can call modules by their Fully Qualified Collection Namespace (FQCN), such as `jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp`.
 The following example task replaces configuration changes in the existing configuration on a Zyxel router, using the FQCN:
 
 ```yaml
 ---
   - name: Configure static_dhcp
-    zyxel_vmg8825_static_dhcp:
+    jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp:
       config:
         - br_wan: Default
           enable: True
