@@ -1,9 +1,9 @@
-.. _kokobana.zyxel_vmg8825.zyxel_vmg8825_dal_rpc_module:
+.. _jwnmulder.zyxel_vmg8825.zyxel_vmg8825_dal_rpc_module:
 
 
-********************************************
-kokobana.zyxel_vmg8825.zyxel_vmg8825_dal_rpc
-********************************************
+*********************************************
+jwnmulder.zyxel_vmg8825.zyxel_vmg8825_dal_rpc
+*********************************************
 
 **Zyxel Module for interacting with the Zyxel DAL API**
 

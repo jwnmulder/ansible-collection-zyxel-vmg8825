@@ -19,10 +19,10 @@ import json
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
     utils,
 )
-from ansible_collections.kokobana.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.nat_port_forwards.nat_port_forwards import (
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.nat_port_forwards.nat_port_forwards import (
     Nat_port_forwardsArgs,
 )
-from ansible_collections.kokobana.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.rm_templates import (
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.rm_templates import (
     nat_port_forwards,
 )
 

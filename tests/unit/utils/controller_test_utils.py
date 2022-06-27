@@ -15,10 +15,10 @@ from ansible.module_utils import basic
 # pyright: reportMissingImports=false
 from ansible.module_utils.six.moves.urllib.error import HTTPError
 
-from ansible_collections.kokobana.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825 import (
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825 import (
     HttpApi,
 )
-from ansible_collections.kokobana.zyxel_vmg8825.tests.unit.mock import fake_httpapi
+from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.mock import fake_httpapi
 
 import httpretty
 import io
@@ -44,7 +44,7 @@ class ZyxelModuleTestCase(ModuleTestCase):
             self.connection.httpapi = self.zyxel_plugin
 
             self.get_connection_patch = mock.patch(
-                "ansible_collections.kokobana.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.utils.get_connection"
+                "ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.utils.get_connection"
             )
             self.get_connection_mock = self.get_connection_patch.start()
             self.get_connection_mock.return_value = self.zyxel_plugin
@@ -70,7 +70,7 @@ class ZyxelModuleTestCase(ModuleTestCase):
     @pytest.fixture
     def connection_mock(self, mocker):
         connection_class_mock = mocker.patch(
-            "ansible_collections.kokobana.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825.Connection"
+            "ansible_collections.jwnmulder.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825.Connection"
         )
         return connection_class_mock.return_value
 

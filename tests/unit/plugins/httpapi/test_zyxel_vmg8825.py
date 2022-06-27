@@ -12,11 +12,11 @@ import unittest
 from unittest import mock
 
 from ansible.module_utils.connection import ConnectionError
-from ansible_collections.kokobana.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825 import (
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.httpapi.zyxel_vmg8825 import (
     HttpApi,
 )
-from ansible_collections.kokobana.zyxel_vmg8825.tests.unit.mock import fake_httpapi
-from ansible_collections.kokobana.zyxel_vmg8825.tests.unit.utils.controller_test_utils import (
+from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.mock import fake_httpapi
+from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.utils.controller_test_utils import (
     # mocked_httperror,
     mocked_response,
 )

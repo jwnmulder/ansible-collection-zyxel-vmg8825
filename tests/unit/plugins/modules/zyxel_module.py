@@ -12,7 +12,7 @@ from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
 )
 from ansible.module_utils import basic
 
-from ansible_collections.kokobana.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils import (
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils import (
     zyxel_vmg8825_requests,
 )
 
@@ -79,7 +79,7 @@ class TestZyxelModule(ModuleTestCase):
 
             self.setUpGetConnectionMock(
                 self.connection,
-                "ansible_collections.kokobana.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.utils.get_connection",
+                "ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.utils.get_connection",
             )
             self.setUpGetConnectionMock(
                 self.connection,

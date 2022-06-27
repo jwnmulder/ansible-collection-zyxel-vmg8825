@@ -1,4 +1,4 @@
-namespace: kokobana
+namespace: jwnmulder
 name: zyxel_vmg8825
 version: 0.2.0
 readme: README.md
@@ -11,10 +11,10 @@ tags:
   - zyxel_vmg8825
 dependencies:
   ansible.netcommon: '>=2.5.1'
-repository: https://github.com/kokobana/ansible-collection-zyxel-vmg8825
-documentation: https://github.com/kokobana/ansible-collection-zyxel-vmg8825/blob/main/README.md
-homepage: https://github.com/kokobana/ansible-collection-zyxel-vmg8825
-issues: https://github.com/kokobana/ansible-collection-zyxel-vmg8825/issues
+repository: https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825
+documentation: https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/blob/main/README.md
+homepage: https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825
+issues: https://github.com/jwnmulder/ansible-collection-zyxel-vmg8825/issues
 build_ignore:
   - '.*'
   - '*.tar.gz'

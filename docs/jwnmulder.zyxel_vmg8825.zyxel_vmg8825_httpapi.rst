@@ -1,9 +1,9 @@
-.. _kokobana.zyxel_vmg8825.zyxel_vmg8825_httpapi:
+.. _jwnmulder.zyxel_vmg8825.zyxel_vmg8825_httpapi:
 
 
-************************************
-kokobana.zyxel_vmg8825.zyxel_vmg8825
-************************************
+*************************************
+jwnmulder.zyxel_vmg8825.zyxel_vmg8825
+*************************************
 
 **HttpApi Plugin for Zyxel VMG 8825**
 

@@ -8,7 +8,7 @@
     # and then reverting back to the base configuration using the previously gathered facts with the state set to overridden.
 - block:
     - name: Ensure test entry is not present
-      kokobana.zyxel_vmg8825.zyxel_vmg8825_static_dhcp:
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp:
         config: &test_entries
           - br_wan: Default
             enable: False
@@ -17,12 +17,12 @@
         state: deleted
 
     - name: Get base config from test device
-      kokobana.zyxel_vmg8825.zyxel_vmg8825_static_dhcp:
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp:
         state: gathered
       register: base_config
 
     - name: Gather static_dhcp facts
-      kokobana.zyxel_vmg8825.zyxel_vmg8825_facts:
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts:
         gather_subset:
           - "!all"
           - "!min"
@@ -30,7 +30,7 @@
           - static_dhcp
 
     - name: Apply test configuration (this will be reverted)
-      kokobana.zyxel_vmg8825.zyxel_vmg8825_static_dhcp:
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp:
         config: *test_entries
         state: merged
       register: result
@@ -41,7 +41,7 @@
           - "result.changed == true"
 
     - name: Revert back to base configuration
-      kokobana.zyxel_vmg8825.zyxel_vmg8825_static_dhcp:
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp:
         config: "{{ ansible_facts['network_resources']['static_dhcp'] }}"
         state: overridden
       register: revert

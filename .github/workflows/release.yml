@@ -44,4 +44,4 @@ jobs:
 
       - name: Publish ansible collection
         run: |
-          ansible-galaxy collection publish --api-key ${{ secrets.GALAXY_API_KEY }} "./kokobana-zyxel_vmg8825-${{ steps.version.outputs.version }}.tar.gz"
+          ansible-galaxy collection publish --api-key ${{ secrets.GALAXY_API_KEY }} "./jwnmulder-zyxel_vmg8825-${{ steps.version.outputs.version }}.tar.gz"

@@ -165,10 +165,10 @@ parsed:
 """
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.kokobana.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.nat_port_forwards.nat_port_forwards import (
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.nat_port_forwards.nat_port_forwards import (
     Nat_port_forwardsArgs,
 )
-from ansible_collections.kokobana.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.config.nat_port_forwards.nat_port_forwards import (
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.config.nat_port_forwards.nat_port_forwards import (
     Nat_port_forwards,
 )
 

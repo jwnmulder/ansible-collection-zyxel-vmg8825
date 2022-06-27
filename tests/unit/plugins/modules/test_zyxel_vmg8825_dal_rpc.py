@@ -7,7 +7,7 @@ __metaclass__ = type
 from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     set_module_args,
 )
-from ansible_collections.kokobana.zyxel_vmg8825.plugins.modules import (
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import (
     zyxel_vmg8825_dal_rpc,
 )
 

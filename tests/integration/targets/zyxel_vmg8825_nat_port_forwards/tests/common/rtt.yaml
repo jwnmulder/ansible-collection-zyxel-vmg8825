@@ -8,7 +8,7 @@
     # and then reverting back to the base configuration using the previously gathered facts with the state set to overridden.
 - block:
     - name: Ensure test entry is not present
-      kokobana.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
         config:
           - &test_entry
             enable: True
@@ -24,12 +24,12 @@
         state: deleted
 
     - name: Get base config from test device
-      kokobana.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
         state: gathered
       register: base_config
 
     - name: Gather static_dhcp facts
-      kokobana.zyxel_vmg8825.zyxel_vmg8825_facts:
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts:
         gather_subset:
           - "!all"
           - "!min"
@@ -37,14 +37,14 @@
           - nat_port_forwards
 
     - name: Apply test configuration (this will be reverted)
-      kokobana.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
         config:
           - *test_entry
         state: merged
       register: result
 
     - name: Update test configuration (this will be reverted)
-      kokobana.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
         config:
           - <<: *test_entry
             description: Ansible network-integration test updated
@@ -57,7 +57,7 @@
           - "result.changed == true"
 
     - name: Revert back to base configuration
-      kokobana.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
         config: "{{ ansible_facts['network_resources']['nat_port_forwards'] }}"
         state: overridden
       register: revert
