@@ -9,7 +9,7 @@ antsibull-changelog==0.15.0
 pytest
 
 httpretty==1.1.4
-q==2.6
+q==2.7
 
 # vscode reStructuredText support
 docutils
