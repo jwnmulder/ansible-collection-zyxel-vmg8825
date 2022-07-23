@@ -4,4 +4,4 @@
 jinja2
 
 httpretty==1.1.4
-q==2.6
+q==2.7
