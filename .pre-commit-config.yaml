@@ -60,13 +60,8 @@ repos:
     hooks:
       - id: flake8
         additional_dependencies:
-          # https://github.com/DmytroLitvinov/awesome-flake8-extensions
-          - pycodestyle==2.8.0  # renovate: datasource=pypi
-          - pyflakes==2.4.0     # renovate: datasource=pypi
-          # - flake8-docstrings==1.6.0
-          - pydocstyle==6.1.1   # renovate: datasource=pypi
-          # - flake8-comprehensions==3.4.0
-          - flake8-noqa==1.2.8  # renovate: datasource=pypi
+          # - flake8-docstrings
+          - flake8-noqa
         args:
           - --max-line-length=88
           - --ignore=E501,E402,W503
