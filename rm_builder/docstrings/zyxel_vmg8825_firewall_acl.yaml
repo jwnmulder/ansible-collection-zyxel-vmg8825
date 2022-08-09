@@ -1,0 +1,144 @@
+module: zyxel_vmg8825_firewall_acl
+short_description: 'Manages firewall ACL entries of zyxel_vmg8825'
+description: 'Manages firewall ACL entries of zyxel_vmg8825'
+version_added: '0.3.0'
+author: Jan-Willem Mulder (@jwnmulder)
+notes:
+  - Tested against Zyxel VMG8825-T50
+options:
+  config:
+    description: The provided configuration
+    type: list
+    elements: dict
+    suboptions:
+      index:
+        description:
+          - Index of the entry
+        type: int
+        required: false
+      protocol:
+        description:
+          - Protocol
+        type: str
+        choices:
+          - ALL
+          - TCP_UDP
+          - TCP
+          - UDP
+          - IMCP
+          # - ICMPV6
+        required: true
+      name:
+        description:
+          - Name
+        type: str
+        required: true
+      source_port:
+        description:
+          - SourcePort
+        type: int
+        default: -1
+      source_port_range_max:
+        description:
+        - SourcePortRangeMax
+        type: int
+        default: -1
+      dest_port:
+        description:
+          - DestPort
+        type: int
+        default: -1
+      dest_port_range_max:
+        description:
+        - DestPortRangeMax
+        type: int
+        default: -1
+      direction:
+        description:
+          - Direction
+        type: str
+        choices:
+          - WAN_TO_LAN
+          - LAN_TO_WAN
+          - WAN_TO_ROUTER
+          - LAN_TO_ROUTER
+        required: true
+      ip_version:
+        description:
+        - IPVersion
+        type: int
+        choices:
+          - 4
+          - 6
+        required: true
+      limit_rate:
+        description:
+          - LimitRate
+        type: int
+        default: 0
+      limit_rate_unit:
+        description:
+          - LimitRateUnit
+        type: str
+        required: false
+      source_ip:
+        description:
+          - SourceIP
+        type: str
+        required: true
+      source_mask:
+        description:
+          - SourceMask
+          - in case of 192.168.0.0/24 the mask would be '24'
+        type: str
+        required: true
+      dest_ip:
+        description:
+          - DestIP
+        type: str
+        required: true
+      dest_mask:
+        description:
+          - DestMask
+          - in case of 192.168.0.0/24 the mask would be '24'
+        type: str
+        required: true
+      icmp_type:
+        description:
+          - ICMPType
+        type: int
+        required: false
+      icmp_type_code:
+        description:
+          - ICMPTypeCode
+        type: int
+        required: false
+      target:
+        description:
+          - Target
+        type: str
+        choices:
+          - Accept
+          - Drop
+          - Reject
+        required: true
+  running_config:
+    description:
+    - This option is used only with state I(parsed).
+    - The state I(parsed) reads the configuration from C(running_config) option and
+      transforms it into Ansible structured data as per the resource module's argspec
+      and the value is then returned in the I(parsed) key within the result.
+    type: str
+  state:
+    description:
+    - The state the configuration should be left in
+    type: str
+    choices:
+    - merged
+    - replaced
+    - overridden
+    - deleted
+    - gathered
+    - rendered
+    - parsed
+    default: merged
