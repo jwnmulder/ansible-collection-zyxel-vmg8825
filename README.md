@@ -119,8 +119,9 @@ ansible-test network-integration -v --debug
 # https://github.com/ansible-network/cli_rm_builder
 ansible-galaxy collection install git+https://github.com/ansible-network/cli_rm_builder.git
 
-ansible-playbook -e rm_dest=$(pwd) rm_builder/generate_all.yml
-ansible-playbook -e rm_dest=$(pwd) rm_builder/update_all.yml
+cd rm_builder
+ansible-playbook -e rm_dest=$(pwd)/.. generate_all.yml
+ansible-playbook -e rm_dest=$(pwd)/.. update_all.yml
 ```
 
 ## Wish list
