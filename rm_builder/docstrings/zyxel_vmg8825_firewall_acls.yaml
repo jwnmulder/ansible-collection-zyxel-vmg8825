@@ -1,4 +1,4 @@
-module: zyxel_vmg8825_firewall_acl
+module: zyxel_vmg8825_firewall_acls
 short_description: 'Manages firewall ACL entries of zyxel_vmg8825'
 description: 'Manages firewall ACL entries of zyxel_vmg8825'
 version_added: '0.3.0'
@@ -16,22 +16,27 @@ options:
           - Index of the entry
         type: int
         required: false
+      name:
+        description:
+          - Name
+        type: str
+        required: true
+      order:
+        description:
+          - Order
+        type: int
+        required: true
       protocol:
         description:
           - Protocol
         type: str
         choices:
           - ALL
-          - TCP_UDP
           - TCP
           - UDP
-          - IMCP
-          # - ICMPV6
-        required: true
-      name:
-        description:
-          - Name
-        type: str
+          - TCPUDP
+          - ICMP
+          - ICMPv6
         required: true
       source_port:
         description:
@@ -68,8 +73,8 @@ options:
         - IPVersion
         type: int
         choices:
-          - 4
-          - 6
+          - 4  # IPv4
+          - 6  # IPv6
         required: true
       limit_rate:
         description:
@@ -80,6 +85,9 @@ options:
         description:
           - LimitRateUnit
         type: str
+        choices:
+          - minute
+          - second
         required: false
       source_ip:
         description:

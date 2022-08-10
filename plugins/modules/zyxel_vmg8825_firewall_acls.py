@@ -1,11 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright 2021
+# Copyright 2022
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """
-The module file for zyxel_vmg8825_nat_port_forwards
+The module file for zyxel_vmg8825_firewall_acls
 """
 
 from __future__ import absolute_import, division, print_function
@@ -13,10 +13,10 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 DOCUMENTATION = """
-module: zyxel_vmg8825_nat_port_forwards
-short_description: 'Manages nat port forward entries of zyxel_vmg8825'
-description: 'Manages nat port forward entries of zyxel_vmg8825'
-version_added: '0.2.0'
+module: zyxel_vmg8825_firewall_acls
+short_description: 'Manages firewall ACL entries of zyxel_vmg8825'
+description: 'Manages firewall ACL entries of zyxel_vmg8825'
+version_added: '0.3.0'
 author: Jan-Willem Mulder (@jwnmulder)
 notes:
   - Tested against Zyxel VMG8825-T50
@@ -28,68 +28,123 @@ options:
     suboptions:
       index:
         description:
-        - Index of the entry
+          - Index of the entry
         type: int
         required: false
-      enable:
+      name:
         description:
-        - True is the entry should be active
-        type: bool
-        default: True
+          - Name
+        type: str
+        required: true
+      order:
+        description:
+          - Order
+        type: int
+        required: true
       protocol:
         description:
-        - Protocol
+          - Protocol
         type: str
         choices:
+          - ALL
           - TCP
           - UDP
-          - TCP_UDP
-        default: TCP
-      description:
-        description:
-        - Service Name
-        type: str
+          - TCPUDP
+          - ICMP
+          - ICMPv6
         required: true
-      interface:
+      source_port:
         description:
-        - Wan Interface.
-        - Dynamic reference to one of VD_Internet/ETH_Ethernet/ADSL_Internet
-        - IP.Interface.7
-        type: str
-        required: true
-      external_port_start:
-        description:
-        - Start Port
-        - This is also used as the primary key for updating entries in the device.
-          Changing this value will result in deleting the old entry and adding a new one
+          - SourcePort
         type: int
-        required: true
-      external_port_end:
+        default: -1
+      source_port_range_max:
         description:
-        - End Port. If only ony port is to be opened, set this to the same value as Start Port
+        - SourcePortRangeMax
         type: int
-        required: true
-      internal_port_start:
+        default: -1
+      dest_port:
         description:
-        - Translation Start Port
+          - DestPort
         type: int
-        required: true
-      internal_port_end:
+        default: -1
+      dest_port_range_max:
         description:
-        - Translation End Port
+        - DestPortRangeMax
         type: int
-        required: true
-      internal_client:
+        default: -1
+      direction:
         description:
-        - Server IP Address. IP address to which traffic should be forwarded
+          - Direction
         type: str
+        choices:
+          - WAN_TO_LAN
+          - LAN_TO_WAN
+          - WAN_TO_ROUTER
+          - LAN_TO_ROUTER
         required: true
-      originating_ip_address:
+      ip_version:
         description:
-        - Originating IP Address
+        - IPVersion
+        type: int
+        choices:
+          - 4  # IPv4
+          - 6  # IPv6
+        required: true
+      limit_rate:
+        description:
+          - LimitRate
+        type: int
+        default: 0
+      limit_rate_unit:
+        description:
+          - LimitRateUnit
         type: str
+        choices:
+          - minute
+          - second
         required: false
-      # X_ZYXEL_AutoDetectWanStatus": false
+      source_ip:
+        description:
+          - SourceIP
+        type: str
+        required: true
+      source_mask:
+        description:
+          - SourceMask
+          - in case of 192.168.0.0/24 the mask would be '24'
+        type: str
+        required: true
+      dest_ip:
+        description:
+          - DestIP
+        type: str
+        required: true
+      dest_mask:
+        description:
+          - DestMask
+          - in case of 192.168.0.0/24 the mask would be '24'
+        type: str
+        required: true
+      icmp_type:
+        description:
+          - ICMPType
+        type: int
+        required: false
+      icmp_type_code:
+        description:
+          - ICMPTypeCode
+        type: int
+        required: false
+      target:
+        description:
+          - Target
+        type: str
+        choices:
+          - Accept
+          - Drop
+          - Reject
+        required: true
   running_config:
     description:
     - This option is used only with state I(parsed).
@@ -164,11 +219,11 @@ parsed:
 """
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.nat_port_forwards.nat_port_forwards import (
-    Nat_port_forwardsArgs,
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.firewall_acls.firewall_acls import (
+    Firewall_aclsArgs,
 )
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.config.nat_port_forwards.nat_port_forwards import (
-    Nat_port_forwards,
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.config.firewall_acls.firewall_acls import (
+    Firewall_acls,
 )
 
 
@@ -179,7 +234,7 @@ def main():
     :returns: the result form module invocation
     """
     module = AnsibleModule(
-        argument_spec=Nat_port_forwardsArgs.argument_spec,
+        argument_spec=Firewall_aclsArgs.argument_spec,
         mutually_exclusive=[["config", "running_config"]],
         required_if=[
             ["state", "merged", ["config"]],
@@ -191,7 +246,7 @@ def main():
         supports_check_mode=True,
     )
 
-    result = Nat_port_forwards(module).execute_module()
+    result = Firewall_acls(module).execute_module()
     module.exit_json(**result)
 
 

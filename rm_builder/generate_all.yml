@@ -23,4 +23,4 @@
       loop:
         - { resource: 'static_dhcp' }
         - { resource: 'nat_port_forwards' }
-        - { resource: 'firewall_acl' }
+        - { resource: 'firewall_acls' }
