@@ -14,9 +14,9 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 module: zyxel_vmg8825_firewall_acls
-short_description: 'Manages firewall ACL entries of zyxel_vmg8825'
-description: 'Manages firewall ACL entries of zyxel_vmg8825'
-version_added: '0.3.0'
+short_description: "Manages firewall ACL entries of zyxel_vmg8825"
+description: "Manages firewall ACL entries of zyxel_vmg8825"
+version_added: "0.3.0"
 author: Jan-Willem Mulder (@jwnmulder)
 notes:
   - Tested against Zyxel VMG8825-T50
@@ -30,17 +30,18 @@ options:
         description:
           - Index of the entry
         type: int
-        required: false
       name:
         description:
           - Name
+          - This is also used as the primary key for updating entries in the device.
+            Changing this value will result in deleting the old entry and adding a new one
         type: str
         required: true
       order:
         description:
           - Order
         type: int
-        required: true
+        required: true # TODO, check what happens if we leave it empty
       protocol:
         description:
           - Protocol
@@ -49,30 +50,29 @@ options:
           - ALL
           - TCP
           - UDP
-          - TCPUDP
+          - TCP_UDP  # GET shows TCP/UDP, POST uses TCPUDP
           - ICMP
-          - ICMPv6
-        required: true
+        default: ALL
       source_port:
         description:
           - SourcePort
+          - Leave empty for 'any' port
         type: int
-        default: -1
       source_port_range_max:
         description:
-        - SourcePortRangeMax
+          - SourcePortRangeMax
+          - Must be set to a higher value than dest_port. If set it indicates a range of ports
         type: int
-        default: -1
       dest_port:
         description:
           - DestPort
+          - Leave empty for 'any' port
         type: int
-        default: -1
       dest_port_range_max:
         description:
-        - DestPortRangeMax
+          - DestPortRangeMax
+          - Must be set to a higher value than dest_port. If set it indicates a range of ports
         type: int
-        default: -1
       direction:
         description:
           - Direction
@@ -85,17 +85,17 @@ options:
         required: true
       ip_version:
         description:
-        - IPVersion
+          - IPVersion
         type: int
         choices:
-          - 4  # IPv4
-          - 6  # IPv6
+          - 4 # IPv4
+          - 6 # IPv6
         required: true
+        # default: 4
       limit_rate:
         description:
           - LimitRate
         type: int
-        default: 0
       limit_rate_unit:
         description:
           - LimitRateUnit
@@ -103,42 +103,31 @@ options:
         choices:
           - minute
           - second
-        required: false
       source_ip:
         description:
-          - SourceIP
+          - SourceIP (can be "Any")
         type: str
         required: true
       source_mask:
         description:
-          - SourceMask
+          - SourceMask, defaults to 32
           - in case of 192.168.0.0/24 the mask would be '24'
         type: str
-        required: true
+        default: "32"
       dest_ip:
         description:
-          - DestIP
+          - DestIP (can be "Any"for IPv6)
         type: str
         required: true
       dest_mask:
         description:
-          - DestMask
+          - DestMask, defaults to 32
           - in case of 192.168.0.0/24 the mask would be '24'
         type: str
-        required: true
-      icmp_type:
-        description:
-          - ICMPType
-        type: int
-        required: false
-      icmp_type_code:
-        description:
-          - ICMPTypeCode
-        type: int
-        required: false
+        default: "32"
       target:
         description:
-          - Target
+          - Target (can be "Any" for IPv6)
         type: str
         choices:
           - Accept
@@ -147,23 +136,23 @@ options:
         required: true
   running_config:
     description:
-    - This option is used only with state I(parsed).
-    - The state I(parsed) reads the configuration from C(running_config) option and
-      transforms it into Ansible structured data as per the resource module's argspec
-      and the value is then returned in the I(parsed) key within the result.
+      - This option is used only with state I(parsed).
+      - The state I(parsed) reads the configuration from C(running_config) option and
+        transforms it into Ansible structured data as per the resource module's argspec
+        and the value is then returned in the I(parsed) key within the result.
     type: str
   state:
     description:
-    - The state the configuration should be left in
+      - The state the configuration should be left in
     type: str
     choices:
-    - merged
-    - replaced
-    - overridden
-    - deleted
-    - gathered
-    - rendered
-    - parsed
+      - merged
+      - replaced
+      - overridden
+      - deleted
+      - gathered
+      - rendered
+      - parsed
     default: merged
 """
 

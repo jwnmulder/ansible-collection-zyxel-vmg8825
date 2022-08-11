@@ -63,7 +63,7 @@ Parameters
                 <td>
                 </td>
                 <td>
-                        <div>DestIP</div>
+                        <div>DestIP (can be &quot;Any&quot;for IPv6)</div>
                 </td>
             </tr>
             <tr>
@@ -74,13 +74,13 @@ Parameters
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">string</span>
-                         / <span style="color: red">required</span>
                     </div>
                 </td>
                 <td>
+                        <b>Default:</b><br/><div style="color: blue">"32"</div>
                 </td>
                 <td>
-                        <div>DestMask</div>
+                        <div>DestMask, defaults to 32</div>
                         <div>in case of 192.168.0.0/24 the mask would be &#x27;24&#x27;</div>
                 </td>
             </tr>
@@ -95,10 +95,10 @@ Parameters
                     </div>
                 </td>
                 <td>
-                        <b>Default:</b><br/><div style="color: blue">-1</div>
                 </td>
                 <td>
                         <div>DestPort</div>
+                        <div>Leave empty for &#x27;any&#x27; port</div>
                 </td>
             </tr>
             <tr>
@@ -112,10 +112,10 @@ Parameters
                     </div>
                 </td>
                 <td>
-                        <b>Default:</b><br/><div style="color: blue">-1</div>
                 </td>
                 <td>
                         <div>DestPortRangeMax</div>
+                        <div>Must be set to a higher value than dest_port. If set it indicates a range of ports</div>
                 </td>
             </tr>
             <tr>
@@ -139,38 +139,6 @@ Parameters
                 </td>
                 <td>
                         <div>Direction</div>
-                </td>
-            </tr>
-            <tr>
-                    <td class="elbow-placeholder"></td>
-                <td colspan="1">
-                    <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>icmp_type</b>
-                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
-                    <div style="font-size: small">
-                        <span style="color: purple">integer</span>
-                    </div>
-                </td>
-                <td>
-                </td>
-                <td>
-                        <div>ICMPType</div>
-                </td>
-            </tr>
-            <tr>
-                    <td class="elbow-placeholder"></td>
-                <td colspan="1">
-                    <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>icmp_type_code</b>
-                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
-                    <div style="font-size: small">
-                        <span style="color: purple">integer</span>
-                    </div>
-                </td>
-                <td>
-                </td>
-                <td>
-                        <div>ICMPTypeCode</div>
                 </td>
             </tr>
             <tr>
@@ -221,7 +189,6 @@ Parameters
                     </div>
                 </td>
                 <td>
-                        <b>Default:</b><br/><div style="color: blue">0</div>
                 </td>
                 <td>
                         <div>LimitRate</div>
@@ -262,6 +229,7 @@ Parameters
                 </td>
                 <td>
                         <div>Name</div>
+                        <div>This is also used as the primary key for updating entries in the device. Changing this value will result in deleting the old entry and adding a new one</div>
                 </td>
             </tr>
             <tr>
@@ -289,17 +257,15 @@ Parameters
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">string</span>
-                         / <span style="color: red">required</span>
                     </div>
                 </td>
                 <td>
                         <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                    <li>ALL</li>
+                                    <li><div style="color: blue"><b>ALL</b>&nbsp;&larr;</div></li>
                                     <li>TCP</li>
                                     <li>UDP</li>
-                                    <li>TCPUDP</li>
+                                    <li>TCP_UDP</li>
                                     <li>ICMP</li>
-                                    <li>ICMPv6</li>
                         </ul>
                 </td>
                 <td>
@@ -320,7 +286,7 @@ Parameters
                 <td>
                 </td>
                 <td>
-                        <div>SourceIP</div>
+                        <div>SourceIP (can be &quot;Any&quot;)</div>
                 </td>
             </tr>
             <tr>
@@ -331,13 +297,13 @@ Parameters
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">string</span>
-                         / <span style="color: red">required</span>
                     </div>
                 </td>
                 <td>
+                        <b>Default:</b><br/><div style="color: blue">"32"</div>
                 </td>
                 <td>
-                        <div>SourceMask</div>
+                        <div>SourceMask, defaults to 32</div>
                         <div>in case of 192.168.0.0/24 the mask would be &#x27;24&#x27;</div>
                 </td>
             </tr>
@@ -352,10 +318,10 @@ Parameters
                     </div>
                 </td>
                 <td>
-                        <b>Default:</b><br/><div style="color: blue">-1</div>
                 </td>
                 <td>
                         <div>SourcePort</div>
+                        <div>Leave empty for &#x27;any&#x27; port</div>
                 </td>
             </tr>
             <tr>
@@ -369,10 +335,10 @@ Parameters
                     </div>
                 </td>
                 <td>
-                        <b>Default:</b><br/><div style="color: blue">-1</div>
                 </td>
                 <td>
                         <div>SourcePortRangeMax</div>
+                        <div>Must be set to a higher value than dest_port. If set it indicates a range of ports</div>
                 </td>
             </tr>
             <tr>
@@ -394,7 +360,7 @@ Parameters
                         </ul>
                 </td>
                 <td>
-                        <div>Target</div>
+                        <div>Target (can be &quot;Any&quot; for IPv6)</div>
                 </td>
             </tr>
 

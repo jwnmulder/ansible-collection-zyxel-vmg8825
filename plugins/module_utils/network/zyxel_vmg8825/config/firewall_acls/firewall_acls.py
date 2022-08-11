@@ -77,16 +77,10 @@ class Firewall_acls(ResourceModule):
         # wantd = {entry['name']: entry for entry in self.want}
         # haved = {entry['name']: entry for entry in self.have}
 
-        # If mac_addr is empty, it means we got an empty string back from our device.
+        # If name is empty, it means we got an empty string back from our device.
         # This does happen sometimes after an invalid entry was sent.
-        wantd = {
-            entry.get("external_port_start") or entry.get("index"): entry
-            for entry in self.want
-        }
-        haved = {
-            entry.get("external_port_start") or entry.get("index"): entry
-            for entry in self.have
-        }
+        wantd = {entry.get("name") or entry.get("index"): entry for entry in self.want}
+        haved = {entry.get("name") or entry.get("index"): entry for entry in self.have}
 
         # if empty, populate 'index' based based on haved
         for key, value in wantd.items():

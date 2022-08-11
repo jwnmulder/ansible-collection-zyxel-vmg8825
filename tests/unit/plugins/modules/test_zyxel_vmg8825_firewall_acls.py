@@ -31,7 +31,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         data = result["gathered"]
 
         # update data
-        data[1]["name"] = "updated ACL name"
+        data[1]["protocol"] = "TCP"
         data.append(
             {
                 "name": "NAME-3",
@@ -52,7 +52,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
             }
         )
 
-        # without index, Index will be determined based on external_port_start TODO
+        # without index, Index will be determined based on 'name'
         del data[0]["index"]
 
         # update device with new config
@@ -65,15 +65,17 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "method": "PUT",
                 "data": {
                     "Index": 2,
-                    "Name": "updated ACL name",
+                    "Name": "Name-2",
                     "Order": 2,
-                    "Protocol": "ALL",
+                    "Protocol": "TCP",
                     "Direction": "LAN_TO_WAN",
                     "IPVersion": 4,
                     "SourceIP": "192.168.0.0",
                     "SourceMask": "24",
                     "DestIP": "1.0.0.2",
                     "DestMask": "32",
+                    "SourcePort": 53,
+                    "DestPort": 53,
                     "Target": "Reject",
                 },
             },
@@ -126,10 +128,10 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         data = result["gathered"]
 
         # update data
-        data[0]["name"] = "updated ACL name"
+        data[0]["protocol"] = "TCP"
         data.pop(1)  # remove an entry
 
-        # without index, Index will be determined based on external_port_start
+        # without index, Index will be determined based on 'name'
         del data[0]["index"]
 
         # update device with new config
@@ -142,9 +144,9 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "method": "PUT",
                 "data": {
                     "Index": 1,
-                    "Name": "updated ACL name",
+                    "Name": "Name-1",
                     "Order": 1,
-                    "Protocol": "ALL",
+                    "Protocol": "TCP",
                     "Direction": "LAN_TO_WAN",
                     "IPVersion": 4,
                     "SourceIP": "192.168.0.0",
@@ -189,9 +191,9 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         data.pop(1)
 
         # update data
-        data[0]["name"] = "updated ACL name"
+        data[0]["protocol"] = "TCP_UDP"
 
-        # without index, Index will be determined based on external_port_start
+        # without index, Index will be determined based on 'name'
         del data[0]["index"]
 
         # update device with new config
@@ -203,9 +205,9 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "method": "PUT",
                 "data": {
                     "Index": 1,
-                    "Name": "updated ACL name",
+                    "Name": "Name-1",
                     "Order": 1,
-                    "Protocol": "ALL",
+                    "Protocol": "TCP/UDP",
                     "Direction": "LAN_TO_WAN",
                     "IPVersion": 4,
                     "SourceIP": "192.168.0.0",
@@ -417,7 +419,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         gather_list = [
             {
                 "index": 1,
-                "name": "BLOCK-DNS-1",
+                "name": "Name-1",
                 "order": 1,
                 "protocol": "ALL",
                 "direction": "LAN_TO_WAN",
@@ -427,15 +429,15 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "dest_ip": "1.0.0.1",
                 "dest_mask": "32",
                 "target": "Reject",
-                "source_port": -1,
-                "source_port_range_max": -1,
-                "dest_port": -1,
-                "dest_port_range_max": -1,
-                "limit_rate": 0,
+                # "source_port": -1,
+                # "source_port_range_max": -1,
+                # "dest_port": -1,
+                # "dest_port_range_max": -1,
+                # "limit_rate": 0,
             },
             {
                 "index": 2,
-                "name": "BLOCK-DNS-2",
+                "name": "Name-2",
                 "order": 2,
                 "protocol": "ALL",
                 "direction": "LAN_TO_WAN",
@@ -445,11 +447,11 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "dest_ip": "1.0.0.2",
                 "dest_mask": "32",
                 "target": "Reject",
-                "source_port": -1,
-                "source_port_range_max": -1,
-                "dest_port": -1,
-                "dest_port_range_max": -1,
-                "limit_rate": 0,
+                "source_port": 53,
+                # "source_port_range_max": -1,
+                "dest_port": 53,
+                # "dest_port_range_max": -1,
+                # "limit_rate": 0,
             },
         ]
 
@@ -635,9 +637,9 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         data = result["gathered"]
 
         # update data
-        data[1]["name"] = "updated ACL name"
+        data[1]["protocol"] = "TCP"
 
-        # without index, Index will be determined based on external_port_start
+        # without index, Index will be determined based on 'name'
         del data[1]["index"]
 
         # update device with new config
@@ -658,4 +660,4 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertEqual(http_calls[0][1]["method"], "PUT")
 
         request_data = http_calls[0][0][0]
-        self.assertEqual(request_data["Name"], "updated ACL name")
+        self.assertEqual(request_data["Protocol"], "TCP")
