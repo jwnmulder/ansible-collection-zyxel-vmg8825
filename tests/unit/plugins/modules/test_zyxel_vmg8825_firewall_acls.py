@@ -31,22 +31,28 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         data = result["gathered"]
 
         # update data
-        data[1]["description"] = "updated service name"
+        data[1]["name"] = "updated ACL name"
         data.append(
             {
-                "enable": True,
-                "protocol": "TCP",
-                "description": "app forward port 21",
-                "interface": "IP.Interface.7",
-                "external_port_start": 21,
-                "external_port_end": 21,
-                "internal_port_start": 21,
-                "internal_port_end": 21,
-                "internal_client": "192.168.0.2",
+                "name": "NAME-3",
+                "order": 3,
+                "protocol": "ALL",
+                "direction": "LAN_TO_WAN",
+                "ip_version": 4,
+                "source_ip": "192.168.0.0",
+                "source_mask": "24",
+                "dest_ip": "1.0.0.3",
+                "dest_mask": "32",
+                "target": "Reject",
+                # "source_port": -1,
+                # "source_port_range_max": -1,
+                # "dest_port": -1,
+                # "dest_port_range_max": -1,
+                # "limit_rate": 0,
             }
         )
 
-        # without index, Index will be determined based on external_port_start
+        # without index, Index will be determined based on external_port_start TODO
         del data[0]["index"]
 
         # update device with new config
@@ -59,16 +65,16 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "method": "PUT",
                 "data": {
                     "Index": 2,
-                    "Enable": True,
-                    "Protocol": "TCP",
-                    "Description": "updated service name",
-                    "Interface": "IP.Interface.7",
-                    "ExternalPortStart": 80,
-                    "ExternalPortEnd": 80,
-                    "InternalPortStart": 80,
-                    "InternalPortEnd": 80,
-                    "InternalClient": "192.168.0.2",
-                    "OriginatingIpAddress": None,
+                    "Name": "updated ACL name",
+                    "Order": 2,
+                    "Protocol": "ALL",
+                    "Direction": "LAN_TO_WAN",
+                    "IPVersion": 4,
+                    "SourceIP": "192.168.0.0",
+                    "SourceMask": "24",
+                    "DestIP": "1.0.0.2",
+                    "DestMask": "32",
+                    "Target": "Reject",
                 },
             },
             {
@@ -76,16 +82,16 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "method": "POST",
                 "data": {
                     "Index": None,
-                    "Enable": True,
-                    "Protocol": "TCP",
-                    "Description": "app forward port 21",
-                    "Interface": "IP.Interface.7",
-                    "ExternalPortStart": 21,
-                    "ExternalPortEnd": 21,
-                    "InternalPortStart": 21,
-                    "InternalPortEnd": 21,
-                    "InternalClient": "192.168.0.2",
-                    "OriginatingIpAddress": None,
+                    "Name": "NAME-3",
+                    "Order": 3,
+                    "Protocol": "ALL",
+                    "Direction": "LAN_TO_WAN",
+                    "IPVersion": 4,
+                    "SourceIP": "192.168.0.0",
+                    "SourceMask": "24",
+                    "DestIP": "1.0.0.3",
+                    "DestMask": "32",
+                    "Target": "Reject",
                 },
             },
         ]
@@ -120,7 +126,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         data = result["gathered"]
 
         # update data
-        data[0]["description"] = "updated service name"
+        data[0]["name"] = "updated ACL name"
         data.pop(1)  # remove an entry
 
         # without index, Index will be determined based on external_port_start
@@ -136,17 +142,16 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "method": "PUT",
                 "data": {
                     "Index": 1,
-                    "Enable": True,
-                    "Protocol": "TCP",
-                    "Description": "updated service name",
-                    "Interface": "IP.Interface.7",
-                    "ExternalPortStart": 443,
-                    "ExternalPortEnd": 443,
-                    "InternalPortStart": 443,
-                    "InternalPortEnd": 443,
-                    "InternalClient": "192.168.0.2",
-                    "OriginatingIpAddress": "192.168.0.1",
-                    # TODO, missing X_ZYXEL_AutoDetectWanStatus, not sure if this is an issue
+                    "Name": "updated ACL name",
+                    "Order": 1,
+                    "Protocol": "ALL",
+                    "Direction": "LAN_TO_WAN",
+                    "IPVersion": 4,
+                    "SourceIP": "192.168.0.0",
+                    "SourceMask": "24",
+                    "DestIP": "1.0.0.1",
+                    "DestMask": "32",
+                    "Target": "Reject",
                 },
             },
         ]
@@ -184,7 +189,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         data.pop(1)
 
         # update data
-        data[0]["description"] = "updated service name"
+        data[0]["name"] = "updated ACL name"
 
         # without index, Index will be determined based on external_port_start
         del data[0]["index"]
@@ -198,16 +203,16 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "method": "PUT",
                 "data": {
                     "Index": 1,
-                    "Enable": True,
-                    "Protocol": "TCP",
-                    "Description": "updated service name",
-                    "Interface": "IP.Interface.7",
-                    "ExternalPortStart": 443,
-                    "ExternalPortEnd": 443,
-                    "InternalPortStart": 443,
-                    "InternalPortEnd": 443,
-                    "InternalClient": "192.168.0.2",
-                    "OriginatingIpAddress": "192.168.0.1",
+                    "Name": "updated ACL name",
+                    "Order": 1,
+                    "Protocol": "ALL",
+                    "Direction": "LAN_TO_WAN",
+                    "IPVersion": 4,
+                    "SourceIP": "192.168.0.0",
+                    "SourceMask": "24",
+                    "DestIP": "1.0.0.1",
+                    "DestMask": "32",
+                    "Target": "Reject",
                 },
             },
         ]
@@ -261,57 +266,68 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         data = [
             {
                 "index": 1,
-                "enable": True,
-                "protocol": "TCP",
-                "description": "app forward port 443",
-                "interface": "IP.Interface.7",
-                "external_port_start": 443,
-                "external_port_end": 443,
-                "internal_port_start": 443,
-                "internal_port_end": 443,
-                "internal_client": "192.168.0.2",
-                "originating_ip_address": "192.168.0.1",
+                "name": "Name-1",
+                "order": 1,
+                "protocol": "ALL",
+                "direction": "LAN_TO_WAN",
+                "ip_version": 4,
+                "source_ip": "192.168.0.0",
+                "source_mask": "24",
+                "dest_ip": "1.0.0.1",
+                "dest_mask": "32",
+                "target": "Reject",
+                # "source_port": -1,
+                # "source_port_range_max": -1,
+                # "dest_port": -1,
+                # "dest_port_range_max": -1,
+                # "limit_rate": 0,
             },
             {
                 "index": 2,
-                "enable": True,
-                "protocol": "TCP",
-                "description": "app forward port 80",
-                "interface": "IP.Interface.7",
-                "external_port_start": 80,
-                "external_port_end": 80,
-                "internal_port_start": 80,
-                "internal_port_end": 80,
-                "internal_client": "192.168.0.2",
+                "name": "Name-2",
+                "order": 2,
+                "protocol": "ALL",
+                "direction": "LAN_TO_WAN",
+                "ip_version": 4,
+                "source_ip": "192.168.0.0",
+                "source_mask": "24",
+                "dest_ip": "1.0.0.2",
+                "dest_mask": "32",
+                "target": "Reject",
+                # "source_port": -1,
+                # "source_port_range_max": -1,
+                # "dest_port": -1,
+                # "dest_port_range_max": -1,
+                # "limit_rate": 0,
             },
         ]
         set_module_args({"config": data, "state": "rendered"})
         expected = [
             {
                 "Index": 1,
-                "Enable": True,
-                "Protocol": "TCP",
-                "Description": "app forward port 443",
-                "Interface": "IP.Interface.7",
-                "ExternalPortStart": 443,
-                "ExternalPortEnd": 443,
-                "InternalPortStart": 443,
-                "InternalPortEnd": 443,
-                "InternalClient": "192.168.0.2",
-                "OriginatingIpAddress": "192.168.0.1",
+                "Name": "Name-1",
+                "Order": 1,
+                "Protocol": "ALL",
+                "Direction": "LAN_TO_WAN",
+                "IPVersion": 4,
+                "SourceIP": "192.168.0.0",
+                "SourceMask": "24",
+                "DestIP": "1.0.0.1",
+                "DestMask": "32",
+                "Target": "Reject",
             },
             {
                 "Index": 2,
-                "Enable": True,
-                "Protocol": "TCP",
-                "Description": "app forward port 80",
-                "Interface": "IP.Interface.7",
-                "ExternalPortStart": 80,
-                "ExternalPortEnd": 80,
-                "InternalPortStart": 80,
-                "InternalPortEnd": 80,
-                "InternalClient": "192.168.0.2",
-                "OriginatingIpAddress": None,
+                "Name": "Name-2",
+                "Order": 2,
+                "Protocol": "ALL",
+                "Direction": "LAN_TO_WAN",
+                "IPVersion": 4,
+                "SourceIP": "192.168.0.0",
+                "SourceMask": "24",
+                "DestIP": "1.0.0.2",
+                "DestMask": "32",
+                "Target": "Reject",
             },
         ]
         result = self.execute_module(changed=False)
@@ -321,29 +337,29 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         commands = [
             {
                 "Index": 1,
-                "Enable": True,
-                "Protocol": "TCP",
-                "Description": "app forward port 443",
-                "Interface": "IP.Interface.7",
-                "ExternalPortStart": 443,
-                "ExternalPortEnd": 443,
-                "InternalPortStart": 443,
-                "InternalPortEnd": 443,
-                "InternalClient": "192.168.0.2",
-                "OriginatingIpAddress": None,
+                "Name": "Name-1",
+                "Order": 1,
+                "Protocol": "ALL",
+                "Direction": "LAN_TO_WAN",
+                "IPVersion": 4,
+                "SourceIP": "192.168.0.0",
+                "SourceMask": "24",
+                "DestIP": "1.0.0.1",
+                "DestMask": "32",
+                "Target": "Reject",
             },
             {
                 "Index": 2,
-                "Enable": True,
-                "Protocol": "TCP",
-                "Description": "app forward port 80",
-                "Interface": "IP.Interface.7",
-                "ExternalPortStart": 80,
-                "ExternalPortEnd": 80,
-                "InternalPortStart": 80,
-                "InternalPortEnd": 80,
-                "InternalClient": "192.168.0.2",
-                "OriginatingIpAddress": None,
+                "Name": "Name-2",
+                "Order": 2,
+                "Protocol": "ALL",
+                "Direction": "LAN_TO_WAN",
+                "IPVersion": 4,
+                "SourceIP": "192.168.0.0",
+                "SourceMask": "24",
+                "DestIP": "1.0.0.2",
+                "DestMask": "32",
+                "Target": "Reject",
             },
         ]
         parsed_str = json.dumps(commands)
@@ -353,27 +369,39 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         parsed_list = [
             {
                 "index": 1,
-                "enable": True,
-                "protocol": "TCP",
-                "description": "app forward port 443",
-                "interface": "IP.Interface.7",
-                "external_port_start": 443,
-                "external_port_end": 443,
-                "internal_port_start": 443,
-                "internal_port_end": 443,
-                "internal_client": "192.168.0.2",
+                "name": "Name-1",
+                "order": 1,
+                "protocol": "ALL",
+                "direction": "LAN_TO_WAN",
+                "ip_version": 4,
+                "source_ip": "192.168.0.0",
+                "source_mask": "24",
+                "dest_ip": "1.0.0.1",
+                "dest_mask": "32",
+                "target": "Reject",
+                # "source_port": -1,
+                # "source_port_range_max": -1,
+                # "dest_port": -1,
+                # "dest_port_range_max": -1,
+                # "limit_rate": 0,
             },
             {
                 "index": 2,
-                "enable": True,
-                "protocol": "TCP",
-                "description": "app forward port 80",
-                "interface": "IP.Interface.7",
-                "external_port_start": 80,
-                "external_port_end": 80,
-                "internal_port_start": 80,
-                "internal_port_end": 80,
-                "internal_client": "192.168.0.2",
+                "name": "Name-2",
+                "order": 2,
+                "protocol": "ALL",
+                "direction": "LAN_TO_WAN",
+                "ip_version": 4,
+                "source_ip": "192.168.0.0",
+                "source_mask": "24",
+                "dest_ip": "1.0.0.2",
+                "dest_mask": "32",
+                "target": "Reject",
+                # "source_port": -1,
+                # "source_port_range_max": -1,
+                # "dest_port": -1,
+                # "dest_port_range_max": -1,
+                # "limit_rate": 0,
             },
         ]
         self.assertEqual(parsed_list, result["parsed"])
@@ -396,7 +424,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "ip_version": 4,
                 "source_ip": "192.168.0.0",
                 "source_mask": "24",
-                "dest_ip": "1.2.3.1",
+                "dest_ip": "1.0.0.1",
                 "dest_mask": "32",
                 "target": "Reject",
                 "source_port": -1,
@@ -414,7 +442,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "ip_version": 4,
                 "source_ip": "192.168.0.0",
                 "source_mask": "24",
-                "dest_ip": "1.2.3.2",
+                "dest_ip": "1.0.0.2",
                 "dest_mask": "32",
                 "target": "Reject",
                 "source_port": -1,
@@ -487,15 +515,16 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
         data.append(
             {
-                "enable": True,
-                "protocol": "TCP",
-                "description": "app forward port 21",
-                "interface": "IP.Interface.7",
-                "external_port_start": 21,
-                "external_port_end": 21,
-                "internal_port_start": 21,
-                "internal_port_end": 21,
-                "internal_client": "192.168.0.2",
+                "name": "Name-3",
+                "order": 3,
+                "protocol": "ALL",
+                "direction": "LAN_TO_WAN",
+                "ip_version": 4,
+                "source_ip": "192.168.0.0",
+                "source_mask": "24",
+                "dest_ip": "1.0.0.3",
+                "dest_mask": "32",
+                "target": "Reject",
             }
         )
 
@@ -606,7 +635,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         data = result["gathered"]
 
         # update data
-        data[1]["description"] = "updated service name"
+        data[1]["name"] = "updated ACL name"
 
         # without index, Index will be determined based on external_port_start
         del data[1]["index"]
@@ -629,4 +658,4 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertEqual(http_calls[0][1]["method"], "PUT")
 
         request_data = http_calls[0][0][0]
-        self.assertEqual(request_data["Description"], "updated service name")
+        self.assertEqual(request_data["Name"], "updated ACL name")

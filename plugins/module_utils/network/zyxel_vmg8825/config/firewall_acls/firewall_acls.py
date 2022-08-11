@@ -146,7 +146,7 @@ class Firewall_acls(ResourceModule):
         else:
 
             request = {
-                "oid": rm_templates.nat_port_forwards.oid(),
+                "oid": rm_templates.firewall_acls.oid(),
                 "method": method,
             }
 
