@@ -37,7 +37,7 @@ class Firewall_aclsArgs(object):  # pylint: disable=R0903
             "options": {
                 "index": {"type": "int"},
                 "name": {"type": "str", "required": True},
-                "order": {"type": "int", "required": True},
+                "order": {"type": "int"},
                 "protocol": {
                     "type": "str",
                     "choices": ["ALL", "TCP", "UDP", "TCP_UDP", "ICMP"],
@@ -57,7 +57,11 @@ class Firewall_aclsArgs(object):  # pylint: disable=R0903
                     ],
                     "required": True,
                 },
-                "ip_version": {"type": "int", "choices": [4, 6], "required": True},
+                "ip_version": {
+                    "type": "str",
+                    "choices": ["IPv4", "IPv6"],
+                    "required": True,
+                },
                 "limit_rate": {"type": "int"},
                 "limit_rate_unit": {
                     "type": "str",

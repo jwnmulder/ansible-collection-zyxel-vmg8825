@@ -40,8 +40,8 @@ options:
       order:
         description:
           - Order
+          - If not set, the router assigns one resulting in a entry with the lowest priority
         type: int
-        required: true # TODO, check what happens if we leave it empty
       protocol:
         description:
           - Protocol
@@ -57,21 +57,25 @@ options:
         description:
           - SourcePort
           - Leave empty for 'any' port
+          - Only valid in combination with protocol TCP, UDP or TCP_UDP
         type: int
       source_port_range_max:
         description:
           - SourcePortRangeMax
           - Must be set to a higher value than dest_port. If set it indicates a range of ports
+          - Only valid in combination with protocol TCP, UDP or TCP_UDP
         type: int
       dest_port:
         description:
           - DestPort
           - Leave empty for 'any' port
+          - Only valid in combination with protocol TCP, UDP or TCP_UDP
         type: int
       dest_port_range_max:
         description:
           - DestPortRangeMax
           - Must be set to a higher value than dest_port. If set it indicates a range of ports
+          - Only valid in combination with protocol TCP, UDP or TCP_UDP
         type: int
       direction:
         description:
@@ -86,12 +90,11 @@ options:
       ip_version:
         description:
           - IPVersion
-        type: int
+        type: str
         choices:
-          - 4 # IPv4
-          - 6 # IPv6
+          - IPv4
+          - IPv6
         required: true
-        # default: 4
       limit_rate:
         description:
           - LimitRate
@@ -105,7 +108,7 @@ options:
           - second
       source_ip:
         description:
-          - SourceIP (can be "Any")
+          - SourceIP
         type: str
         required: true
       source_mask:
@@ -116,7 +119,7 @@ options:
         default: "32"
       dest_ip:
         description:
-          - DestIP (can be "Any"for IPv6)
+          - DestIP
         type: str
         required: true
       dest_mask:

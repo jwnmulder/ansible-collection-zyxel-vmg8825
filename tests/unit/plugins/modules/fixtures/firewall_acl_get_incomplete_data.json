@@ -1,1 +1,33 @@
-{}
+{
+    "result": "ZCFG_SUCCESS",
+    "ReplyMsg": "ICMPTypeCode",
+    "ReplyMsgMultiLang": "",
+    "Object": [
+        {
+            "Index": 1,
+            "Protocol": "ALL",
+            "Order": 0,
+            "Name": "",
+            "SourcePort": -1,
+            "SourcePortRangeMax": -1,
+            "DestPort": -1,
+            "DestPortRangeMax": -1,
+            "Direction": "WAN_TO_LAN",
+            "IPVersion": -1,
+            "X_ZYXEL_ScheduleRule": 0,
+            "LimitRate": 0,
+            "LimitRateUnit": "",
+            "X_ZYXEL_TCPFlagMask": "",
+            "X_ZYXEL_TCPFlagComp": "",
+            "SourceIP": "Any",
+            "SourceMask": "",
+            "DestIP": "Any",
+            "DestMask": "",
+            "ICMPType": -1,
+            "ICMPTypeCode": -1,
+            "Target": "Drop",
+            "X_ZYXEL_ServiceIndex": 0,
+            "idx": 3
+        }
+    ]
+}

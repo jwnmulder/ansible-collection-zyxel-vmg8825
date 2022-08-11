@@ -1,0 +1,100 @@
+---
+- debug:
+    msg: "Start round trip integration tests on connection={{ ansible_connection }}"
+    # round trip test case.
+    # This involves a merge operation,
+    # followed by gather_facts,
+    # a merge update with additional configuration,
+    # and then reverting back to the base configuration using the previously gathered facts with the state set to overridden.
+- block:
+    - name: Ensure test entry is not present
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_firewall_acls:
+        config:
+          - &test_entry_1
+            name: ANSIBLE-TEST-1
+            protocol: ALL
+            direction: LAN_TO_WAN
+            ip_version: IPv4
+            source_ip: "{{ test_zyxel_ip_prefix }}.0"
+            source_mask: "24" 
+            dest_ip: "1.0.0.1"
+            target: Accept
+          - &test_entry_icmp
+            name: ANSIBLE-TEST-ICMP
+            protocol: ICMP
+            direction: LAN_TO_WAN
+            ip_version: IPv4
+            source_ip: "{{ test_zyxel_ip_prefix }}.0"
+            source_mask: "24" 
+            dest_ip: "1.0.0.1"
+            target: Accept
+          - &test_entry_tcp_udp
+            name: ANSIBLE-TEST-TCP_UDP
+            protocol: TCP_UDP
+            direction: LAN_TO_WAN
+            ip_version: IPv4
+            source_ip: "{{ test_zyxel_ip_prefix }}.0"
+            source_mask: "24" 
+            dest_ip: "1.0.0.1"
+            target: Accept
+          - &test_entry_port_range
+            name: ANSIBLE-TEST-PORTRANGE
+            protocol: TCP
+            direction: LAN_TO_WAN
+            ip_version: IPv4
+            source_ip: "{{ test_zyxel_ip_prefix }}.0"
+            source_mask: "24" 
+            dest_ip: "1.0.0.1"
+            source_port: 1000
+            source_port_range_max: 1100
+            dest_port: 1000
+            dest_port_range_max: 1100
+            target: Accept
+        state: deleted
+
+    - name: Get base config from test device
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_firewall_acls:
+        state: gathered
+      register: base_config
+
+    - name: Gather firewall_acls facts
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts:
+        gather_subset:
+          - "!all"
+          - "!min"
+        gather_network_resources:
+          - firewall_acls
+
+    - name: Apply test configuration (this will be reverted)
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_firewall_acls:
+        config:
+          - *test_entry_1
+          - *test_entry_icmp
+          - *test_entry_tcp_udp
+          - *test_entry_port_range
+        state: merged
+      register: result
+
+    - name: Update test configuration (this will be reverted)
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_firewall_acls:
+        config:
+          - <<: *test_entry_1
+            dest_ip: "1.0.0.0"
+            dest_mask: "16"
+        state: replaced
+      register: result
+
+    - name: Assert that changes are applied
+      assert:
+        that:
+          - "result.changed == true"
+
+    - name: Revert back to base configuration
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_firewall_acls:
+        config: "{{ ansible_facts['network_resources']['firewall_acls'] }}"
+        state: overridden
+      register: revert
+
+    - assert:
+        that:
+          - "base_config['gathered'] | symmetric_difference(revert['after']) | length == 0"

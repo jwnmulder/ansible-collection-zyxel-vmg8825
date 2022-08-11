@@ -3,6 +3,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 import json
+import pytest
 
 from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     set_module_args,
@@ -38,7 +39,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "order": 3,
                 "protocol": "ALL",
                 "direction": "LAN_TO_WAN",
-                "ip_version": 4,
+                "ip_version": "IPv4",
                 "source_ip": "192.168.0.0",
                 "source_mask": "24",
                 "dest_ip": "1.0.0.3",
@@ -69,7 +70,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                     "Order": 2,
                     "Protocol": "TCP",
                     "Direction": "LAN_TO_WAN",
-                    "IPVersion": 4,
+                    "IPVersion": "IPv4",
                     "SourceIP": "192.168.0.0",
                     "SourceMask": "24",
                     "DestIP": "1.0.0.2",
@@ -88,7 +89,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                     "Order": 3,
                     "Protocol": "ALL",
                     "Direction": "LAN_TO_WAN",
-                    "IPVersion": 4,
+                    "IPVersion": "IPv4",
                     "SourceIP": "192.168.0.0",
                     "SourceMask": "24",
                     "DestIP": "1.0.0.3",
@@ -148,7 +149,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                     "Order": 1,
                     "Protocol": "TCP",
                     "Direction": "LAN_TO_WAN",
-                    "IPVersion": 4,
+                    "IPVersion": "IPv4",
                     "SourceIP": "192.168.0.0",
                     "SourceMask": "24",
                     "DestIP": "1.0.0.1",
@@ -207,9 +208,9 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                     "Index": 1,
                     "Name": "Name-1",
                     "Order": 1,
-                    "Protocol": "TCP/UDP",
+                    "Protocol": "TCPUDP",
                     "Direction": "LAN_TO_WAN",
-                    "IPVersion": 4,
+                    "IPVersion": "IPv4",
                     "SourceIP": "192.168.0.0",
                     "SourceMask": "24",
                     "DestIP": "1.0.0.1",
@@ -272,7 +273,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "order": 1,
                 "protocol": "ALL",
                 "direction": "LAN_TO_WAN",
-                "ip_version": 4,
+                "ip_version": "IPv4",
                 "source_ip": "192.168.0.0",
                 "source_mask": "24",
                 "dest_ip": "1.0.0.1",
@@ -290,7 +291,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "order": 2,
                 "protocol": "ALL",
                 "direction": "LAN_TO_WAN",
-                "ip_version": 4,
+                "ip_version": "IPv4",
                 "source_ip": "192.168.0.0",
                 "source_mask": "24",
                 "dest_ip": "1.0.0.2",
@@ -311,7 +312,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "Order": 1,
                 "Protocol": "ALL",
                 "Direction": "LAN_TO_WAN",
-                "IPVersion": 4,
+                "IPVersion": "IPv4",
                 "SourceIP": "192.168.0.0",
                 "SourceMask": "24",
                 "DestIP": "1.0.0.1",
@@ -324,7 +325,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "Order": 2,
                 "Protocol": "ALL",
                 "Direction": "LAN_TO_WAN",
-                "IPVersion": 4,
+                "IPVersion": "IPv4",
                 "SourceIP": "192.168.0.0",
                 "SourceMask": "24",
                 "DestIP": "1.0.0.2",
@@ -375,7 +376,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "order": 1,
                 "protocol": "ALL",
                 "direction": "LAN_TO_WAN",
-                "ip_version": 4,
+                "ip_version": "IPv4",
                 "source_ip": "192.168.0.0",
                 "source_mask": "24",
                 "dest_ip": "1.0.0.1",
@@ -393,7 +394,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "order": 2,
                 "protocol": "ALL",
                 "direction": "LAN_TO_WAN",
-                "ip_version": 4,
+                "ip_version": "IPv4",
                 "source_ip": "192.168.0.0",
                 "source_mask": "24",
                 "dest_ip": "1.0.0.2",
@@ -423,7 +424,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "order": 1,
                 "protocol": "ALL",
                 "direction": "LAN_TO_WAN",
-                "ip_version": 4,
+                "ip_version": "IPv4",
                 "source_ip": "192.168.0.0",
                 "source_mask": "24",
                 "dest_ip": "1.0.0.1",
@@ -441,7 +442,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "order": 2,
                 "protocol": "ALL",
                 "direction": "LAN_TO_WAN",
-                "ip_version": 4,
+                "ip_version": "IPv4",
                 "source_ip": "192.168.0.0",
                 "source_mask": "24",
                 "dest_ip": "1.0.0.2",
@@ -521,7 +522,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
                 "order": 3,
                 "protocol": "ALL",
                 "direction": "LAN_TO_WAN",
-                "ip_version": 4,
+                "ip_version": "IPv4",
                 "source_ip": "192.168.0.0",
                 "source_mask": "24",
                 "dest_ip": "1.0.0.3",
@@ -661,3 +662,23 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
 
         request_data = http_calls[0][0][0]
         self.assertEqual(request_data["Protocol"], "TCP")
+
+    @pytest.mark.skip(
+        reason=(
+            "not sure how to implement a workaround for this behavior while at the"
+            " same time keeping input validation enabled for the resource module."
+        )
+    )
+    def test_update_with_incomplete_entry_in_response(self):
+
+        self.mock_dal_request("firewall_acl", "GET", variant="incomplete_data")
+
+        # get current config
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
+
+        data = result["gathered"]
+
+        # update device with the same incomplete config
+        set_module_args({"config": data})
+        self.execute_module(changed=False)

@@ -63,7 +63,7 @@ Parameters
                 <td>
                 </td>
                 <td>
-                        <div>DestIP (can be &quot;Any&quot;for IPv6)</div>
+                        <div>DestIP</div>
                 </td>
             </tr>
             <tr>
@@ -99,6 +99,7 @@ Parameters
                 <td>
                         <div>DestPort</div>
                         <div>Leave empty for &#x27;any&#x27; port</div>
+                        <div>Only valid in combination with protocol TCP, UDP or TCP_UDP</div>
                 </td>
             </tr>
             <tr>
@@ -116,6 +117,7 @@ Parameters
                 <td>
                         <div>DestPortRangeMax</div>
                         <div>Must be set to a higher value than dest_port. If set it indicates a range of ports</div>
+                        <div>Only valid in combination with protocol TCP, UDP or TCP_UDP</div>
                 </td>
             </tr>
             <tr>
@@ -164,14 +166,14 @@ Parameters
                     <b>ip_version</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">integer</span>
+                        <span style="color: purple">string</span>
                          / <span style="color: red">required</span>
                     </div>
                 </td>
                 <td>
                         <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                    <li>4</li>
-                                    <li>6</li>
+                                    <li>IPv4</li>
+                                    <li>IPv6</li>
                         </ul>
                 </td>
                 <td>
@@ -240,13 +242,13 @@ Parameters
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">integer</span>
-                         / <span style="color: red">required</span>
                     </div>
                 </td>
                 <td>
                 </td>
                 <td>
                         <div>Order</div>
+                        <div>If not set, the router assigns one resulting in a entry with the lowest priority</div>
                 </td>
             </tr>
             <tr>
@@ -286,7 +288,7 @@ Parameters
                 <td>
                 </td>
                 <td>
-                        <div>SourceIP (can be &quot;Any&quot;)</div>
+                        <div>SourceIP</div>
                 </td>
             </tr>
             <tr>
@@ -322,6 +324,7 @@ Parameters
                 <td>
                         <div>SourcePort</div>
                         <div>Leave empty for &#x27;any&#x27; port</div>
+                        <div>Only valid in combination with protocol TCP, UDP or TCP_UDP</div>
                 </td>
             </tr>
             <tr>
@@ -339,6 +342,7 @@ Parameters
                 <td>
                         <div>SourcePortRangeMax</div>
                         <div>Must be set to a higher value than dest_port. If set it indicates a range of ports</div>
+                        <div>Only valid in combination with protocol TCP, UDP or TCP_UDP</div>
                 </td>
             </tr>
             <tr>

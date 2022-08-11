@@ -35,31 +35,6 @@ def oid():
     return "firewall_acl"
 
 
-def field_map():
-
-    return {
-        "index": "Index",
-        "name": "Name",
-        "order": "Order",
-        "protocol": "Protocol",
-        #   "source_port": "SourcePort",
-        #   "source_port_range_max": "SourcePortRangeMax",
-        #   "dest_port": "DestPort",
-        #   "dest_port_range_max": "DestPortRangeMax",
-        "direction": "Direction",
-        "ip_version": "IPVersion",
-        #   "limit_rate": "LimitRate",
-        #   "limit_rate_unit": "LimitRateUnit",
-        "source_ip": "SourceIP",
-        "source_mask": "SourceMask",
-        "dest_ip": "DestIP",
-        "dest_mask": "DestMask",
-        #   "icmp_type": "ICMPType",
-        #   "icmp_type_code": "ICMPTypeCode",
-        "target": "Target",
-    }
-
-
 def from_dal_object(dal_object):
     result = {
         "index": dal_object.get("Index"),
@@ -67,16 +42,30 @@ def from_dal_object(dal_object):
         "order": dal_object.get("Order"),
         "direction": dal_object.get("Direction"),
         "target": dal_object.get("Target"),
-        "ip_version": dal_object.get("IPVersion"),
         "source_ip": dal_object.get("SourceIP"),
         "source_mask": dal_object.get("SourceMask"),
         "dest_ip": dal_object.get("DestIP"),
         "dest_mask": dal_object.get("DestMask"),
     }
 
+    # Workaround for invalid Zyxel ACL router entries
+    if len(result["name"]) <= 0:
+        result["name"] = f"INVALID-INDEX-{result['index']}"
+
+    ip_version = dal_object.get("IPVersion")
+    if ip_version is not None:
+
+        # Workaround for invalid Zyxel ACL router entries
+        ip_version = ip_version if ip_version >= 0 else 4
+
+        ip_version = str(ip_version).replace("IPv", "")
+        ip_version = f"IPv{ip_version}"
+        result["ip_version"] = ip_version
+
     protocol = dal_object.get("Protocol")
     if protocol is not None:
         protocol = protocol.replace("TCP/UDP", "TCP_UDP")
+        protocol = protocol.replace("TCPUDP", "TCP_UDP")
         result["protocol"] = protocol
 
     source_port = dal_object.get("SourcePort")
@@ -114,16 +103,22 @@ def to_dal_object(ansible_object):
         "Order": ansible_object.get("order"),
         "Direction": ansible_object.get("direction"),
         "Target": ansible_object.get("target"),
-        "IPVersion": ansible_object.get("ip_version"),
         "SourceIP": ansible_object.get("source_ip"),
         "SourceMask": ansible_object.get("source_mask"),
         "DestIP": ansible_object.get("dest_ip"),
         "DestMask": ansible_object.get("dest_mask"),
     }
 
+    if result["Order"] is None:
+        result["Order"] = -1
+
+    ip_version = ansible_object.get("ip_version")
+    if ip_version is not None:
+        result["IPVersion"] = ip_version
+
     protocol = ansible_object.get("protocol")
     if protocol is not None:
-        protocol = protocol.replace("TCP_UDP", "TCP/UDP")
+        protocol = protocol.replace("TCP_UDP", "TCPUDP")
         result["Protocol"] = protocol
 
     source_port = ansible_object.get("source_port")
