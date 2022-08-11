@@ -43,7 +43,7 @@ options:
         choices:
           - TCP
           - UDP
-          - TCP_UDP
+          - ALL  # TCP/UDP
         default: TCP
       description:
         description:
