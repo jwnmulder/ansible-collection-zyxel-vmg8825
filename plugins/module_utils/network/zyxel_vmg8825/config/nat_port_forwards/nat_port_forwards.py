@@ -85,7 +85,7 @@ class Nat_port_forwards(ResourceModule):
             for entry in self.have
         }
 
-        # if empty, populate 'index' based based on haved
+        # if empty, populate 'index' based on haved
         for key, value in wantd.items():
             have = haved.get(key)
             have_index = have.get("index") if have else None

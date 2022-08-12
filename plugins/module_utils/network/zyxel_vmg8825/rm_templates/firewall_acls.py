@@ -109,6 +109,8 @@ def to_dal_object(ansible_object):
         "DestMask": ansible_object.get("dest_mask"),
     }
 
+    # Order must be set. If not, Zyxel will do weird and set the order of all other rules to '0'
+    # which results in a failing web UI
     if result["Order"] is None:
         result["Order"] = -1
 

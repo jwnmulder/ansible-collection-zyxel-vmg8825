@@ -663,6 +663,25 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         request_data = http_calls[0][0][0]
         self.assertEqual(request_data["Protocol"], "TCP")
 
+    def test_no_order_noop(self):
+        """
+        Test the no update is done if order is not provided
+        """
+        self.mock_dal_request("firewall_acl", "GET")
+
+        # get current config
+        set_module_args({"state": "gathered"})
+        result = self.execute_module(changed=False)
+
+        data = result["gathered"]
+        del data[0]["order"]
+        del data[1]["order"]
+
+        # update device with new the same config but no order
+        # config should not have changed
+        set_module_args({"config": data, "state": "overridden"})
+        self.execute_module(changed=False, commands=[])
+
     @pytest.mark.skip(
         reason=(
             "not sure how to implement a workaround for this behavior while at the"

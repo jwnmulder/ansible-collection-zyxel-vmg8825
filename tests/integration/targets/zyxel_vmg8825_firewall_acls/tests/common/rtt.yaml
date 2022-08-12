@@ -12,7 +12,6 @@
         config:
           - &test_entry_1
             name: ANSIBLE-TEST-1
-            protocol: ALL
             direction: LAN_TO_WAN
             ip_version: IPv4
             source_ip: "{{ test_zyxel_ip_prefix }}.0"

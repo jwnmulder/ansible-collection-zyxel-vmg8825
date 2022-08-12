@@ -73,21 +73,22 @@ class Firewall_acls(ResourceModule):
         """Generate configuration commands to send based on
         want, have and desired state.
         """
-
-        # wantd = {entry['name']: entry for entry in self.want}
-        # haved = {entry['name']: entry for entry in self.have}
-
         # If name is empty, it means we got an empty string back from our device.
         # This does happen sometimes after an invalid entry was sent.
         wantd = {entry.get("name") or entry.get("index"): entry for entry in self.want}
         haved = {entry.get("name") or entry.get("index"): entry for entry in self.have}
 
-        # if empty, populate 'index' based based on haved
+        # populate 'index' and 'order' based on haved if not set in wantd
         for key, value in wantd.items():
             have = haved.get(key)
+
             have_index = have.get("index") if have else None
             if have_index and not value.get("index"):
                 value["index"] = have_index
+
+            have_order = have.get("order") if have else None
+            if have_order and not value.get("order"):
+                value["order"] = have_order
 
         # if state is merged, merge want onto have and then compare
         if self.state == "merged":
@@ -117,7 +118,7 @@ class Firewall_acls(ResourceModule):
 
         # if both 'have' and 'want' are set, they have the same PK
         # if dict values differ, an update is needed
-        if want and have and not equal_dicts(want, have, ["index"]):
+        if want and have and not equal_dicts(want, have, ["index", "order"]):
             self.add_zyxel_dal_command(
                 "PUT", rm_templates.firewall_acls.to_dal_object(want)
             )
