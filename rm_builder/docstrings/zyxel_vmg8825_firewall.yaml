@@ -1,0 +1,53 @@
+module: zyxel_vmg8825_firewall
+short_description: "Manages firewall config of zyxel_vmg8825"
+description: "Manages firewall config of zyxel_vmg8825"
+version_added: "0.3.0"
+author: Jan-Willem Mulder (@jwnmulder)
+notes:
+  - Tested against Zyxel VMG8825-T50
+options:
+  config:
+    description: The provided configuration
+    type: list
+    elements: dict
+    suboptions:
+      ipv4_enabled:
+        description:
+          - IPv4_Enable
+        type: bool
+      ipv6_enabled:
+        description:
+          - IPv6_Enable
+        type: bool
+      dos_enabled:
+        description:
+          - enableDos
+        type: bool
+      level:
+        description:
+          - Level_GUI
+        type: str
+        choices:
+          - "Off"
+          - "Low"
+          - "High"
+  running_config:
+    description:
+      - This option is used only with state I(parsed).
+      - The state I(parsed) reads the configuration from C(running_config) option and
+        transforms it into Ansible structured data as per the resource module's argspec
+        and the value is then returned in the I(parsed) key within the result.
+    type: str
+  state:
+    description:
+      - The state the configuration should be left in
+    type: str
+    choices:
+      - merged
+      - replaced
+      - overridden
+      - deleted
+      - gathered
+      - rendered
+      - parsed
+    default: merged
