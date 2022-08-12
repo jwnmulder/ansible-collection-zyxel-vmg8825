@@ -1,3 +1,4 @@
+#https://github.com/ansible-community/antsibull-changelog/blob/main/docs/changelog.yaml-format.md
 changelog_filename_template: ../CHANGELOG.rst
 changelog_filename_version_depth: 0
 changes_file: changelog.yaml
