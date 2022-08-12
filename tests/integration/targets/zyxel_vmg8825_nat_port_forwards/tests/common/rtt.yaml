@@ -28,7 +28,7 @@
         state: gathered
       register: base_config
 
-    - name: Gather static_dhcp facts
+    - name: Gather nat_port_forwards facts
       jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts:
         gather_subset:
           - "!all"

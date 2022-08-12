@@ -1,14 +1,14 @@
-.. _jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp_module:
+.. _jwnmulder.zyxel_vmg8825.zyxel_vmg8825_firewall_acls_module:
 
 
-*************************************************
-jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp
-*************************************************
+***************************************************
+jwnmulder.zyxel_vmg8825.zyxel_vmg8825_firewall_acls
+***************************************************
 
-**Manages static_dhcp entries of zyxel_vmg8825**
+**Manages firewall ACL entries of zyxel_vmg8825**
 
 
-Version added: 0.1.0
+Version added: 0.3.0
 
 .. contents::
    :local:
@@ -17,7 +17,7 @@ Version added: 0.1.0
 
 Synopsis
 --------
-- Manages static_dhcp entries of zyxel_vmg8825
+- Manages firewall ACL entries of zyxel_vmg8825
 
 
 
@@ -53,38 +53,94 @@ Parameters
                     <td class="elbow-placeholder"></td>
                 <td colspan="1">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>br_wan</b>
+                    <b>dest_ip</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">string</span>
+                         / <span style="color: red">required</span>
                     </div>
                 </td>
                 <td>
-                        <b>Default:</b><br/><div style="color: blue">"Default"</div>
                 </td>
                 <td>
-                        <div>BrWan. Most likely this will be the value &#x27;Default&#x27;</div>
-                        <div>On Zyxel VMG8825 this matches with IpIfacePath=IP.Interface.1, Type=LAN, Name=Default</div>
+                        <div>DestIP</div>
                 </td>
             </tr>
             <tr>
                     <td class="elbow-placeholder"></td>
                 <td colspan="1">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>enable</b>
+                    <b>dest_mask</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
-                        <span style="color: purple">boolean</span>
+                        <span style="color: purple">string</span>
+                    </div>
+                </td>
+                <td>
+                        <b>Default:</b><br/><div style="color: blue">"32"</div>
+                </td>
+                <td>
+                        <div>DestMask, defaults to 32</div>
+                        <div>in case of 192.168.0.0/24 the mask would be &#x27;24&#x27;</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>dest_port</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">integer</span>
+                    </div>
+                </td>
+                <td>
+                </td>
+                <td>
+                        <div>DestPort</div>
+                        <div>Leave empty for &#x27;any&#x27; port</div>
+                        <div>Only valid in combination with protocol TCP, UDP or TCP_UDP</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>dest_port_range_max</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">integer</span>
+                    </div>
+                </td>
+                <td>
+                </td>
+                <td>
+                        <div>DestPortRangeMax</div>
+                        <div>Must be set to a higher value than dest_port. If set it indicates a range of ports</div>
+                        <div>Only valid in combination with protocol TCP, UDP or TCP_UDP</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>direction</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">string</span>
+                         / <span style="color: red">required</span>
                     </div>
                 </td>
                 <td>
                         <ul style="margin: 0; padding: 0"><b>Choices:</b>
-                                    <li>no</li>
-                                    <li><div style="color: blue"><b>yes</b>&nbsp;&larr;</div></li>
+                                    <li>WAN_TO_LAN</li>
+                                    <li>LAN_TO_WAN</li>
+                                    <li>WAN_TO_ROUTER</li>
+                                    <li>LAN_TO_ROUTER</li>
                         </ul>
                 </td>
                 <td>
-                        <div>True is the entry should be active</div>
+                        <div>Direction</div>
                 </td>
             </tr>
             <tr>
@@ -100,14 +156,71 @@ Parameters
                 <td>
                 </td>
                 <td>
-                        <div>Index of the entry. Note that this field has no use in updating configuration. Entries are updated based on their mac_addr</div>
+                        <div>Index of the entry</div>
                 </td>
             </tr>
             <tr>
                     <td class="elbow-placeholder"></td>
                 <td colspan="1">
                     <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>ip_addr</b>
+                    <b>ip_version</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">string</span>
+                         / <span style="color: red">required</span>
+                    </div>
+                </td>
+                <td>
+                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
+                                    <li>IPv4</li>
+                                    <li>IPv6</li>
+                        </ul>
+                </td>
+                <td>
+                        <div>IPVersion</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>limit_rate</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">integer</span>
+                    </div>
+                </td>
+                <td>
+                </td>
+                <td>
+                        <div>LimitRate</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>limit_rate_unit</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">string</span>
+                    </div>
+                </td>
+                <td>
+                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
+                                    <li>minute</li>
+                                    <li>second</li>
+                        </ul>
+                </td>
+                <td>
+                        <div>LimitRateUnit</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>name</b>
                     <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
                     <div style="font-size: small">
                         <span style="color: purple">string</span>
@@ -117,25 +230,141 @@ Parameters
                 <td>
                 </td>
                 <td>
-                        <div>IP address</div>
-                </td>
-            </tr>
-            <tr>
-                    <td class="elbow-placeholder"></td>
-                <td colspan="1">
-                    <div class="ansibleOptionAnchor" id="parameter-"></div>
-                    <b>mac_addr</b>
-                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
-                    <div style="font-size: small">
-                        <span style="color: purple">string</span>
-                         / <span style="color: red">required</span>
-                    </div>
-                </td>
-                <td>
-                </td>
-                <td>
-                        <div>MAC address.</div>
+                        <div>Name</div>
                         <div>This is also used as the primary key for updating entries in the device. Changing this value will result in deleting the old entry and adding a new one</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>order</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">integer</span>
+                    </div>
+                </td>
+                <td>
+                </td>
+                <td>
+                        <div>Order</div>
+                        <div>If not set, the router assigns one resulting in a entry with the lowest priority</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>protocol</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">string</span>
+                    </div>
+                </td>
+                <td>
+                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
+                                    <li><div style="color: blue"><b>ALL</b>&nbsp;&larr;</div></li>
+                                    <li>TCP</li>
+                                    <li>UDP</li>
+                                    <li>TCP_UDP</li>
+                                    <li>ICMP</li>
+                        </ul>
+                </td>
+                <td>
+                        <div>Protocol</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>source_ip</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">string</span>
+                         / <span style="color: red">required</span>
+                    </div>
+                </td>
+                <td>
+                </td>
+                <td>
+                        <div>SourceIP</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>source_mask</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">string</span>
+                    </div>
+                </td>
+                <td>
+                        <b>Default:</b><br/><div style="color: blue">"32"</div>
+                </td>
+                <td>
+                        <div>SourceMask, defaults to 32</div>
+                        <div>in case of 192.168.0.0/24 the mask would be &#x27;24&#x27;</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>source_port</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">integer</span>
+                    </div>
+                </td>
+                <td>
+                </td>
+                <td>
+                        <div>SourcePort</div>
+                        <div>Leave empty for &#x27;any&#x27; port</div>
+                        <div>Only valid in combination with protocol TCP, UDP or TCP_UDP</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>source_port_range_max</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">integer</span>
+                    </div>
+                </td>
+                <td>
+                </td>
+                <td>
+                        <div>SourcePortRangeMax</div>
+                        <div>Must be set to a higher value than dest_port. If set it indicates a range of ports</div>
+                        <div>Only valid in combination with protocol TCP, UDP or TCP_UDP</div>
+                </td>
+            </tr>
+            <tr>
+                    <td class="elbow-placeholder"></td>
+                <td colspan="1">
+                    <div class="ansibleOptionAnchor" id="parameter-"></div>
+                    <b>target</b>
+                    <a class="ansibleOptionLink" href="#parameter-" title="Permalink to this option"></a>
+                    <div style="font-size: small">
+                        <span style="color: purple">string</span>
+                         / <span style="color: red">required</span>
+                    </div>
+                </td>
+                <td>
+                        <ul style="margin: 0; padding: 0"><b>Choices:</b>
+                                    <li>Accept</li>
+                                    <li>Drop</li>
+                                    <li>Reject</li>
+                        </ul>
+                </td>
+                <td>
+                        <div>Target (can be &quot;Any&quot; for IPv6)</div>
                 </td>
             </tr>
 
@@ -188,153 +417,9 @@ Notes
 
 .. note::
    - Tested against Zyxel VMG8825-T50
-   - Configuration is merged using the 'mac_addr' value and not the 'index' value
 
 
 
-Examples
---------
-
-.. code-block:: yaml
-
-    # Using replaced
-
-    # Before state:
-    # -------------
-    #
-    # DAL?oid=static_dhcp
-    # [
-    #   {
-    #     "Index": 1,
-    #     "BrWan": "Default",
-    #     "Enable": true,
-    #     "MACAddr": "01:01:01:01:01:01",
-    #     "IPAddr": "192.168.0.1"
-    #   },
-    # ]
-
-    - name: Configure static_dhcp
-      zyxel_vmg8825_static_dhcp:
-        config:
-          - br_wan: Default
-            enable: True
-            mac_addr: "01:01:01:01:01:01"
-            ip_addr: "192.168.0.2"
-        state: replaced
-
-    # DAL?oid=static_dhcp
-    # [
-    #   {
-    #     "Index": 1,
-    #     "BrWan": "Default",
-    #     "Enable": true,
-    #     "MACAddr": "01:01:01:01:01:01",
-    #     "IPAddr": "192.168.0.2"
-    #   },
-    # ]
-
-    # Using deleted
-
-    # Before state:
-    # -------------
-    #
-    # DAL?oid=static_dhcp
-    # [
-    #   {
-    #     "Index": 1,
-    #     "BrWan": "Default",
-    #     "Enable": true,
-    #     "MACAddr": "01:01:01:01:01:01",
-    #     "IPAddr": "192.168.0.1"
-    #   },
-    # ]
-
-    - name: Configure static_dhcp
-      zyxel_vmg8825_static_dhcp:
-        state: deleted
-
-    # DAL?oid=static_dhcp
-    # [
-    # ]
-
-    # Using merged
-
-    # Before state:
-    # -------------
-    #
-    # DAL?oid=static_dhcp
-    # [
-    #   {
-    #     "Index": 1,
-    #     "BrWan": "Default",
-    #     "Enable": true,
-    #     "MACAddr": "01:01:01:01:01:01",
-    #     "IPAddr": "192.168.0.1"
-    #   },
-    # ]
-
-    - name: Configure static_dhcp
-      zyxel_vmg8825_static_dhcp:
-        config:
-          - br_wan: Default
-            enable: True
-            mac_addr: "01:01:01:01:01:02"
-            ip_addr: "192.168.0.2"
-        state: merged
-
-    # DAL?oid=static_dhcp
-    # [
-    #   {
-    #     "Index": 1,
-    #     "BrWan": "Default",
-    #     "Enable": true,
-    #     "MACAddr": "01:01:01:01:01:01",
-    #     "IPAddr": "192.168.0.1"
-    #   },
-    #   {
-    #     "Index": 2,
-    #     "BrWan": "Default",
-    #     "Enable": true,
-    #     "MACAddr": "01:01:01:01:01:02",
-    #     "IPAddr": "192.168.0.2"
-    #   },
-    # ]
-
-    # Using overridden
-
-    # Before state:
-    # -------------
-    #
-    # DAL?oid=static_dhcp
-    # [
-    #   {
-    #     "Index": 1,
-    #     "BrWan": "Default",
-    #     "Enable": true,
-    #     "MACAddr": "01:01:01:01:01:01",
-    #     "IPAddr": "192.168.0.1"
-    #   },
-    # ]
-
-    - name: Configure static_dhcp
-      zyxel_vmg8825_static_dhcp:
-        config:
-          - br_wan: Default
-            enable: True
-            mac_addr: "01:01:01:01:01:02"
-            ip_addr: "192.168.0.2"
-        state: replaced
-
-    # DAL?oid=static_dhcp
-    # [
-    #   {
-    #     "Index": 1,
-    #     "BrWan": "Default",
-    #     "Enable": true,
-    #     "MACAddr": "01:01:01:01:01:02",
-    #     "IPAddr": "192.168.0.2"
-    #   },
-    # ]
 
 
 

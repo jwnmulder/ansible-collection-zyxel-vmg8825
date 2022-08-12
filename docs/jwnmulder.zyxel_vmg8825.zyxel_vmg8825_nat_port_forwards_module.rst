@@ -237,7 +237,7 @@ Parameters
                         <ul style="margin: 0; padding: 0"><b>Choices:</b>
                                     <li><div style="color: blue"><b>TCP</b>&nbsp;&larr;</div></li>
                                     <li>UDP</li>
-                                    <li>TCP_UDP</li>
+                                    <li>ALL</li>
                         </ul>
                 </td>
                 <td>

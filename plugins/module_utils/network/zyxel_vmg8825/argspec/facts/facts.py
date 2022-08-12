@@ -16,7 +16,7 @@ class FactsArgs:  # pylint: disable=R0903
     def __init__(self, **kwargs):
         pass
 
-    choices = ["all", "static_dhcp", "nat_port_forwards"]
+    choices = ["all", "firewall_acls", "nat_port_forwards", "static_dhcp"]
 
     argument_spec = {
         "gather_subset": dict(default=["min"], type="list", elements="str"),

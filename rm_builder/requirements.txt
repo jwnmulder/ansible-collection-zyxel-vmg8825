@@ -1,0 +1,2 @@
+ansible-base==2.10.17  # later versions are not supported by rm_builder
+click==8.0.4

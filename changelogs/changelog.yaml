@@ -7,12 +7,17 @@ releases:
     - description: Zyxel Module for interacting with the Zyxel DAL API
       name: zyxel_vmg8825_dal_rpc
       namespace: ''
-    - description: Get facts about zyxel_vmg8825 devices
+    - description: Get facts about zyxel_vmg8825 devices.
       name: zyxel_vmg8825_facts
       namespace: ''
     - description: Manages static_dhcp entries of zyxel_vmg8825
       name: zyxel_vmg8825_static_dhcp
       namespace: ''
+    plugins:
+      httpapi:
+      - description: HttpApi Plugin for Zyxel VMG 8825
+        name: zyxel_vmg8825
+        namespace: null
     release_date: '2021-10-17'
   0.2.0:
     changes:

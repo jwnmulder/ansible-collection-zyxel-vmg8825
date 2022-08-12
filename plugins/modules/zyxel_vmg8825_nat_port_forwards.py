@@ -14,13 +14,12 @@ __metaclass__ = type
 
 DOCUMENTATION = """
 module: zyxel_vmg8825_nat_port_forwards
-author: Jan-Willem Mulder (@jwnmulder)
 short_description: 'Manages nat port forward entries of zyxel_vmg8825'
 description: 'Manages nat port forward entries of zyxel_vmg8825'
 version_added: '0.2.0'
+author: Jan-Willem Mulder (@jwnmulder)
 notes:
   - Tested against Zyxel VMG8825-T50
-  # - Configuration is merged using the 'mac_addr' value and not the 'index' value
 options:
   config:
     description: The provided configuration
@@ -44,7 +43,7 @@ options:
         choices:
           - TCP
           - UDP
-          - TCP_UDP
+          - ALL  # TCP/UDP
         default: TCP
       description:
         description:

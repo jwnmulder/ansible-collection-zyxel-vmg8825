@@ -39,7 +39,7 @@ class Nat_port_forwardsArgs(object):  # pylint: disable=R0903
                 "enable": {"type": "bool", "default": True},
                 "protocol": {
                     "type": "str",
-                    "choices": ["TCP", "UDP", "TCP_UDP"],
+                    "choices": ["TCP", "UDP", "ALL"],
                     "default": "TCP",
                 },
                 "description": {"type": "str", "required": True},

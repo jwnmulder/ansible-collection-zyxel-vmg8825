@@ -83,7 +83,7 @@ class Static_dhcp(ResourceModule):
             entry.get("mac_addr") or entry.get("index"): entry for entry in self.have
         }
 
-        # if empty, populate 'index' based based on haved
+        # if empty, populate 'index' based on haved
         for key, value in wantd.items():
             have = haved.get(key)
             have_index = have.get("index") if have else None

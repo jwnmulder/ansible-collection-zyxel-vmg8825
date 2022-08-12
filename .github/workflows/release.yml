@@ -36,7 +36,18 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install wheel
-          python -m pip install ansible-core
+          python -m pip install ansible-core antsibull-changelog
+
+      - name: Ensure that there is a changelog for a matching version in `galaxy.yml
+        id: version
+        run: |
+          antsibull-changelog release --version=${{ steps.version.outputs.version }}
+
+          changelog_status=$(git status CHANGELOG.rst --porcelain)
+          if [[ ! -z "${changelog_status}" ]]; then
+            echo "CHANGELOG.rst not up-to-date for release ${{ steps.version.outputs.version }}"
+            echo "Run 'antsibull-changelog release' first"
+          fi
 
       - name: Build ansible collection
         run: |
