@@ -50,6 +50,7 @@ options:
     elements: str
     choices:
       - all
+      - firewall
       - firewall_acls
       - nat_port_forwards
       - static_dhcp
