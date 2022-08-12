@@ -1,0 +1,2 @@
+bugfixes:
+  - nat_port_forwards - fixed TCP/UDP protocol option. The option 'TCP_UDP' was invalid and is now corrected to 'ALL'

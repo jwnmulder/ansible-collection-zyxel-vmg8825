@@ -5,24 +5,6 @@ Zyxel VMG8825 Release Notes
 .. contents:: Topics
 
 
-v0.3.0
-======
-
-Release Summary
----------------
-
-Added zyxel_vmg8825_firewall_acls module and some minor bugfixes
-
-Bugfixes
---------
-
-- Fixed TCP/UDP protocol option for nat_port_forwards. The option 'TCP_UDP' was invalid and is now corrected to 'ALL'
-
-New Modules
------------
-
-- zyxel_vmg8825_firewall_acls - Manages firewall ACL entries of zyxel_vmg8825
-
 v0.2.0
 ======
 
@@ -44,9 +26,17 @@ Release Summary
 
 Initial release containing the zyxel_vmg8825_static_dhcp module
 
+New Plugins
+-----------
+
+Httpapi
+~~~~~~~
+
+- zyxel_vmg8825 - HttpApi Plugin for Zyxel VMG 8825
+
 New Modules
 -----------
 
 - zyxel_vmg8825_dal_rpc - Zyxel Module for interacting with the Zyxel DAL API
-- zyxel_vmg8825_facts - Get facts about zyxel_vmg8825 devices
+- zyxel_vmg8825_facts - Get facts about zyxel_vmg8825 devices.
 - zyxel_vmg8825_static_dhcp - Manages static_dhcp entries of zyxel_vmg8825

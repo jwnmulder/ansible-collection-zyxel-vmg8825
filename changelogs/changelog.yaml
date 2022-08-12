@@ -4,31 +4,26 @@ releases:
     changes:
       release_summary: Initial release containing the zyxel_vmg8825_static_dhcp module
     modules:
-      - description: Zyxel Module for interacting with the Zyxel DAL API
-        name: zyxel_vmg8825_dal_rpc
-        namespace: ""
-      - description: Get facts about zyxel_vmg8825 devices
-        name: zyxel_vmg8825_facts
-        namespace: ""
-      - description: Manages static_dhcp entries of zyxel_vmg8825
-        name: zyxel_vmg8825_static_dhcp
-        namespace: ""
-    release_date: "2021-10-17"
+    - description: Zyxel Module for interacting with the Zyxel DAL API
+      name: zyxel_vmg8825_dal_rpc
+      namespace: ''
+    - description: Get facts about zyxel_vmg8825 devices.
+      name: zyxel_vmg8825_facts
+      namespace: ''
+    - description: Manages static_dhcp entries of zyxel_vmg8825
+      name: zyxel_vmg8825_static_dhcp
+      namespace: ''
+    plugins:
+      httpapi:
+      - description: HttpApi Plugin for Zyxel VMG 8825
+        name: zyxel_vmg8825
+        namespace: null
+    release_date: '2021-10-17'
   0.2.0:
     changes:
       release_summary: Added zyxel_vmg8825_nat_port_forwards module
     modules:
-      - description: Manages nat port forward entries of zyxel_vmg8825
-        name: zyxel_vmg8825_nat_port_forwards
-        namespace: ""
-    release_date: "2021-10-30"
-  0.3.0:
-    changes:
-      release_summary: Added zyxel_vmg8825_firewall_acls module and some minor bugfixes
-      bugfixes:
-        - Fixed TCP/UDP protocol option for nat_port_forwards. The option 'TCP_UDP' was invalid and is now corrected to 'ALL'
-    modules:
-      - description: Manages firewall ACL entries of zyxel_vmg8825
-        name: zyxel_vmg8825_firewall_acls
-        namespace: ""
-    release_date: "2022-08-11"
+    - description: Manages nat port forward entries of zyxel_vmg8825
+      name: zyxel_vmg8825_nat_port_forwards
+      namespace: ''
+    release_date: '2021-10-30'
