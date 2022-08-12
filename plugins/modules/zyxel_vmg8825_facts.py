@@ -50,8 +50,9 @@ options:
     elements: str
     choices:
       - all
-      - static_dhcp
+      - firewall_acls
       - nat_port_forwards
+      - static_dhcp
 """
 
 EXAMPLES = """

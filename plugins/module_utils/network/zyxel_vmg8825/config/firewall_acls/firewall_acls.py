@@ -1,6 +1,6 @@
 #
 # -*- coding: utf-8 -*-
-# Copyright 2021
+# Copyright 2022
 # GNU General Public License v3.0+
 # (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 #
@@ -10,7 +10,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 """
-The zyxel_vmg8825_nat_port_forwards config file.
+The zyxel_vmg8825_firewall_acls config file.
 It is in this file where the current configuration (as dict)
 is compared to the provided configuration (as dict) and the command set
 necessary to bring the current configuration to its desired end-state is
@@ -29,8 +29,8 @@ from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.r
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.facts.facts import (
     Facts,
 )
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.rm_templates.nat_port_forwards import (
-    Nat_port_forwardsTemplate,
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.rm_templates.firewall_acls import (
+    Firewall_aclsTemplate,
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.utils import (
     equal_dicts,
@@ -42,18 +42,18 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zy
 logger = logging.getLogger(__name__)
 
 
-class Nat_port_forwards(ResourceModule):
+class Firewall_acls(ResourceModule):
     """
-    The zyxel_vmg8825_nat_port_forwards config class
+    The zyxel_vmg8825_firewall_acls config class
     """
 
     def __init__(self, module):
-        super(Nat_port_forwards, self).__init__(
+        super(Firewall_acls, self).__init__(
             empty_fact_val={},
             facts_module=Facts(module),
             module=module,
-            resource="nat_port_forwards",
-            tmplt=Nat_port_forwardsTemplate(),
+            resource="firewall_acls",
+            tmplt=Firewall_aclsTemplate(),
         )
         self.parsers = []
 
@@ -73,24 +73,22 @@ class Nat_port_forwards(ResourceModule):
         """Generate configuration commands to send based on
         want, have and desired state.
         """
-
-        # If mac_addr is empty, it means we got an empty string back from our device.
+        # If name is empty, it means we got an empty string back from our device.
         # This does happen sometimes after an invalid entry was sent.
-        wantd = {
-            entry.get("external_port_start") or entry.get("index"): entry
-            for entry in self.want
-        }
-        haved = {
-            entry.get("external_port_start") or entry.get("index"): entry
-            for entry in self.have
-        }
+        wantd = {entry.get("name") or entry.get("index"): entry for entry in self.want}
+        haved = {entry.get("name") or entry.get("index"): entry for entry in self.have}
 
-        # if empty, populate 'index' based on haved
+        # populate 'index' and 'order' based on haved if not set in wantd
         for key, value in wantd.items():
             have = haved.get(key)
+
             have_index = have.get("index") if have else None
             if have_index and not value.get("index"):
                 value["index"] = have_index
+
+            have_order = have.get("order") if have else None
+            if have_order and not value.get("order"):
+                value["order"] = have_order
 
         # if state is merged, merge want onto have and then compare
         if self.state == "merged":
@@ -114,15 +112,15 @@ class Nat_port_forwards(ResourceModule):
         """Leverages the base class `compare()` method and
         populates the list of commands to be run by comparing
         the `want` and `have` data with the `parsers` defined
-        for the nat_port_forwards network resource.
+        for the Firewall_acls network resource.
         """
         # logger.debug("compare, want=%s, have=%s", want, have)
 
         # if both 'have' and 'want' are set, they have the same PK
         # if dict values differ, an update is needed
-        if want and have and not equal_dicts(want, have, ["index"]):
+        if want and have and not equal_dicts(want, have, ["index", "order"]):
             self.add_zyxel_dal_command(
-                "PUT", rm_templates.nat_port_forwards.to_dal_object(want)
+                "PUT", rm_templates.firewall_acls.to_dal_object(want)
             )
 
         # if only 'have' is set, delete based on index
@@ -132,7 +130,7 @@ class Nat_port_forwards(ResourceModule):
         # if only 'want' is set, inset new
         if want and not have:
             self.add_zyxel_dal_command(
-                "POST", rm_templates.nat_port_forwards.to_dal_object(want)
+                "POST", rm_templates.firewall_acls.to_dal_object(want)
             )
 
     def add_zyxel_dal_command(self, method, data=None, oid_index=None):
@@ -143,7 +141,7 @@ class Nat_port_forwards(ResourceModule):
         else:
 
             request = {
-                "oid": rm_templates.nat_port_forwards.oid(),
+                "oid": rm_templates.firewall_acls.oid(),
                 "method": method,
             }
 

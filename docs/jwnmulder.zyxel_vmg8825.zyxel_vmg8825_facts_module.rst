@@ -46,8 +46,9 @@ Parameters
                 <td>
                         <ul style="margin: 0; padding: 0"><b>Choices:</b>
                                     <li>all</li>
-                                    <li>static_dhcp</li>
+                                    <li>firewall_acls</li>
                                     <li>nat_port_forwards</li>
+                                    <li>static_dhcp</li>
                         </ul>
                 </td>
                 <td>

@@ -26,9 +26,17 @@ Release Summary
 
 Initial release containing the zyxel_vmg8825_static_dhcp module
 
+New Plugins
+-----------
+
+Httpapi
+~~~~~~~
+
+- zyxel_vmg8825 - HttpApi Plugin for Zyxel VMG 8825
+
 New Modules
 -----------
 
 - zyxel_vmg8825_dal_rpc - Zyxel Module for interacting with the Zyxel DAL API
-- zyxel_vmg8825_facts - Get facts about zyxel_vmg8825 devices
+- zyxel_vmg8825_facts - Get facts about zyxel_vmg8825 devices.
 - zyxel_vmg8825_static_dhcp - Manages static_dhcp entries of zyxel_vmg8825

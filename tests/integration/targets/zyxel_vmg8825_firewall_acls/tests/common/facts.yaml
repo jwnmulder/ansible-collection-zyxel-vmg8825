@@ -1,0 +1,19 @@
+---
+- debug: msg="START common/facts on connection={{ ansible_connection }}"
+
+- name: zyxel_vmg8825_facts
+  zyxel_vmg8825_facts:
+    gather_subset:
+      - '!all'
+      - '!min'
+    gather_network_resources:
+      - firewall_acls
+  register: result
+
+- assert:
+    that:
+      - "result.changed == false"
+      - "result.ansible_facts.ansible_net_gather_network_resources[0] == 'firewall_acls'"
+      - "result.ansible_facts.ansible_network_resources.firewall_acls is defined"
+
+- debug: msg="END common/facts on connection={{ ansible_connection }}"
