@@ -5,6 +5,31 @@ Zyxel VMG8825 Release Notes
 .. contents:: Topics
 
 
+v0.3.0
+======
+
+Release Summary
+---------------
+
+Added zyxel_vmg8825_firewall and zyxel_vmg8825_firewall_acls modules and some minor bugfixes
+
+Minor Changes
+-------------
+
+- Added new firewall module
+- Added new firewall_acls module
+
+Bugfixes
+--------
+
+- nat_port_forwards - fixed TCP/UDP protocol option. The option 'TCP_UDP' was invalid and is now corrected to 'ALL'
+
+New Modules
+-----------
+
+- zyxel_vmg8825_firewall - Manages firewall config of zyxel_vmg8825
+- zyxel_vmg8825_firewall_acls - Manages firewall ACL entries of zyxel_vmg8825
+
 v0.2.0
 ======
 
