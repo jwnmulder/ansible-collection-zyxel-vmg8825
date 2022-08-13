@@ -27,11 +27,17 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zy
     Firewall_aclsFacts,
 )
 
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.facts.firewall.firewall import (
+    FirewallFacts,
+)
+
+
 FACT_LEGACY_SUBSETS = {}
 FACT_RESOURCE_SUBSETS = dict(
     static_dhcp=Static_dhcpFacts,
     nat_port_forwards=Nat_port_forwardsFacts,
     firewall_acls=Firewall_aclsFacts,
+    firewall=FirewallFacts,
 )
 
 

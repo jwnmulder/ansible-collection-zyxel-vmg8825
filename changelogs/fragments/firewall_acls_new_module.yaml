@@ -1,6 +1,2 @@
 minor_changes:
-  - Added firewall_acls module
-# modules:
-#   - description: Manages firewall ACL entries of zyxel_vmg8825
-#     name: zyxel_vmg8825_firewall_acls
-#     namespace: ""
+  - Added new firewall_acls module

@@ -1,0 +1,68 @@
+module: zyxel_vmg8825_firewall
+short_description: "Manages firewall config of zyxel_vmg8825"
+description: "Manages firewall config of zyxel_vmg8825"
+version_added: "0.3.0"
+author: Jan-Willem Mulder (@jwnmulder)
+notes:
+  - Tested against Zyxel VMG8825-T50
+options:
+  config:
+    description: The provided configuration
+    type: dict
+    suboptions:
+      ipv4_enabled:
+        description:
+          - IPv4 Firewall
+          - Zyxel parameter - IPv4_Enable
+        type: bool
+      ipv6_enabled:
+        description:
+          - IPv6 Firewall
+          - Zyxel parameter - IPv6_Enable
+        type: bool
+      dos_enabled:
+        description:
+          - Dos Protection Blocking
+          - Zyxel parameter - enableDos
+        type: bool
+      level:
+        description:
+          - Zyxel Firewall level
+          - |
+            I(level=Off):
+            LAN to WAN - allow access to all internet services,
+            WAN to LAN - allow access from other computers on the internet
+          - |
+            I(level=Low):
+            LAN to WAN - allow access to all internet services,
+            WAN to LAN - block access from other computers on the internet
+          - |
+            I(level=High):
+            LAN to WAN - block access to all internet services,
+            WAN to LAN - block access from other computers on the internet.
+            When the security level is set to "High", access to the following services is allowed: Telnet,FTP,HTTP,HTTPS,DNS,IMAP,POP3,SMTP and IPv6 Ping
+          - Zyxel parameter - Level_GUI
+        type: str
+        choices:
+          - "Off"
+          - "Low"
+          - "High"
+  running_config:
+    description:
+      - This option is used only with state I(parsed).
+      - The state I(parsed) reads the configuration from C(running_config) option and
+        transforms it into Ansible structured data as per the resource module's argspec
+        and the value is then returned in the I(parsed) key within the result.
+    type: str
+  state:
+    description:
+      - The state the configuration should be left in
+    type: str
+    choices:
+      - merged
+      - replaced
+      - overridden
+      - gathered
+      - rendered
+      - parsed
+    default: merged

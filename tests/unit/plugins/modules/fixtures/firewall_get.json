@@ -1,0 +1,13 @@
+{
+    "result": "ZCFG_SUCCESS",
+    "ReplyMsg": "enableDos",
+    "ReplyMsgMultiLang": "",
+    "Object": [
+        {
+            "IPv4_Enable": true,
+            "IPv6_Enable": true,
+            "enableDos": true,
+            "Level_GUI": "Low"
+        }
+    ]
+}
