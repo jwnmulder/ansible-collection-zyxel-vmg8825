@@ -7,7 +7,9 @@
     "github>whitesource/merge-confidence:beta"
   ],
 
-  "ignorePaths": [],
+  "ignorePaths": [
+    "rm_builder/requirements.txt"
+  ],
 
   "vulnerabilityAlerts": {
     "addLabels": ["security"]
