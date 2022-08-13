@@ -23,24 +23,40 @@ notes:
 options:
   config:
     description: The provided configuration
-    type: list
-    elements: dict
+    type: dict
     suboptions:
       ipv4_enabled:
         description:
-          - IPv4_Enable
+          - IPv4 Firewall
+          - Zyxel parameter - IPv4_Enable
         type: bool
       ipv6_enabled:
         description:
-          - IPv6_Enable
+          - IPv6 Firewall
+          - Zyxel parameter - IPv6_Enable
         type: bool
       dos_enabled:
         description:
-          - enableDos
+          - Dos Protection Blocking
+          - Zyxel parameter - enableDos
         type: bool
       level:
         description:
-          - Level_GUI
+          - Zyxel Firewall level
+          - |
+            I(level=Off):
+            LAN to WAN - allow access to all internet services,
+            WAN to LAN - allow access from other computers on the internet
+          - |
+            I(level=Low):
+            LAN to WAN - allow access to all internet services,
+            WAN to LAN - block access from other computers on the internet
+          - |
+            I(level=High):
+            LAN to WAN - block access to all internet services,
+            WAN to LAN - block access from other computers on the internet.
+            When the security level is set to "High", access to the following services is allowed: Telnet,FTP,HTTP,HTTPS,DNS,IMAP,POP3,SMTP and IPv6 Ping
+          - Zyxel parameter - Level_GUI
         type: str
         choices:
           - "Off"
@@ -61,7 +77,6 @@ options:
       - merged
       - replaced
       - overridden
-      - deleted
       - gathered
       - rendered
       - parsed
@@ -69,7 +84,95 @@ options:
 """
 
 EXAMPLES = """
+# Using replaced
 
+# Before state:
+# -------------
+#
+# DAL?oid=firewall
+# {
+#    "IPv4_Enable": true,
+#    "IPv6_Enable": true,
+#    "enableDos": true,
+#    "Level_GUI": "Low"
+# }
+
+- name: Configure firewall
+  zyxel_vmg8825_firewall:
+    config:
+      ipv4_enabled: true
+      ipv6_enabled: true
+      dos_enabled: true
+      level: High
+    state: replaced
+
+# DAL?oid=firewall
+# {
+#    "IPv4_Enable": true,
+#    "IPv6_Enable": true,
+#    "enableDos": true,
+#    "Level_GUI": "High"
+# }
+
+# Using merged
+
+# Before state:
+# -------------
+#
+# DAL?oid=firewall
+# {
+#    "IPv4_Enable": true,
+#    "IPv6_Enable": true,
+#    "enableDos": true,
+#    "Level_GUI": "Low"
+# }
+
+- name: Configure firewall
+  zyxel_vmg8825_firewall:
+    config:
+      ipv4_enabled: true
+      ipv6_enabled: true
+      dos_enabled: true
+      level: High
+    state: merged
+
+# DAL?oid=firewall
+# {
+#    "IPv4_Enable": true,
+#    "IPv6_Enable": true,
+#    "enableDos": true,
+#    "Level_GUI": "High"
+# }
+
+# Using overridden
+
+# Before state:
+# -------------
+#
+# DAL?oid=firewall
+# {
+#    "IPv4_Enable": true,
+#    "IPv6_Enable": true,
+#    "enableDos": true,
+#    "Level_GUI": "Low"
+# }
+
+- name: Configure firewall
+  zyxel_vmg8825_firewall:
+    config:
+      ipv4_enabled: true
+      ipv6_enabled: true
+      dos_enabled: true
+      level: High
+    state: overridden
+
+# DAL?oid=firewall
+# {
+#    "IPv4_Enable": true,
+#    "IPv6_Enable": true,
+#    "enableDos": true,
+#    "Level_GUI": "High"
+# }
 """
 
 RETURN = """

@@ -32,8 +32,7 @@ class FirewallArgs(object):  # pylint: disable=R0903
 
     argument_spec = {
         "config": {
-            "type": "list",
-            "elements": "dict",
+            "type": "dict",
             "options": {
                 "ipv4_enabled": {"type": "bool"},
                 "ipv6_enabled": {"type": "bool"},
@@ -48,7 +47,6 @@ class FirewallArgs(object):  # pylint: disable=R0903
                 "merged",
                 "replaced",
                 "overridden",
-                "deleted",
                 "gathered",
                 "rendered",
                 "parsed",

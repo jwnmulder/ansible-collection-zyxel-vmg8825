@@ -37,15 +37,10 @@ def from_dal_object(dal_object):
 
     result = {}
 
-    ip_version = dal_object.get("IPVersion")
-    if ip_version is not None:
-
-        # Workaround for invalid Zyxel ACL router entries
-        ip_version = ip_version if ip_version >= 0 else 4
-
-        ip_version = str(ip_version).replace("IPv", "")
-        ip_version = f"IPv{ip_version}"
-        result["ip_version"] = ip_version
+    set_when_not_none(result, "ipv4_enabled", dal_object.get("IPv4_Enable"))
+    set_when_not_none(result, "ipv6_enabled", dal_object.get("IPv6_Enable"))
+    set_when_not_none(result, "dos_enabled", dal_object.get("enableDos"))
+    set_when_not_empty(result, "level", dal_object.get("Level_GUI"))
 
     return result
 
@@ -54,8 +49,19 @@ def to_dal_object(ansible_object):
 
     result = {}
 
-    ip_version = ansible_object.get("ip_version")
-    if ip_version is not None:
-        result["IPVersion"] = ip_version
+    set_when_not_none(result, "IPv4_Enable", ansible_object.get("ipv4_enabled"))
+    set_when_not_none(result, "IPv6_Enable", ansible_object.get("ipv6_enabled"))
+    set_when_not_none(result, "enableDos", ansible_object.get("dos_enabled"))
+    set_when_not_empty(result, "Level_GUI", ansible_object.get("level"))
 
     return result
+
+
+def set_when_not_none(d, key, value):
+    if value is not None:
+        d[key] = value
+
+
+def set_when_not_empty(d, key, value):
+    if value is not None and len(value) > 0:
+        d[key] = value

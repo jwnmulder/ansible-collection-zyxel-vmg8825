@@ -19,7 +19,6 @@ created.
 
 import logging
 
-from ansible.module_utils.six import iteritems
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
     dict_merge,
 )
@@ -66,32 +65,24 @@ class Firewall(ResourceModule):
         if self.state not in ["parsed", "gathered"]:
             self.generate_commands()
             self.run_commands()
+
         return self.result
 
     def generate_commands(self):
         """Generate configuration commands to send based on
         want, have and desired state.
         """
-        wantd = {entry["name"]: entry for entry in self.want}
-        haved = {entry["name"]: entry for entry in self.have}
 
-        # if state is merged, merge want onto have and then compare
-        if self.state == "merged":
-            wantd = dict_merge(haved, wantd)
+        # Only full configuration updates are supported by the Zyxel router
+        # to support only updating one setting at a time, we merge the existing
+        # on router config first
+        wanted = dict_merge(self.have, self.want)
 
-        # if state is deleted, empty out wantd and set haved to wantd
-        if self.state == "deleted":
-            haved = {k: v for k, v in iteritems(haved) if k in wantd or not wantd}
-            wantd = {}
-
-        # remove superfluous config for overridden and deleted
-        if self.state in ["overridden", "deleted"]:
-            for k, have in iteritems(haved):
-                if k not in wantd:
-                    self._compare(want={}, have=have)
-
-        for k, want in iteritems(wantd):
-            self._compare(want=want, have=haved.pop(k, {}))
+        if self.state == "rendered":
+            data = rm_templates.firewall.to_dal_object(wanted)
+            self.commands.append(data)
+        else:
+            self._compare(want=wanted, have=self.have)
 
     def _compare(self, want, have):
         """Leverages the base class `compare()` method and
@@ -103,53 +94,15 @@ class Firewall(ResourceModule):
 
         # if both 'have' and 'want' are set, they have the same PK
         # if dict values differ, an update is needed
-        if want and have and not equal_dicts(want, have, ["index", "order"]):
-            self.add_zyxel_dal_command(
-                "PUT", rm_templates.firewall_acls.to_dal_object(want)
-            )
+        if want and have and not equal_dicts(want, have, []):
+            self.add_zyxel_dal_command("PUT", rm_templates.firewall.to_dal_object(want))
 
-        # if only 'have' is set, delete based on index
-        if not want and have:
-            self.add_zyxel_dal_command("DELETE", oid_index=have["index"])
+    def add_zyxel_dal_command(self, method, data):
 
-        # if only 'want' is set, inset new
-        if want and not have:
-            self.add_zyxel_dal_command(
-                "POST", rm_templates.firewall_acls.to_dal_object(want)
-            )
+        request = {
+            "oid": rm_templates.firewall.oid(),
+            "method": method,
+            "data": data,
+        }
 
-    def add_zyxel_dal_command(self, method, data=None, oid_index=None):
-
-        if self.state == "rendered":
-            self.commands.append(data)
-
-        else:
-
-            request = {
-                "oid": rm_templates.firewall_acls.oid(),
-                "method": method,
-            }
-
-            if data:
-                request["data"] = data
-
-            if oid_index:
-                request["oid_index"] = oid_index
-
-            if self.commands and method == "DELETE":
-                # deletes must happen first and in reverse orde
-                # higest indexes are to be deleted first as indexes
-                # keep changing while adding or deleting entries on a Zyxel device
-                closests_higher = None
-                for x in self.commands:
-                    if x["method"] == "DELETE":
-                        index = x["oid_index"]
-                        if index > oid_index:
-                            closests_higher = x
-
-                index = 0
-                if closests_higher:
-                    index = self.commands.index(closests_higher) + 1
-                self.commands.insert(index, request)
-            else:
-                self.commands.append(request)
+        self.commands.append(request)

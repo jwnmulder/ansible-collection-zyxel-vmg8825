@@ -1,0 +1,45 @@
+---
+- debug:
+    msg: "Start round trip integration tests on connection={{ ansible_connection }}"
+    # round trip test case.
+    # This involves a merge operation,
+    # followed by gather_facts,
+    # a merge update with additional configuration,
+    # and then reverting back to the base configuration using the previously gathered facts with the state set to overridden.
+- block:
+    - name: Get base config from test device
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_firewall:
+        state: gathered
+      register: base_config
+
+    - name: Gather firewall facts
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_facts:
+        gather_subset:
+          - "!all"
+          - "!min"
+        gather_network_resources:
+          - firewall
+
+    - name: Apply test configuration (this will be reverted)
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_firewall:
+        config:
+          level: "High"
+        state: merged
+      register: result
+
+    - name: Assert that changes are applied
+      assert:
+        that:
+          - "result.changed == true"
+
+    - name: Revert back to base configuration
+      jwnmulder.zyxel_vmg8825.zyxel_vmg8825_firewall:
+        config: "{{ ansible_facts['network_resources']['firewall'] }}"
+        state: overridden
+      register: revert
+
+    - name: Assert that config was reverted
+      assert:
+        that:
+          - result.changed == True
+          - "{{ base_config['gathered'] == revert['after'] }}"

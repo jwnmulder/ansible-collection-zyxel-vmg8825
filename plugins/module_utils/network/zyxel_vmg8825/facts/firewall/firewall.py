@@ -14,15 +14,16 @@ for a given resource, parsed, and the facts tree is populated
 based on the configuration.
 """
 
+import json
 
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common import (
     utils,
 )
-from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.rm_templates.firewall import (
-    FirewallTemplate,
-)
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.argspec.firewall.firewall import (
     FirewallArgs,
+)
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.rm_templates import (
+    firewall,
 )
 
 
@@ -43,25 +44,24 @@ class FirewallFacts(object):
         :rtype: dictionary
         :returns: facts
         """
-        facts = {}
-        objs = []
 
         if not data:
-            data = connection.get()
+            data = connection.dal_get(oid=firewall.oid())
 
-        # parse native config using the Firewall template
-        firewall_parser = FirewallTemplate(lines=data.splitlines(), module=self._module)
-        objs = list(firewall_parser.parse().values())
+        if isinstance(data, str):
+            data = json.loads(data)
+
+        obj = firewall.from_dal_object(dal_object=data[0])
 
         ansible_facts["ansible_network_resources"].pop("firewall", None)
 
-        params = utils.remove_empties(
-            firewall_parser.validate_config(
-                self.argument_spec, {"config": objs}, redact=True
-            )
-        )
+        facts = {}
+        if obj:
+            facts["firewall"] = {}
+            params = utils.validate_config(self.argument_spec, {"config": obj})
+            config = params["config"]
+            facts["firewall"] = config
 
-        facts["firewall"] = params["config"]
         ansible_facts["ansible_network_resources"].update(facts)
 
         return ansible_facts

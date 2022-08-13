@@ -1,0 +1,18 @@
+---
+- debug: msg="START common/ensure_not_changed on connection={{ ansible_connection }}"
+
+- name: grab facts
+  zyxel_vmg8825_facts:
+    gather_subset: min
+    gather_network_resources: firewall
+
+- name: Update firewall with same info
+  zyxel_vmg8825_firewall:
+    config: "{{ ansible_network_resources['firewall'] }}"
+  register: result
+
+- name: Ensure config did not change.
+  assert:
+    that: not result.changed
+
+- debug: msg="END common/ensure_not_changed on connection={{ ansible_connection }}"
