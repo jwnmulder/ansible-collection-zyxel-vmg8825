@@ -39,7 +39,6 @@ jobs:
           python -m pip install ansible-core antsibull-changelog
 
       - name: Ensure that there is a changelog for a matching version in `galaxy.yml
-        id: version
         run: |
           antsibull-changelog release --version=${{ steps.version.outputs.version }}
 
