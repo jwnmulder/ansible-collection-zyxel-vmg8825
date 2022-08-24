@@ -15,7 +15,7 @@
             direction: LAN_TO_WAN
             ip_version: IPv4
             source_ip: "{{ test_zyxel_ip_prefix }}.0"
-            source_mask: "24" 
+            source_mask: "24"
             dest_ip: "1.0.0.1"
             target: Accept
           - &test_entry_icmp
@@ -24,7 +24,7 @@
             direction: LAN_TO_WAN
             ip_version: IPv4
             source_ip: "{{ test_zyxel_ip_prefix }}.0"
-            source_mask: "24" 
+            source_mask: "24"
             dest_ip: "1.0.0.1"
             target: Accept
           - &test_entry_tcp_udp
@@ -33,7 +33,7 @@
             direction: LAN_TO_WAN
             ip_version: IPv4
             source_ip: "{{ test_zyxel_ip_prefix }}.0"
-            source_mask: "24" 
+            source_mask: "24"
             dest_ip: "1.0.0.1"
             target: Accept
           - &test_entry_port_range
@@ -42,7 +42,7 @@
             direction: LAN_TO_WAN
             ip_version: IPv4
             source_ip: "{{ test_zyxel_ip_prefix }}.0"
-            source_mask: "24" 
+            source_mask: "24"
             dest_ip: "1.0.0.1"
             source_port: 1000
             source_port_range_max: 1100

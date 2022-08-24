@@ -11,7 +11,7 @@
       jwnmulder.zyxel_vmg8825.zyxel_vmg8825_static_dhcp:
         config: &test_entries
           - br_wan: Default
-            enable: False
+            enable: true
             mac_addr: "01:01:01:01:01:02"
             ip_addr: "{{ test_zyxel_ip_prefix }}.123"
         state: deleted

@@ -11,7 +11,7 @@
       jwnmulder.zyxel_vmg8825.zyxel_vmg8825_nat_port_forwards:
         config:
           - &test_entry
-            enable: True
+            enable: true
             protocol: TCP
             description: Ansible network-integration test
             interface: IP.Interface.7

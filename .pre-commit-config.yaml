@@ -57,6 +57,19 @@ repos:
           - --ignore=E501,E402,W503
         files: ^(plugins|tests)/.+\.py$
 
+  - repo: https://github.com/ansible/ansible-lint.git
+    rev: v6.4.0
+    hooks:
+      - id: ansible-lint
+        files: tests/integration/.*\.(yaml|yml)$
+        args:
+          - --force-color
+          - -v
+          - tests/integration
+        always_run: false
+        additional_dependencies:
+          - ansible
+
   - repo: https://github.com/ansible-network/collection_prep
     rev: 1.0.0
     hooks:
