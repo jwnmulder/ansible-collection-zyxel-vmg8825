@@ -2,7 +2,7 @@ ansible-core==2.13.4
 # https://github.com/ansible/ansible/archive/devel.tar.gz
 
 ansible-lint==6.7.0
-antsibull-docs==1.6.1
+antsibull-docs==1.7.0
 antsibull-changelog==0.16.0
 
 # For unit testing in vscode
