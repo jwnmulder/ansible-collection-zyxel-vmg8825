@@ -65,10 +65,9 @@ repos:
         args:
           - --force-color
           - -v
+          - --warn-list=name[missing]
           - tests/integration
         always_run: false
-        additional_dependencies:
-          - ansible
 
   - repo: https://github.com/ansible-network/collection_prep
     rev: 1.0.0

@@ -1,4 +1,4 @@
 ---
-- include: httpapi.yaml
+- ansible.builtin.include_tasks: httpapi.yaml
   tags:
     - httpapi
