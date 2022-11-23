@@ -46,7 +46,7 @@ repos:
         files: ^(plugins|tests)/.+\.py$
 
   - repo: https://github.com/pycqa/flake8
-    rev: 5.0.4
+    rev: 6.0.0
     hooks:
       - id: flake8
         additional_dependencies:
