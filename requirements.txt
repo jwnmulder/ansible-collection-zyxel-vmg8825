@@ -1,4 +1,4 @@
-ansible-core==2.14.0
+ansible-core==2.14.1
 # https://github.com/ansible/ansible/archive/devel.tar.gz
 
 ansible-lint==6.10.0
