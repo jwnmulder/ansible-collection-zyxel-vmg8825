@@ -6,9 +6,7 @@
 
 The Ansible Zyxel collection includes a variety of Ansible content to help automate the management of Zyxel VMG8825 routers.
 
-This collection has been tested against Zyxel VMG8825-T50.
-
-For now only the `zyxel_vmg8825_nat_port_forwards` and `zyxel_vmg8825_static_dhcp` modules have been tested. Other modules are work in progress
+This collection has been tested against Zyxel VMG8825-T50. The modules `zyxel_vmg8825_ping` and `zyxel_vmg8825_dal_rpc` are not thoroughly tested and should be considered alpha quality.
 
 <!--start requires_ansible-->
 ## Ansible version compatibility
