@@ -14,7 +14,7 @@ fi
 
 # We might already be in a python virtual venv, in that case, skip upgrading pip
 if [ ! -v VIRTUAL_ENV ]; then
-    python3 -m pip install --upgrade pip
+    python3 -m pip install --isolated --upgrade pip
 fi
 
 if [ ! -f "${VIRTUAL_ENV_DIR}/bin/activate" ]; then
@@ -24,7 +24,7 @@ fi
 # shellcheck disable=SC1091
 source "${VIRTUAL_ENV_DIR}/bin/activate"
 
-python3 -m pip install --upgrade wheel
-python3 -m pip install --upgrade -r "${ROOT_DIR}/requirements.txt"
+python3 -m pip install --require-virtualenv --upgrade wheel
+python3 -m pip install --require-virtualenv --upgrade -r "${ROOT_DIR}/requirements.txt"
 
 deactivate
