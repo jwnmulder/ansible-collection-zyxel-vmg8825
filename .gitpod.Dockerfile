@@ -8,7 +8,7 @@ RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends \
 
 USER gitpod
 
-ARG PYTHON_VERSION=3.9.2
+ARG PYTHON_VERSION=3.10.4
 RUN pyenv install ${PYTHON_VERSION} && pyenv global ${PYTHON_VERSION}
 
 RUN echo 'eval "$(direnv hook bash)"' > /home/gitpod/.bashrc.d/300-direnv.bashrc
