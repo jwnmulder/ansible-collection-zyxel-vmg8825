@@ -58,7 +58,7 @@ repos:
         files: ^(plugins|tests)/.+\.py$
 
   - repo: https://github.com/ansible/ansible-lint.git
-    rev: v6.14.3
+    rev: v6.14.4
     hooks:
       - id: ansible-lint
         files: tests/integration/.*\.(yaml|yml)$
