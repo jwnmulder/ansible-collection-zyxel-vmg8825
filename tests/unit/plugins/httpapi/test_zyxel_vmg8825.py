@@ -70,8 +70,7 @@ class TestZyxelHttpApi(unittest.TestCase):
 
         assert (
             "Server returned response without token info during connection"
-            " authentication"
-            in str(res.exception)
+            " authentication" in str(res.exception)
         )
 
     @pytest.mark.skip(

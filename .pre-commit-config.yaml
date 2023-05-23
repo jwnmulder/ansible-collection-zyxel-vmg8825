@@ -42,7 +42,6 @@ repos:
         args:
           - --safe
           - --quiet
-          - --experimental-string-processing
         files: ^(plugins|tests)/.+\.py$
 
   - repo: https://github.com/pycqa/flake8
