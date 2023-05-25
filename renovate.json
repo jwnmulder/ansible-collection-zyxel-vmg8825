@@ -4,7 +4,8 @@
     ":dependencyDashboard",
     "docker:enableMajor",
     ":enablePreCommit",
-    "github>whitesource/merge-confidence:beta"
+    "github>whitesource/merge-confidence:beta",
+    "github>jwnmulder/renovate-config"
   ],
 
   "ignorePaths": [
@@ -25,10 +26,6 @@
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true,
       "addLabels": ["automerge"]
-    },
-    {
-      "matchPackageNames": "psf/black",
-      "versioning": "pep440"
     }
   ],
 
