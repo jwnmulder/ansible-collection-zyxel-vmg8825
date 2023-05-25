@@ -27,21 +27,4 @@
       "addLabels": ["automerge"]
     }
   ],
-
-  "regexManagers": [
-    {
-      "fileMatch": ["(^|/)\\.pre-commit-config\\.yaml$"],
-      "matchStrings": [
-        "\\s*language:\\sdocker_image\n\\s*entry:\\s(?<depName>.*?):(?<currentValue>.*?)\\s.*"
-      ],
-      "datasourceTemplate": "docker"
-    },
-    {
-      "fileMatch": ["(^|/)\\.pre-commit-config\\.yaml$"],
-      "matchStrings": [
-        "\\s*- (?<depName>.*?)==(?<currentValue>.*?)\\s+#\\s+renovate: datasource=pypi\\s"
-      ],
-      "datasourceTemplate": "pypi"
-    }
-  ]
 }
