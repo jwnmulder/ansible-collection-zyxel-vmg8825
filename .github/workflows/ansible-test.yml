@@ -60,6 +60,7 @@ jobs:
             ansible.netcommon
             ansible.utils
           pull-request-change-detection: false
+          coverage: never
 
 ###
 # Unit tests (OPTIONAL)
@@ -101,6 +102,7 @@ jobs:
             ansible.netcommon
             ansible.utils
           pull-request-change-detection: false
+          coverage: never
 
 ###
 # Integration tests (RECOMMENDED)
@@ -172,6 +174,7 @@ jobs:
             ansible.netcommon
             ansible.utils
           pull-request-change-detection: false
+          coverage: never
 
 
   check:  # This job does nothing and is only used for the branch protection
