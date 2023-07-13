@@ -33,9 +33,6 @@ jobs:
     strategy:
       matrix:
         ansible:
-          - stable-2.10
-          - stable-2.11
-          - stable-2.12
           - stable-2.13
           - stable-2.14
           - stable-2.15
@@ -82,9 +79,6 @@ jobs:
       fail-fast: false
       matrix:
         ansible:
-          - stable-2.10
-          - stable-2.11
-          - stable-2.12
           - stable-2.13
           - stable-2.14
           - stable-2.15
@@ -137,12 +131,6 @@ jobs:
           # Add new versions announced in
           # https://github.com/ansible-collections/news-for-maintainers in a timely manner,
           # consider dropping testing against EOL versions and versions you don't support.
-          - ansible: stable-2.10
-            python: '3.9'
-          - ansible: stable-2.11
-            python: '3.9'
-          - ansible: stable-2.12
-            python: '3.9'
           - ansible: stable-2.13
             python: '3.9'
           - ansible: stable-2.13
