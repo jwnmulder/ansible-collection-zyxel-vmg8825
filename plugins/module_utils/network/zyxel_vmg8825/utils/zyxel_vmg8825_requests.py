@@ -8,7 +8,7 @@ import json
 import logging
 import os
 
-# import time
+from . import ZyxelSessionContext
 
 from ansible_collections.ansible.utils.plugins.module_utils.common.utils import (
     to_list,
@@ -20,6 +20,9 @@ from ansible.module_utils.connection import ConnectionError
 # pylint: disable-all
 # pyright: reportMissingImports=false
 from ansible.module_utils.six.moves.urllib.error import HTTPError
+
+from .zyxel_vmg8825_encryption import zyxel_encrypt_request, zyxel_decrypt_response
+
 
 logger = logging.getLogger(__name__)
 if os.environ.get("ANSIBLE_DEBUG") is not None:
@@ -44,9 +47,27 @@ class RequestsHandler(logging.Handler):
 logger.addHandler(RequestsHandler())
 
 
-class ZyxelHttpApiRequests(object):
-    def __init__(self, httpapi):
+class ZyxelRequests(object):
+    def __init__(self, httpapi, context: ZyxelSessionContext):
         self.httpapi = httpapi
+        self.context = context
+
+    def _ensure_encryption_context(self):
+
+        if self.context.encrypted_payloads == None:
+            info = self.httpapi.get_device_info()
+            self.context.encrypted_payloads = info["encrypted_payloads"] == True
+
+    def _prepare_zyxel_request(self, data):
+
+        self._ensure_encryption_context()
+
+        if self.context.encrypted_payloads:
+            request = zyxel_encrypt_request(data)
+        else:
+            request = data
+
+        return request
 
     def send_request(self, data, **message_kwargs):
         # Fixed headers for requests
@@ -71,7 +92,7 @@ class ZyxelHttpApiRequests(object):
         except HTTPError as exc:
             response = exc
             response_data = exc
-            return handle_response(method, path, response, response_data)
+            return self.handle_response(method, path, response, response_data)
 
         # # return response.status, to_text(response_data.getvalue())
         # except Exception as err:
@@ -82,7 +103,7 @@ class ZyxelHttpApiRequests(object):
         # handle_response (defined separately) will take the format returned by the device
         # and transform it into something more suitable for use by modules.
         # This may be JSON text to Python dictionaries, for example.
-        return handle_response(method, path, response, response_data)
+        return self.handle_response(method, path, response, response_data)
 
     def send_dal_request(self, data, **message_kwargs):
 
@@ -92,10 +113,12 @@ class ZyxelHttpApiRequests(object):
 
         if oid:
             path = "/cgi-bin/DAL?oid=%s" % (oid)
-            if self.httpapi._sessionkey:
-                path += "&sessionkey=%s" % (self.httpapi._sessionkey)
+            if self.context.sessionkey:
+                path += "&sessionkey=%s" % (self.context.sessionkey)
             if oid_index:
                 path += "&Index=%s" % (oid_index)
+
+        data = self._prepare_zyxel_request(data)
 
         response_data, response_code = self.send_request(data, path=path, method=method)
 
@@ -194,41 +217,44 @@ class ZyxelHttpApiRequests(object):
 
         # return [resp for resp in to_list(responses) if resp != "{}"]
 
+    def handle_response(self, method, path, response, response_data):
 
-def handle_response(method, path, response, response_data):
+        response_code = response.code
+        content_type = response.headers.get("Content-Type")
+        if content_type != "application/json":
+            raise ConnectionError(
+                "Error while sending '%s' request to '%s'. Expected application/json"
+                " content-type, response_code=%s, content_type=%s"
+                % (method, path, response_code, content_type),
+                code=response_code,
+            )
 
-    response_code = response.code
-    content_type = response.headers.get("Content-Type")
-    if content_type != "application/json":
-        raise ConnectionError(
-            "Error while sending '%s' request to '%s'. Expected application/json"
-            " content-type, response_code=%s, content_type=%s"
-            % (method, path, response_code, content_type),
-            code=response_code,
+        response_data = response_data.read()
+        response_data = json.loads(response_data)
+
+        if self.context.encrypted_payloads:
+            response_data = zyxel_decrypt_response(response_data)
+
+        logger.debug(
+            "handle_response: %s, %s, %s, %s"
+            % (method, response_code, path, response_data)
         )
 
-    response_data = response_data.read()
-    response_data = json.loads(response_data)
+        if isinstance(response, HTTPError):
 
-    logger.debug(
-        "handle_response: %s, %s, %s, %s" % (method, response_code, path, response_data)
-    )
-
-    if isinstance(response, HTTPError):
-
-        if response_data:
-            if "errors" in response_data:
-                errors = response_data["errors"]["error"]
-                error_text = "\n".join((error["error-message"] for error in errors))
+            if response_data:
+                if "errors" in response_data:
+                    errors = response_data["errors"]["error"]
+                    error_text = "\n".join((error["error-message"] for error in errors))
+                else:
+                    error_text = response_data
             else:
-                error_text = response_data
-        else:
-            error_text = to_text(response)
+                error_text = to_text(response)
 
-        msg = "Server returned error response, code=%s, error_text=%s" % (
-            response_code,
-            error_text,
-        )
-        raise ConnectionError(msg, code=response_code)
+            msg = "Server returned error response, code=%s, error_text=%s" % (
+                response_code,
+                error_text,
+            )
+            raise ConnectionError(msg, code=response_code)
 
-    return response_data, response.code
+        return response_data, response.code

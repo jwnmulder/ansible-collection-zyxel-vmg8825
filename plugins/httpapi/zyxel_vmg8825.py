@@ -22,7 +22,8 @@ import os
 from ansible.plugins.httpapi import HttpApiBase
 
 from ..module_utils.network.zyxel_vmg8825.utils.zyxel_vmg8825_requests import (
-    ZyxelHttpApiRequests,
+    ZyxelSessionContext,
+    ZyxelRequests,
 )
 
 OPTIONS = {
@@ -60,10 +61,10 @@ class HttpApi(HttpApiBase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.requests = ZyxelHttpApiRequests(self)
+        self.context = ZyxelSessionContext()
+        self.requests = ZyxelRequests(self, self.context)
 
-        # self._device_info = None
-        self._sessionkey = None
+        self._device_info = None
 
     def update_auth(self, response, response_text):
 
@@ -90,15 +91,17 @@ class HttpApi(HttpApiBase):
             logger.debug("update_auth - response_data=%s", response_data)
 
             # if 'result' in response and response['result'] == 'ZCFG_SUCCESS':
-            if "sessionkey" in response_data:
-                self._sessionkey = response_data["sessionkey"]
-                sessionkey = self._sessionkey
+            sessionkey = response_data.get("sessionkey")
+            if sessionkey:
+                self.context.sessionkey = sessionkey
 
         cookie = response.info().get("Set-Cookie")
 
         if cookie or sessionkey:
             logger.debug(
-                "update_auth - sessionkey=%s, cookie=%s", self._sessionkey, cookie
+                "update_auth - sessionkey=%s, cookie=%s",
+                self.context.sessionkey,
+                cookie,
             )
 
         if cookie:
@@ -127,31 +130,39 @@ class HttpApi(HttpApiBase):
             data=data, path=login_path, method="POST"
         )
         logger.debug(
-            "login/response: response_code=%s, session_key=%s, response_data=%s",
+            "login/response: response_code=%s, context.session_key=%s, response_data=%s",
             response_code,
-            self._sessionkey,
+            self.context.sessionkey,
             response_data,
         )
 
     def logout(self):
         logger.debug(
-            "logout: _sessionkey=%s, connecion._auth=%s",
-            self._sessionkey,
+            "logout: context.sessionkey=%s, connecion._auth=%s",
+            self.context.sessionkey,
             self.connection._auth,
         )
 
-        if self._sessionkey:
+        if self.context.sessionkey:
             try:
                 self.send_request(
                     data=None,
-                    path="/cgi-bin/UserLogout?sessionkey=%s" % (self._sessionkey),
+                    path="/cgi-bin/UserLogout?sessionkey=%s"
+                    % (self.context.sessionkey),
                     method="POST",
                 )
             except Exception as e:
                 logger.debug("logout error: %s", e)
 
-        self._sessionkey = None
+        self.context.sessionkey = None
         self.connection._auth = None
+
+    def encrypted_payloads(self) -> bool:
+
+        info = self.get_device_info()
+        encrypted_payloads = info["encrypted_payloads"] == True
+
+        return encrypted_payloads
 
     def send_request(self, data, **message_kwargs):
         return self.requests.send_request(data, **message_kwargs)
@@ -167,8 +178,9 @@ class HttpApi(HttpApiBase):
         # self.connection.queue_message('vvvv', 'REST:%s:%s:%s\n%s' % (http_method, self.connection._url, title, msg))
 
     def get_device_info(self):
-        # if self._device_info:
-        # return self._device_info
+
+        if self._device_info:
+            return self._device_info
 
         device_info = {}
 
@@ -178,17 +190,31 @@ class HttpApi(HttpApiBase):
         )
         # data = json.loads(reply)
 
-        # device_info["network_os_version"] = data["version"]
+        software_version = response_data["SoftwareVersion"]
+        device_info["network_os_version"] = software_version
         device_info["network_os_model"] = response_data["ModelName"]
 
-        return device_info
-        # data = self.send_request("show hostname", output="json")
-        # data = json.loads(reply)
+        # Starting from an unknown version, HTTPS requests and responses became encrypted.
+        # This was only required for HTTP plain text communication before
+
+        # HTTP  + unecrpyted msg  : Never supported by Zyxel
+        # HTTPS + unencrypted msg : Was working on V5.50(ABPY.1)b16_20210525
+        # HTTP  + encrpyted msg   : Supported by Zyxel but not by this library
+        # HTTPS + encrypted msg   : Required starting from V5.50(ABPY.1)b21_20230112
+        software_version_major = int(software_version[1:2])
+        software_version_minor = int(software_version[3:5])
+        software_build = int(software_version[14:16])
+
+        device_info["encrypted_payloads"] = software_version_major > 5 or (
+            software_version_major == 5
+            and software_version_minor >= 50
+            and software_build >= 21
+        )
 
         # device_info["network_os_hostname"] = data["hostname"]
 
-        # self._device_info = device_info
-        # return self._device_info
+        self._device_info = device_info
+        return self._device_info
 
     def dal_get(self, oid):
         return self.requests.dal_get(oid)
