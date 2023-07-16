@@ -54,15 +54,15 @@ class ZyxelRequests(object):
 
     def _ensure_encryption_context(self):
 
-        if self.context.encrypted_payloads == None:
-            info = self.httpapi.get_device_info()
-            self.context.encrypted_payloads = info["encrypted_payloads"] == True
+        if self.httpapi.get_option("zyxel_encrypted_payloads") is None:
+            self.httpapi.encrypted_payloads()
+        # pass
 
     def _prepare_zyxel_request(self, data):
 
         self._ensure_encryption_context()
 
-        if self.context.encrypted_payloads:
+        if self.httpapi.get_option("zyxel_encrypted_payloads"):
             request = zyxel_encrypt_request(data)
         else:
             request = data
@@ -232,7 +232,7 @@ class ZyxelRequests(object):
         response_data = response_data.read()
         response_data = json.loads(response_data)
 
-        if self.context.encrypted_payloads:
+        if self.httpapi.get_option("zyxel_encrypted_payloads"):
             response_data = zyxel_decrypt_response(response_data)
 
         logger.debug(

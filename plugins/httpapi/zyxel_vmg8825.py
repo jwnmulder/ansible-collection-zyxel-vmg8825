@@ -58,8 +58,14 @@ logger.addHandler(RequestsHandler())
 
 
 class HttpApi(HttpApiBase):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, connection):
+        super().__init__(connection)
+
+        encrypted_payloads = connection.get_option("zyxel_encrypted_payloads")
+        if encrypted_payloads is None:
+            use_ssl = connection.get_option("use_ssl")
+            if use_ssl == False:
+                self.set_option("zyxel_encrypted_payloads", True)
 
         self.context = ZyxelSessionContext()
         self.requests = ZyxelRequests(self, self.context)
@@ -159,8 +165,38 @@ class HttpApi(HttpApiBase):
 
     def encrypted_payloads(self) -> bool:
 
+        # In certain situations, Zyxel devices use encrypted payloads for some
+        # requests and responses. If encryption is used depends on firmware versions
+        # and response types (200 reponses might be encrypted while 401 are not).
+
+        # Sometimes it can be determined based on ansible config. E.g. when overriding automatic
+        # detection or when HTTP is used
+        encrypted_payloads = self.get_option("zyxel_encrypted_payloads")
+        if encrypted_payloads is not None:
+            return encrypted_payloads
+
+        # In all other cases, lets try some dynamic detection methods
         info = self.get_device_info()
-        encrypted_payloads = info["encrypted_payloads"] == True
+
+        software_version = info["network_os_version"]
+        # Starting from an certain version (not sure which one), HTTPS requests and responses became encrypted.
+        # This was only required for HTTP plain text communication before
+
+        # HTTP  + unecrpyted msg  : Never supported by Zyxel
+        # HTTPS + unencrypted msg : Was working on V5.50(ABPY.1)b16_20210525
+        # HTTP  + encrpyted msg   : Supported by Zyxel but not by this library
+        # HTTPS + encrypted msg   : Required starting from V5.50(ABPY.1)b21_20230112
+        software_version_major = int(software_version[1:2])
+        software_version_minor = int(software_version[3:5])
+        software_build = int(software_version[14:16])
+
+        encrypted_payloads = software_version_major > 5 or (
+            software_version_major == 5
+            and software_version_minor >= 50
+            and software_build >= 21
+        )
+
+        self.set_option("zyxel_encrypted_payloads", encrypted_payloads)
 
         return encrypted_payloads
 
@@ -190,26 +226,8 @@ class HttpApi(HttpApiBase):
         )
         # data = json.loads(reply)
 
-        software_version = response_data["SoftwareVersion"]
-        device_info["network_os_version"] = software_version
+        device_info["network_os_version"] = response_data["SoftwareVersion"]
         device_info["network_os_model"] = response_data["ModelName"]
-
-        # Starting from an unknown version, HTTPS requests and responses became encrypted.
-        # This was only required for HTTP plain text communication before
-
-        # HTTP  + unecrpyted msg  : Never supported by Zyxel
-        # HTTPS + unencrypted msg : Was working on V5.50(ABPY.1)b16_20210525
-        # HTTP  + encrpyted msg   : Supported by Zyxel but not by this library
-        # HTTPS + encrypted msg   : Required starting from V5.50(ABPY.1)b21_20230112
-        software_version_major = int(software_version[1:2])
-        software_version_minor = int(software_version[3:5])
-        software_build = int(software_version[14:16])
-
-        device_info["encrypted_payloads"] = software_version_major > 5 or (
-            software_version_major == 5
-            and software_version_minor >= 50
-            and software_build >= 21
-        )
 
         # device_info["network_os_hostname"] = data["hostname"]
 

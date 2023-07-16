@@ -3,6 +3,5 @@ class ZyxelSessionContext(object):
 
         self.sessionkey: str = None
 
-        self.encrypted_payloads: bool = None
         self.aes_key = None
         self.public_key = None

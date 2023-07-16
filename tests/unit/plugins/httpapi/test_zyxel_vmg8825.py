@@ -25,10 +25,13 @@ logger = logging.getLogger(__name__)
 
 
 class FakeZyxelHttpApiPlugin(HttpApi):
-    def __init__(self, conn):
-        super().__init__(conn)
+    def __init__(self, connection):
+
         self.hostvars = {"use_ssl": True, "host": "router.test"}
-        self._device_info = {"network_os": "zyxel", "encrypted_payloads": False}
+        super().__init__(connection)
+
+        connection.set_option("zyxel_encrypted_payloads", False)
+        self._device_info = {"network_os": "zyxel", "network_os_version": "V5.50(ABPY.1)b16_20210525"}
 
     def get_option(self, option):
         return self.hostvars.get(option)
@@ -40,6 +43,8 @@ class FakeZyxelHttpApiPlugin(HttpApi):
 class TestZyxelHttpApi(unittest.TestCase):
     def setUp(self):
         self.connection = fake_httpapi.Connection()
+        self.connection.hostvars["use_ssl"] = True
+
         self.zyxel_plugin = FakeZyxelHttpApiPlugin(self.connection)
         self.zyxel_plugin._load_name = "httpapi"
         self.connection.httpapi = self.zyxel_plugin
@@ -96,7 +101,10 @@ class TestZyxelHttpApi(unittest.TestCase):
         device_info = self.zyxel_plugin.get_device_info()
 
         assert device_info["network_os_version"] == "V5.50(ABPY.1)b21_20230112"
-        assert device_info["encrypted_payloads"] is True
+
+        encrypted_payloads = self.zyxel_plugin.encrypted_payloads()
+
+        assert encrypted_payloads is True
 
     def test_detect_encryption_mode_disabled(self):
 
@@ -120,7 +128,10 @@ class TestZyxelHttpApi(unittest.TestCase):
         device_info = self.zyxel_plugin.get_device_info()
 
         assert device_info["network_os_version"] == "V5.50(ABPY.1)b16_20210525"
-        assert device_info["encrypted_payloads"] is False
+
+        encrypted_payloads = self.zyxel_plugin.encrypted_payloads()
+
+        assert encrypted_payloads is False
 
     @pytest.mark.skip(
         reason=(
