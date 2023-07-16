@@ -253,10 +253,14 @@ class TestZyxelModule(ModuleTestCase):
 
 class FakeZyxelHttpApiPlugin(zyxel_vmg8825_requests.ZyxelRequests):
     def __init__(self, connection):
-        super().__init__(self, ZyxelSessionContext())
+
+        context = ZyxelSessionContext()
+        context.encrypted_payloads = False
+
+        super().__init__(self, context)
         self.connection = connection
         self.hostvars = {"use_ssl": True, "host": "router.test"}
-        self._device_info = {"network_os": "zyxel", "encrypted_payloads": False}
+        self._device_info = {"network_os": "zyxel"}
 
     def get_option(self, option):
         return self.hostvars.get(option)

@@ -21,7 +21,7 @@ from ansible.module_utils.connection import ConnectionError
 # pyright: reportMissingImports=false
 from ansible.module_utils.six.moves.urllib.error import HTTPError
 
-from .zyxel_vmg8825_encryption import zyxel_encrypt_request, zyxel_decrypt_response
+from .zyxel_vmg8825_encryption import zyxel_encrypt_request_dict, zyxel_decrypt_response_dict
 
 
 logger = logging.getLogger(__name__)
@@ -54,16 +54,15 @@ class ZyxelRequests(object):
 
     def _ensure_encryption_context(self):
 
-        if self.httpapi.get_option("zyxel_encrypted_payloads") is None:
+        if self.context.encrypted_payloads is None:
             self.httpapi.encrypted_payloads()
-        # pass
 
-    def _prepare_zyxel_request(self, data):
+    def _prepare_zyxel_request(self, data: dict):
 
         self._ensure_encryption_context()
 
-        if self.httpapi.get_option("zyxel_encrypted_payloads"):
-            request = zyxel_encrypt_request(data)
+        if data is not None and self.context.encrypted_payloads:
+            request = zyxel_encrypt_request_dict(self.context, data)
         else:
             request = data
 
@@ -105,7 +104,7 @@ class ZyxelRequests(object):
         # This may be JSON text to Python dictionaries, for example.
         return self.handle_response(method, path, response, response_data)
 
-    def send_dal_request(self, data, **message_kwargs):
+    def send_dal_request(self, data: dict, **message_kwargs):
 
         oid = message_kwargs.get("oid")
         oid_index = message_kwargs.get("oid_index")
@@ -232,8 +231,8 @@ class ZyxelRequests(object):
         response_data = response_data.read()
         response_data = json.loads(response_data)
 
-        if self.httpapi.get_option("zyxel_encrypted_payloads"):
-            response_data = zyxel_decrypt_response(response_data)
+        if self.context.encrypted_payloads:
+            response_data = zyxel_decrypt_response_dict(self.context, response_data)
 
         logger.debug(
             "handle_response: %s, %s, %s, %s"

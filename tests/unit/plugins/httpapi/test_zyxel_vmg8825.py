@@ -30,7 +30,7 @@ class FakeZyxelHttpApiPlugin(HttpApi):
         self.hostvars = {"use_ssl": True, "host": "router.test"}
         super().__init__(connection)
 
-        connection.set_option("zyxel_encrypted_payloads", False)
+        self.context.encrypted_payloads = False
         self._device_info = {"network_os": "zyxel", "network_os_version": "V5.50(ABPY.1)b16_20210525"}
 
     def get_option(self, option):
@@ -97,6 +97,7 @@ class TestZyxelHttpApi(unittest.TestCase):
             )
         ]
 
+        self.zyxel_plugin.context.encrypted_payloads = None
         self.zyxel_plugin._device_info = None
         device_info = self.zyxel_plugin.get_device_info()
 
@@ -124,6 +125,7 @@ class TestZyxelHttpApi(unittest.TestCase):
             )
         ]
 
+        self.zyxel_plugin.context.encrypted_payloads = None
         self.zyxel_plugin._device_info = None
         device_info = self.zyxel_plugin.get_device_info()
 
@@ -190,6 +192,56 @@ class TestZyxelHttpApi(unittest.TestCase):
         # no session should exist yet
         self.assertIsNone(self.zyxel_plugin.connection._auth)
         self.assertIsNone(self.zyxel_plugin.context.sessionkey, sessionkey)
+
+        # login
+        self.zyxel_plugin.login(username, "PASSWORD")
+
+        # assert that a login session exists
+        self.assertIsNotNone(self.zyxel_plugin.connection._auth)
+        self.assertEqual(self.zyxel_plugin.context.sessionkey, sessionkey)
+
+        self.assertTrue(
+            any(
+                x[1][0] == "POST" and x[1][1].find("/UserLogin")
+                for x in self.request_mock.mock_calls
+            )
+        )
+
+    def test_login_with_encryption(self):
+
+        username = "admin"
+        sessionkey = "358987652"
+
+        self.request_mock.side_effect = [
+            mocked_response(
+                url="/getRSAPublicKey",
+                status=200,
+                response={
+                    "RSAPublicKey": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9+84erHfPJ9qCVnfD6SwFuPlP\ngK6C4bH3z7+aWg0IGyKnhZ8vcef7Rl8vn4qLeM0AfXeI58ndHzwWvklLFow1IQtg\nHhoaVnIYKSrGw7CcDLYjbP3e2mbj\/sWxlyUick8asD0qwGXiXMsvfneyiU71Ye0w\n+CSrIJUJLCco18CBqQIDAQAB\n-----END PUBLIC KEY-----\n",
+                    "result": "ZCFG_SUCCESS"
+                }
+            ),
+            mocked_response(
+                url="/UserLogin",
+                status=200,
+                response={
+                    "sessionkey": sessionkey,
+                    "ThemeColor": "blue",
+                    "changePw": False,
+                    "showSkipBtn": False,
+                    "quickStart": True,
+                    "loginAccount": username,
+                    "loginLevel": "medium",
+                    "result": "ZCFG_SUCCESS",
+                },
+            ),
+        ]
+
+        # no session should exist yet
+        self.assertIsNone(self.zyxel_plugin.connection._auth)
+        self.assertIsNone(self.zyxel_plugin.context.sessionkey, sessionkey)
+
+        self.zyxel_plugin.context.encrypted_payloads = True
 
         # login
         self.zyxel_plugin.login(username, "PASSWORD")
