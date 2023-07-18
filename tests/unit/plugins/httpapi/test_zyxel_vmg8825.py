@@ -31,7 +31,10 @@ class FakeZyxelHttpApiPlugin(HttpApi):
         super().__init__(connection)
 
         self.context.encrypted_payloads = False
-        self._device_info = {"network_os": "zyxel", "network_os_version": "V5.50(ABPY.1)b16_20210525"}
+        self._device_info = {
+            "network_os": "zyxel",
+            "network_os_version": "V5.50(ABPY.1)b16_20210525",
+        }
 
     def get_option(self, option):
         return self.hostvars.get(option)
@@ -215,9 +218,9 @@ class TestZyxelHttpApi(unittest.TestCase):
                 url="/getRSAPublicKey",
                 status=200,
                 response={
-                    "RSAPublicKey": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9+84erHfPJ9qCVnfD6SwFuPlP\ngK6C4bH3z7+aWg0IGyKnhZ8vcef7Rl8vn4qLeM0AfXeI58ndHzwWvklLFow1IQtg\nHhoaVnIYKSrGw7CcDLYjbP3e2mbj\/sWxlyUick8asD0qwGXiXMsvfneyiU71Ye0w\n+CSrIJUJLCco18CBqQIDAQAB\n-----END PUBLIC KEY-----\n",
-                    "result": "ZCFG_SUCCESS"
-                }
+                    "RSAPublicKey": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9+84erHfPJ9qCVnfD6SwFuPlP\ngK6C4bH3z7+aWg0IGyKnhZ8vcef7Rl8vn4qLeM0AfXeI58ndHzwWvklLFow1IQtg\nHhoaVnIYKSrGw7CcDLYjbP3e2mbj\\/sWxlyUick8asD0qwGXiXMsvfneyiU71Ye0w\n+CSrIJUJLCco18CBqQIDAQAB\n-----END PUBLIC KEY-----\n",
+                    "result": "ZCFG_SUCCESS",
+                },
             ),
             mocked_response(
                 url="/UserLogin",

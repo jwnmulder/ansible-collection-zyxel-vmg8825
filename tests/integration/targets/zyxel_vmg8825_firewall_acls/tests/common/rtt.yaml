@@ -77,7 +77,7 @@
     - name: Pause for 5 seconds to avoid 'Remote end closed connection without response'
       ansible.builtin.pause:
         seconds: 5
-    
+
     - name: Update test configuration (this will be reverted)
       jwnmulder.zyxel_vmg8825.zyxel_vmg8825_firewall_acls:
         config:

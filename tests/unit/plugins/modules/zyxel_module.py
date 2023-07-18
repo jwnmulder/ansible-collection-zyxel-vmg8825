@@ -270,7 +270,7 @@ class FakeZyxelHttpApiPlugin(zyxel_vmg8825_requests.ZyxelRequests):
 
     def get_device_info(self):
         return self._device_info
-    
+
     def detect_router_api_capabilities(self):
         pass
 

@@ -21,7 +21,10 @@ from ansible.module_utils.connection import ConnectionError
 # pyright: reportMissingImports=false
 from ansible.module_utils.six.moves.urllib.error import HTTPError
 
-from .zyxel_vmg8825_encryption import zyxel_encrypt_request_dict, zyxel_decrypt_response_dict
+from .zyxel_vmg8825_encryption import (
+    zyxel_encrypt_request_dict,
+    zyxel_decrypt_response_dict,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -65,9 +68,7 @@ class ZyxelRequests(object):
 
     def send_request(self, data, **message_kwargs):
 
-        headers = {
-            "Content-Type": "application/json"
-        }
+        headers = {"Content-Type": "application/json"}
 
         path = message_kwargs.get("path", "/")
         method = message_kwargs.get("method", "GET")
@@ -77,10 +78,16 @@ class ZyxelRequests(object):
             data = json.dumps(data)
 
         if sessionkey and method in ("PUT", "POST", "DELETE"):
-            if self.context.sessionkey_method == ZyxelSessionContext.SESSIONKEY_METHOD_QUERY_PARAM:
+            if (
+                self.context.sessionkey_method
+                == ZyxelSessionContext.SESSIONKEY_METHOD_QUERY_PARAM
+            ):
                 path += "?" if "?" not in path else "&"
                 path += "sessionkey=%s" % (self.context.sessionkey)
-            elif self.context.sessionkey_method == ZyxelSessionContext.SESSIONKEY_METHOD_CSRF_TOKEN:
+            elif (
+                self.context.sessionkey_method
+                == ZyxelSessionContext.SESSIONKEY_METHOD_CSRF_TOKEN
+            ):
                 headers["CSRFToken"] = sessionkey
 
         logger.debug("send_request: %s, %s, %s", method, path, data)
@@ -124,10 +131,7 @@ class ZyxelRequests(object):
         data = self._prepare_zyxel_request(data)
 
         response_data, response_code = self.send_request(
-            data=data,
-            path=path,
-            method=method,
-            sessionkey=self.context.sessionkey
+            data=data, path=path, method=method, sessionkey=self.context.sessionkey
         )
 
         dal_result = response_data.get("result")

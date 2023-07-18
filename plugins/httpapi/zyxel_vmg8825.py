@@ -25,12 +25,12 @@ from ..module_utils.network.zyxel_vmg8825.utils.zyxel_vmg8825_requests import (
     ZyxelSessionContext,
     ZyxelRequests,
     zyxel_encrypt_request_dict,
-    zyxel_decrypt_response_dict
+    zyxel_decrypt_response_dict,
 )
 
 from ..module_utils.network.zyxel_vmg8825.utils.zyxel_vmg8825_encryption import (
     load_rsa_public_key,
-    zyxel_encrypt_cient_aes_key
+    zyxel_encrypt_cient_aes_key,
 )
 
 OPTIONS = {
@@ -72,7 +72,7 @@ class HttpApi(HttpApiBase):
 
         if self.context.encrypted_payloads is None:
             use_ssl = connection.get_option("use_ssl")
-            if use_ssl == False:
+            if use_ssl is False:
                 self.context.encrypted_payloads = True
 
         self.requests = ZyxelRequests(self, self.context)
@@ -150,10 +150,14 @@ class HttpApi(HttpApiBase):
             self._load_public_key()
             self.context.client_aes_key = os.urandom(32)
 
-            login_request_data = zyxel_encrypt_request_dict(self.context, login_request_data)
+            login_request_data = zyxel_encrypt_request_dict(
+                self.context, login_request_data
+            )
 
             # Encrypt the aes key with RSA pubkey of the device
-            enc_aes_key = zyxel_encrypt_cient_aes_key(self.context, base64.b64encode(self.context.client_aes_key))
+            enc_aes_key = zyxel_encrypt_cient_aes_key(
+                self.context, base64.b64encode(self.context.client_aes_key)
+            )
             login_request_data["key"] = base64.b64encode(enc_aes_key).decode("ascii")
 
             logger.debug("login/request-encrypted: %s", login_request_data)
@@ -182,7 +186,7 @@ class HttpApi(HttpApiBase):
                     data=None,
                     path="/cgi-bin/UserLogout",
                     method="POST",
-                    sessionkey=self.context.sessionkey
+                    sessionkey=self.context.sessionkey,
                 )
             except Exception as e:
                 logger.debug("logout error: %s", e)
@@ -198,8 +202,11 @@ class HttpApi(HttpApiBase):
 
         # Sometimes it can be determined based on ansible config. E.g. when overriding automatic
         # detection or when HTTP is used
-        
-        if self.context.encrypted_payloads is None or self.context.sessionkey_method is None:
+
+        if (
+            self.context.encrypted_payloads is None
+            or self.context.sessionkey_method is None
+        ):
 
             # In all other cases, lets try some dynamic detection methods
             info = self.get_device_info()
@@ -250,7 +257,7 @@ class HttpApi(HttpApiBase):
     def _load_public_key(self):
 
         if not self.context.router_public_key:
-        
+
             response_data, response_code = self.send_request(
                 data=None, path="/getRSAPublickKey"
             )
@@ -258,7 +265,7 @@ class HttpApi(HttpApiBase):
             public_key_str = str(response_data["RSAPublicKey"])
 
             # Not sure why but Zyxel is escaping some characters that should not be escaped
-            public_key_str = public_key_str.replace("\/", "/")
+            public_key_str = public_key_str.replace("\\/", "/")
 
             load_rsa_public_key(self.context, public_key_str)
 
