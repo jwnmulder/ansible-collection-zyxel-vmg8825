@@ -4,8 +4,6 @@ import os
 
 from . import ZyxelSessionContext
 
-from ansible.errors import AnsibleError
-
 HAS_CRYPTOGRAPHY = False
 CRYPTOGRAPHY_BACKEND = None
 try:
@@ -29,13 +27,11 @@ NEED_CRYPTO_LIBRARY = (
     "zyxel_vmg8825 requires the cryptography library in order to function"
 )
 
-rsa_public_key = "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9+84erHfPJ9qCVnfD6SwFuPlP\ngK6C4bH3z7+aWg0IGyKnhZ8vcef7Rl8vn4qLeM0AfXeI58ndHzwWvklLFow1IQtg\nHhoaVnIYKSrGw7CcDLYjbP3e2mbj/sWxlyUick8asD0qwGXiXMsvfneyiU71Ye0w\n+CSrIJUJLCco18CBqQIDAQAB\n-----END PUBLIC KEY-----\n"
-
 
 def load_rsa_public_key(context: ZyxelSessionContext, public_key_str: str):
 
     if not HAS_CRYPTOGRAPHY:
-        raise AnsibleError(NEED_CRYPTO_LIBRARY)
+        raise ModuleNotFoundError(NEED_CRYPTO_LIBRARY)
 
     public_key_bytes = public_key_str.encode("ascii")
     context.router_public_key = serialization.load_pem_public_key(
@@ -46,7 +42,7 @@ def load_rsa_public_key(context: ZyxelSessionContext, public_key_str: str):
 def zyxel_encrypt_cient_aes_key(context: ZyxelSessionContext, data: bytes) -> bytes:
 
     if not HAS_CRYPTOGRAPHY:
-        raise AnsibleError(NEED_CRYPTO_LIBRARY)
+        raise ModuleNotFoundError(NEED_CRYPTO_LIBRARY)
 
     rsa_public_key: RSAPublicKey = context.router_public_key
     enc_data = rsa_public_key.encrypt(plaintext=data, padding=PKCS1v15())
@@ -59,7 +55,7 @@ def zyxel_encrypt_request_dict(
 ) -> dict:
 
     if not HAS_CRYPTOGRAPHY:
-        raise AnsibleError(NEED_CRYPTO_LIBRARY)
+        raise ModuleNotFoundError(NEED_CRYPTO_LIBRARY)
 
     if not isinstance(request_data, dict):
         raise ValueError(
@@ -90,7 +86,7 @@ def zyxel_encrypt_request_dict(
 def zyxel_decrypt_response_dict(context: ZyxelSessionContext, response_data) -> dict:
 
     if not HAS_CRYPTOGRAPHY:
-        raise AnsibleError(NEED_CRYPTO_LIBRARY)
+        raise ModuleNotFoundError(NEED_CRYPTO_LIBRARY)
 
     if not isinstance(response_data, dict):
         raise ValueError(

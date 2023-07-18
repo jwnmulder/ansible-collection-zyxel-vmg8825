@@ -7,6 +7,7 @@ __metaclass__ = type
 
 import logging
 import pytest
+import textwrap
 import unittest
 
 from unittest import mock
@@ -218,7 +219,16 @@ class TestZyxelHttpApi(unittest.TestCase):
                 url="/getRSAPublicKey",
                 status=200,
                 response={
-                    "RSAPublicKey": "-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9+84erHfPJ9qCVnfD6SwFuPlP\ngK6C4bH3z7+aWg0IGyKnhZ8vcef7Rl8vn4qLeM0AfXeI58ndHzwWvklLFow1IQtg\nHhoaVnIYKSrGw7CcDLYjbP3e2mbj\\/sWxlyUick8asD0qwGXiXMsvfneyiU71Ye0w\n+CSrIJUJLCco18CBqQIDAQAB\n-----END PUBLIC KEY-----\n",
+                    "RSAPublicKey": textwrap.dedent(
+                        """
+                        -----BEGIN PUBLIC KEY-----
+                        MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9+84erHfPJ9qCVnfD6SwFuPlP
+                        gK6C4bH3z7+aWg0IGyKnhZ8vcef7Rl8vn4qLeM0AfXeI58ndHzwWvklLFow1IQtg
+                        HhoaVnIYKSrGw7CcDLYjbP3e2mbj\\/sWxlyUick8asD0qwGXiXMsvfneyiU71Ye0w
+                        +CSrIJUJLCco18CBqQIDAQAB
+                        -----END PUBLIC KEY-----
+                        """
+                    ),
                     "result": "ZCFG_SUCCESS",
                 },
             ),
