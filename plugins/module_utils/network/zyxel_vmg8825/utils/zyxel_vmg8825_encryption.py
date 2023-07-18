@@ -2,7 +2,7 @@ import base64
 import json
 import os
 
-from . import ZyxelSessionContext
+from .zyxel_session_context import ZyxelSessionContext
 
 HAS_CRYPTOGRAPHY = False
 CRYPTOGRAPHY_BACKEND = None

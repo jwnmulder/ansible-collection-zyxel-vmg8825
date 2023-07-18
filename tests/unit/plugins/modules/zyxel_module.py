@@ -14,6 +14,8 @@ from ansible.module_utils import basic
 
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils import (
     zyxel_vmg8825_requests,
+)
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.zyxel_vmg8825_requests import (
     ZyxelSessionContext,
 )
 

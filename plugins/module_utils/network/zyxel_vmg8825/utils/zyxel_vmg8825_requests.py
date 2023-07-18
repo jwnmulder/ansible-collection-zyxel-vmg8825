@@ -8,7 +8,7 @@ import json
 import logging
 import os
 
-from . import ZyxelSessionContext
+from .zyxel_session_context import ZyxelSessionContext
 
 from ansible_collections.ansible.utils.plugins.module_utils.common.utils import (
     to_list,
