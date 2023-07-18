@@ -1,0 +1,2 @@
+minor_changes:
+  - Added new encryption and CSRF features to support latest TMNL firmware requirements which became required since V5.50(ABPY.1)b21_20230112

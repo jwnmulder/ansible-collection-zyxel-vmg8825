@@ -99,13 +99,12 @@ class TestZyxelHttpApi(unittest.TestCase):
 
         self.zyxel_plugin.context.encrypted_payloads = None
         self.zyxel_plugin._device_info = None
+
+        self.zyxel_plugin.detect_router_api_capabilities()
         device_info = self.zyxel_plugin.get_device_info()
 
         assert device_info["network_os_version"] == "V5.50(ABPY.1)b21_20230112"
-
-        encrypted_payloads = self.zyxel_plugin.encrypted_payloads()
-
-        assert encrypted_payloads is True
+        assert self.zyxel_plugin.context.encrypted_payloads is True
 
     def test_detect_encryption_mode_disabled(self):
 
@@ -127,13 +126,12 @@ class TestZyxelHttpApi(unittest.TestCase):
 
         self.zyxel_plugin.context.encrypted_payloads = None
         self.zyxel_plugin._device_info = None
+
+        self.zyxel_plugin.detect_router_api_capabilities()
         device_info = self.zyxel_plugin.get_device_info()
 
         assert device_info["network_os_version"] == "V5.50(ABPY.1)b16_20210525"
-
-        encrypted_payloads = self.zyxel_plugin.encrypted_payloads()
-
-        assert encrypted_payloads is False
+        assert self.zyxel_plugin.context.encrypted_payloads is False
 
     @pytest.mark.skip(
         reason=(
@@ -278,7 +276,7 @@ class TestZyxelHttpApi(unittest.TestCase):
                 },
             ),
             mocked_response(
-                url="cgi-bin/UserLogout",  # ?sessionkey=358987652",
+                url="cgi-bin/UserLogout",
                 status=200,
                 response={"result": "ZCFG_SUCCESS"},
             ),

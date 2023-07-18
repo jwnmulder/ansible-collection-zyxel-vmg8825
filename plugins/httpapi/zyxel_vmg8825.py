@@ -24,7 +24,8 @@ from ansible.plugins.httpapi import HttpApiBase
 from ..module_utils.network.zyxel_vmg8825.utils.zyxel_vmg8825_requests import (
     ZyxelSessionContext,
     ZyxelRequests,
-    zyxel_encrypt_request_dict
+    zyxel_encrypt_request_dict,
+    zyxel_decrypt_response_dict
 )
 
 from ..module_utils.network.zyxel_vmg8825.utils.zyxel_vmg8825_encryption import (
@@ -100,6 +101,10 @@ class HttpApi(HttpApiBase):
 
             response_data = json.loads(response_text.getvalue())
 
+            # data here is not yet decrypted
+            if self.context.encrypted_payloads:
+                response_data = zyxel_decrypt_response_dict(self.context, response_data)
+
             logger.debug("update_auth - response_data=%s", response_data)
 
             # if 'result' in response and response['result'] == 'ZCFG_SUCCESS':
@@ -139,7 +144,8 @@ class HttpApi(HttpApiBase):
 
         logger.debug("login/request: %s", login_request_data)
 
-        if self.encrypted_payloads():
+        self.detect_router_api_capabilities()
+        if self.context.encrypted_payloads:
 
             self._load_public_key()
             self.context.client_aes_key = os.urandom(32)
@@ -155,6 +161,7 @@ class HttpApi(HttpApiBase):
         response_data, response_code = self.send_request(
             data=login_request_data, path=login_path, method="POST"
         )
+
         logger.debug(
             "login/response: response_code=%s, context.session_key=%s, response_data=%s",
             response_code,
@@ -173,9 +180,9 @@ class HttpApi(HttpApiBase):
             try:
                 self.send_request(
                     data=None,
-                    path="/cgi-bin/UserLogout?sessionkey=%s"
-                    % (self.context.sessionkey),
+                    path="/cgi-bin/UserLogout",
                     method="POST",
+                    sessionkey=self.context.sessionkey
                 )
             except Exception as e:
                 logger.debug("logout error: %s", e)
@@ -183,7 +190,7 @@ class HttpApi(HttpApiBase):
         self.context.sessionkey = None
         self.connection._auth = None
 
-    def encrypted_payloads(self) -> bool:
+    def detect_router_api_capabilities(self):
 
         # In certain situations, Zyxel devices use encrypted payloads for some
         # requests and responses. If encryption is used depends on firmware versions
@@ -191,34 +198,41 @@ class HttpApi(HttpApiBase):
 
         # Sometimes it can be determined based on ansible config. E.g. when overriding automatic
         # detection or when HTTP is used
-        encrypted_payloads = self.context.encrypted_payloads
-        if encrypted_payloads is not None:
-            return encrypted_payloads
+        
+        if self.context.encrypted_payloads is None or self.context.sessionkey_method is None:
 
-        # In all other cases, lets try some dynamic detection methods
-        info = self.get_device_info()
+            # In all other cases, lets try some dynamic detection methods
+            info = self.get_device_info()
 
-        software_version = info["network_os_version"]
-        # Starting from an certain version (not sure which one), HTTPS requests and responses became encrypted.
-        # This was only required for HTTP plain text communication before
+            software_version = info["network_os_version"]
+            # Starting from an certain version (not sure which one), HTTPS requests and responses became encrypted.
+            # This was only required for HTTP plain text communication before
 
-        # HTTP  + unecrpyted msg  : Never supported by Zyxel
-        # HTTPS + unencrypted msg : Was working on V5.50(ABPY.1)b16_20210525
-        # HTTP  + encrpyted msg   : Supported by Zyxel but not by this library
-        # HTTPS + encrypted msg   : Required starting from V5.50(ABPY.1)b21_20230112
-        software_version_major = int(software_version[1:2])
-        software_version_minor = int(software_version[3:5])
-        software_build = int(software_version[14:16])
+            # HTTP  + unecrpyted msg  : Never supported by Zyxel
+            # HTTPS + unencrypted msg : Was working on V5.50(ABPY.1)b16_20210525
+            # HTTP  + encrpyted msg   : Supported by Zyxel but not by this library
+            # HTTPS + encrypted msg   : Required starting from V5.50(ABPY.1)b21_20230112
+            software_version_major = int(software_version[1:2])
+            software_version_minor = int(software_version[3:5])
+            software_build = int(software_version[14:16])
 
-        encrypted_payloads = software_version_major > 5 or (
-            software_version_major == 5
-            and software_version_minor >= 50
-            and software_build >= 21
-        )
+            if software_version_major > 5 or (
+                software_version_major == 5
+                and software_version_minor >= 50
+                and software_build >= 21
+            ):
+                encrypted_payloads = True
+                sessionkey_method = ZyxelSessionContext.SESSIONKEY_METHOD_CSRF_TOKEN
+            else:
+                encrypted_payloads = False
+                sessionkey_method = ZyxelSessionContext.SESSIONKEY_METHOD_QUERY_PARAM
 
-        self.context.encrypted_payloads = encrypted_payloads
+            # respect overrides
+            if self.context.encrypted_payloads is None:
+                self.context.encrypted_payloads = encrypted_payloads
 
-        return self.context.encrypted_payloads
+            if self.context.sessionkey_method is None:
+                self.context.sessionkey_method = sessionkey_method
 
     def send_request(self, data, **message_kwargs):
         return self.requests.send_request(data, **message_kwargs)

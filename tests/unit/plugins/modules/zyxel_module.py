@@ -271,8 +271,8 @@ class FakeZyxelHttpApiPlugin(zyxel_vmg8825_requests.ZyxelRequests):
     def get_device_info(self):
         return self._device_info
     
-    def encrypted_payloads(self):
-        return False
+    def detect_router_api_capabilities(self):
+        pass
 
     def _display(self, http_method, title, msg=""):
         pass

@@ -1,0 +1,15 @@
+---
+- debug: msg="START common/lan on connection={{ ansible_connection }}"
+
+- name: test zyxel_vmg8825_dal_rpc - lan
+  zyxel_vmg8825_dal_rpc:
+    oid: lan
+    method: GET
+  register: result
+
+- assert:
+    that:
+      - "result.changed == false"
+      - "result.obj is defined"
+
+- debug: msg="END common/lan on connection={{ ansible_connection }}"

@@ -52,14 +52,9 @@ class ZyxelRequests(object):
         self.httpapi = httpapi
         self.context = context
 
-    def _ensure_encryption_context(self):
-
-        if self.context.encrypted_payloads is None:
-            self.httpapi.encrypted_payloads()
-
     def _prepare_zyxel_request(self, data: dict):
 
-        self._ensure_encryption_context()
+        self.httpapi.detect_router_api_capabilities()
 
         if data is not None and self.context.encrypted_payloads:
             request = zyxel_encrypt_request_dict(self.context, data)
@@ -69,13 +64,24 @@ class ZyxelRequests(object):
         return request
 
     def send_request(self, data, **message_kwargs):
-        # Fixed headers for requests
-        headers = {"Content-Type": "application/json"}
+
+        headers = {
+            "Content-Type": "application/json"
+        }
+
         path = message_kwargs.get("path", "/")
         method = message_kwargs.get("method", "GET")
+        sessionkey = message_kwargs.get("sessionkey", None)
 
         if isinstance(data, dict):
             data = json.dumps(data)
+
+        if sessionkey and method in ("PUT", "POST", "DELETE"):
+            if self.context.sessionkey_method == ZyxelSessionContext.SESSIONKEY_METHOD_QUERY_PARAM:
+                path += "?" if "?" not in path else "&"
+                path += "sessionkey=%s" % (self.context.sessionkey)
+            elif self.context.sessionkey_method == ZyxelSessionContext.SESSIONKEY_METHOD_CSRF_TOKEN:
+                headers["CSRFToken"] = sessionkey
 
         logger.debug("send_request: %s, %s, %s", method, path, data)
 
@@ -112,14 +118,17 @@ class ZyxelRequests(object):
 
         if oid:
             path = "/cgi-bin/DAL?oid=%s" % (oid)
-            if self.context.sessionkey:
-                path += "&sessionkey=%s" % (self.context.sessionkey)
             if oid_index:
                 path += "&Index=%s" % (oid_index)
 
         data = self._prepare_zyxel_request(data)
 
-        response_data, response_code = self.send_request(data, path=path, method=method)
+        response_data, response_code = self.send_request(
+            data=data,
+            path=path,
+            method=method,
+            sessionkey=self.context.sessionkey
+        )
 
         dal_result = response_data.get("result")
         if dal_result and dal_result != "ZCFG_SUCCESS":
@@ -223,8 +232,8 @@ class ZyxelRequests(object):
         if content_type != "application/json":
             raise ConnectionError(
                 "Error while sending '%s' request to '%s'. Expected application/json"
-                " content-type, response_code=%s, content_type=%s"
-                % (method, path, response_code, content_type),
+                " content-type, response_code=%s, content_type=%s, response_data=%s"
+                % (method, path, response_code, content_type, response_data),
                 code=response_code,
             )
 

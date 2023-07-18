@@ -1,0 +1,15 @@
+---
+- debug: msg="START common/status on connection={{ ansible_connection }}"
+
+- name: test zyxel_vmg8825_dal_rpc - status
+  zyxel_vmg8825_dal_rpc:
+    oid: status
+    method: GET
+  register: result
+
+- assert:
+    that:
+      - "result.changed == false"
+      - "result.obj is defined"
+
+- debug: msg="END common/status on connection={{ ansible_connection }}"

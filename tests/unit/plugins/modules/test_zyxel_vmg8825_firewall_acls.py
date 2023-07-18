@@ -660,7 +660,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertEqual(len(http_calls), 1)
         self.assertEqual(http_calls[0][1]["method"], "PUT")
 
-        request_data = http_calls[0][0][0]
+        request_data = http_calls[0][1]["data"]
         self.assertEqual(request_data["Protocol"], "TCP")
 
     def test_no_order_noop(self):
