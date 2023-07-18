@@ -5,6 +5,14 @@ Zyxel VMG8825 Release Notes
 .. contents:: Topics
 
 
+v0.4.0
+======
+
+Minor Changes
+-------------
+
+- Added new encryption and CSRF features to support latest TMNL firmware requirements which became required since V5.50(ABPY.1)b21_20230112
+
 v0.3.0
 ======
 

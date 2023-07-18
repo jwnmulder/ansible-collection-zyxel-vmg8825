@@ -35,7 +35,8 @@ releases:
       minor_changes:
       - Added new firewall module
       - Added new firewall_acls module
-      release_summary: Added zyxel_vmg8825_firewall and zyxel_vmg8825_firewall_acls modules and some minor bugfixes
+      release_summary: Added zyxel_vmg8825_firewall and zyxel_vmg8825_firewall_acls
+        modules and some minor bugfixes
     fragments:
     - 0.3.0.yaml
     - firewall_acls_new_module.yaml
@@ -49,3 +50,11 @@ releases:
       name: zyxel_vmg8825_firewall_acls
       namespace: ''
     release_date: '2022-08-13'
+  0.4.0:
+    changes:
+      minor_changes:
+      - Added new encryption and CSRF features to support latest TMNL firmware requirements
+        which became required since V5.50(ABPY.1)b21_20230112
+    fragments:
+    - crypto_csrf_capabilities.yaml
+    release_date: '2023-07-18'
