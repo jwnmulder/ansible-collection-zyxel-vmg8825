@@ -7,6 +7,7 @@ __metaclass__ = type
 
 import logging
 import pytest
+import textwrap
 import unittest
 
 from unittest import mock
@@ -25,9 +26,16 @@ logger = logging.getLogger(__name__)
 
 
 class FakeZyxelHttpApiPlugin(HttpApi):
-    def __init__(self, conn):
-        super().__init__(conn)
+    def __init__(self, connection):
+
         self.hostvars = {"use_ssl": True, "host": "router.test"}
+        super().__init__(connection)
+
+        self.context.encrypted_payloads = False
+        self._device_info = {
+            "network_os": "zyxel",
+            "network_os_version": "V5.50(ABPY.1)b16_20210525",
+        }
 
     def get_option(self, option):
         return self.hostvars.get(option)
@@ -39,6 +47,8 @@ class FakeZyxelHttpApiPlugin(HttpApi):
 class TestZyxelHttpApi(unittest.TestCase):
     def setUp(self):
         self.connection = fake_httpapi.Connection()
+        self.connection.hostvars["use_ssl"] = True
+
         self.zyxel_plugin = FakeZyxelHttpApiPlugin(self.connection)
         self.zyxel_plugin._load_name = "httpapi"
         self.connection.httpapi = self.zyxel_plugin
@@ -62,7 +72,7 @@ class TestZyxelHttpApi(unittest.TestCase):
     def test_login_raises_exception_when_invalid_response(self):
 
         self.request_mock.side_effect = [
-            mocked_response({"invalid": "data"}, status=500)
+            mocked_response(response={"invalid": "data"}, status=500)
         ]
 
         with self.assertRaises(ConnectionError) as res:
@@ -73,6 +83,60 @@ class TestZyxelHttpApi(unittest.TestCase):
             " authentication" in str(res.exception)
         )
 
+    def test_detect_encryption_mode_enabled(self):
+
+        self.request_mock.side_effect = [
+            mocked_response(
+                response={
+                    "result": "ZCFG_SUCCESS",
+                    "ModelName": "VMG8825-T50",
+                    "SoftwareVersion": "V5.50(ABPY.1)b21_20230112",
+                    "CurrentLanguage": "en",
+                    "AvailableLanguages": "en",
+                    "RememberPassword": 0,
+                    "DebugMode": False,
+                    "RemoAddr_Type": "WAN",
+                },
+                status=200,
+            )
+        ]
+
+        self.zyxel_plugin.context.encrypted_payloads = None
+        self.zyxel_plugin._device_info = None
+
+        self.zyxel_plugin.detect_router_api_capabilities()
+        device_info = self.zyxel_plugin.get_device_info()
+
+        assert device_info["network_os_version"] == "V5.50(ABPY.1)b21_20230112"
+        assert self.zyxel_plugin.context.encrypted_payloads is True
+
+    def test_detect_encryption_mode_disabled(self):
+
+        self.request_mock.side_effect = [
+            mocked_response(
+                response={
+                    "result": "ZCFG_SUCCESS",
+                    "ModelName": "VMG8825-T50",
+                    "SoftwareVersion": "V5.50(ABPY.1)b16_20210525",
+                    "CurrentLanguage": "en",
+                    "AvailableLanguages": "en",
+                    "RememberPassword": 0,
+                    "DebugMode": False,
+                    "RemoAddr_Type": "WAN",
+                },
+                status=200,
+            )
+        ]
+
+        self.zyxel_plugin.context.encrypted_payloads = None
+        self.zyxel_plugin._device_info = None
+
+        self.zyxel_plugin.detect_router_api_capabilities()
+        device_info = self.zyxel_plugin.get_device_info()
+
+        assert device_info["network_os_version"] == "V5.50(ABPY.1)b16_20210525"
+        assert self.zyxel_plugin.context.encrypted_payloads is False
+
     @pytest.mark.skip(
         reason=(
             "We don't align with ftd.py here. Not sure what is recommended for"
@@ -82,7 +146,7 @@ class TestZyxelHttpApi(unittest.TestCase):
     def test_send_request_should_return_error_info_when_http_error_raises(self):
 
         self.request_mock.side_effect = [
-            mocked_response({"errorMessage": "ERROR"}, status=500)
+            mocked_response(response={"errorMessage": "ERROR"}, status=500)
         ]
 
         response_data = self.zyxel_plugin.send_request(None, path="/test")
@@ -129,14 +193,73 @@ class TestZyxelHttpApi(unittest.TestCase):
 
         # no session should exist yet
         self.assertIsNone(self.zyxel_plugin.connection._auth)
-        self.assertIsNone(self.zyxel_plugin._sessionkey, sessionkey)
+        self.assertIsNone(self.zyxel_plugin.context.sessionkey, sessionkey)
 
         # login
         self.zyxel_plugin.login(username, "PASSWORD")
 
         # assert that a login session exists
         self.assertIsNotNone(self.zyxel_plugin.connection._auth)
-        self.assertEqual(self.zyxel_plugin._sessionkey, sessionkey)
+        self.assertEqual(self.zyxel_plugin.context.sessionkey, sessionkey)
+
+        self.assertTrue(
+            any(
+                x[1][0] == "POST" and x[1][1].find("/UserLogin")
+                for x in self.request_mock.mock_calls
+            )
+        )
+
+    def test_login_with_encryption(self):
+
+        username = "admin"
+        sessionkey = "358987652"
+
+        self.request_mock.side_effect = [
+            mocked_response(
+                url="/getRSAPublicKey",
+                status=200,
+                response={
+                    "RSAPublicKey": textwrap.dedent(
+                        """
+                        -----BEGIN PUBLIC KEY-----
+                        MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9+84erHfPJ9qCVnfD6SwFuPlP
+                        gK6C4bH3z7+aWg0IGyKnhZ8vcef7Rl8vn4qLeM0AfXeI58ndHzwWvklLFow1IQtg
+                        HhoaVnIYKSrGw7CcDLYjbP3e2mbj\\/sWxlyUick8asD0qwGXiXMsvfneyiU71Ye0w
+                        +CSrIJUJLCco18CBqQIDAQAB
+                        -----END PUBLIC KEY-----
+                        """
+                    ),
+                    "result": "ZCFG_SUCCESS",
+                },
+            ),
+            mocked_response(
+                url="/UserLogin",
+                status=200,
+                response={
+                    "sessionkey": sessionkey,
+                    "ThemeColor": "blue",
+                    "changePw": False,
+                    "showSkipBtn": False,
+                    "quickStart": True,
+                    "loginAccount": username,
+                    "loginLevel": "medium",
+                    "result": "ZCFG_SUCCESS",
+                },
+            ),
+        ]
+
+        # no session should exist yet
+        self.assertIsNone(self.zyxel_plugin.connection._auth)
+        self.assertIsNone(self.zyxel_plugin.context.sessionkey, sessionkey)
+
+        self.zyxel_plugin.context.encrypted_payloads = True
+
+        # login
+        self.zyxel_plugin.login(username, "PASSWORD")
+
+        # assert that a login session exists
+        self.assertIsNotNone(self.zyxel_plugin.connection._auth)
+        self.assertEqual(self.zyxel_plugin.context.sessionkey, sessionkey)
 
         self.assertTrue(
             any(
@@ -166,7 +289,7 @@ class TestZyxelHttpApi(unittest.TestCase):
                 },
             ),
             mocked_response(
-                url="cgi-bin/UserLogout",  # ?sessionkey=358987652",
+                url="cgi-bin/UserLogout",
                 status=200,
                 response={"result": "ZCFG_SUCCESS"},
             ),
@@ -177,14 +300,14 @@ class TestZyxelHttpApi(unittest.TestCase):
 
         # assert that a login session exists
         self.assertIsNotNone(self.zyxel_plugin.connection._auth)
-        self.assertIsNotNone(self.zyxel_plugin._sessionkey)
+        self.assertIsNotNone(self.zyxel_plugin.context.sessionkey)
 
         # logout
         self.zyxel_plugin.logout()
 
         # assert that no session exist after logout
         self.assertIsNone(self.zyxel_plugin.connection._auth)
-        self.assertIsNone(self.zyxel_plugin._sessionkey)
+        self.assertIsNone(self.zyxel_plugin.context.sessionkey)
 
         # assert that UserLogout was invoked
         name, args, kwargs = self.request_mock.mock_calls[1]
@@ -195,7 +318,7 @@ class TestZyxelHttpApi(unittest.TestCase):
     def test_logout_without_login(self):
 
         self.assertIsNone(self.zyxel_plugin.connection._auth)
-        self.assertIsNone(self.zyxel_plugin._sessionkey)
+        self.assertIsNone(self.zyxel_plugin.context.sessionkey)
 
         # logout
         self.zyxel_plugin.logout()

@@ -1,7 +1,7 @@
 ---
 - debug: msg="START common/pingtest on connection={{ ansible_connection }}"
 
-- name: test zyxel_vmg8825_dal_rpc
+- name: test zyxel_vmg8825_dal_rpc - PINGTEST
   zyxel_vmg8825_dal_rpc:
     oid: PINGTEST
     method: GET

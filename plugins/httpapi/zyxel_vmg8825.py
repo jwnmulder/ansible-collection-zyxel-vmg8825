@@ -22,7 +22,15 @@ import os
 from ansible.plugins.httpapi import HttpApiBase
 
 from ..module_utils.network.zyxel_vmg8825.utils.zyxel_vmg8825_requests import (
-    ZyxelHttpApiRequests,
+    ZyxelSessionContext,
+    ZyxelRequests,
+    zyxel_encrypt_request_dict,
+    zyxel_decrypt_response_dict,
+)
+
+from ..module_utils.network.zyxel_vmg8825.utils.zyxel_vmg8825_encryption import (
+    load_rsa_public_key,
+    zyxel_encrypt_cient_aes_key,
 )
 
 OPTIONS = {
@@ -57,13 +65,19 @@ logger.addHandler(RequestsHandler())
 
 
 class HttpApi(HttpApiBase):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, connection):
+        super().__init__(connection)
 
-        self.requests = ZyxelHttpApiRequests(self)
+        self.context = ZyxelSessionContext()
 
-        # self._device_info = None
-        self._sessionkey = None
+        if self.context.encrypted_payloads is None:
+            use_ssl = connection.get_option("use_ssl")
+            if use_ssl is False:
+                self.context.encrypted_payloads = True
+
+        self.requests = ZyxelRequests(self, self.context)
+
+        self._device_info = None
 
     def update_auth(self, response, response_text):
 
@@ -87,18 +101,24 @@ class HttpApi(HttpApiBase):
 
             response_data = json.loads(response_text.getvalue())
 
+            # data here is not yet decrypted
+            if self.context.encrypted_payloads:
+                response_data = zyxel_decrypt_response_dict(self.context, response_data)
+
             logger.debug("update_auth - response_data=%s", response_data)
 
             # if 'result' in response and response['result'] == 'ZCFG_SUCCESS':
-            if "sessionkey" in response_data:
-                self._sessionkey = response_data["sessionkey"]
-                sessionkey = self._sessionkey
+            sessionkey = response_data.get("sessionkey")
+            if sessionkey:
+                self.context.sessionkey = sessionkey
 
         cookie = response.info().get("Set-Cookie")
 
         if cookie or sessionkey:
             logger.debug(
-                "update_auth - sessionkey=%s, cookie=%s", self._sessionkey, cookie
+                "update_auth - sessionkey=%s, cookie=%s",
+                self.context.sessionkey,
+                cookie,
             )
 
         if cookie:
@@ -115,43 +135,111 @@ class HttpApi(HttpApiBase):
         logger.debug("login with username '%s' and password", username)
 
         login_path = "/UserLogin"
-        data = {
+        login_request_data = {
             "Input_Account": username,
             "Input_Passwd": base64.b64encode(password.encode("ascii")).decode("ascii"),
             "RememberPassword": 0,
             "SHA512_password": False,
         }
 
-        logger.debug("login/data: %s", data)
+        logger.debug("login/request: %s", login_request_data)
+
+        self.detect_router_api_capabilities()
+        if self.context.encrypted_payloads:
+
+            self._load_public_key()
+            self.context.client_aes_key = os.urandom(32)
+
+            login_request_data = zyxel_encrypt_request_dict(
+                self.context, login_request_data
+            )
+
+            # Encrypt the aes key with RSA pubkey of the device
+            enc_aes_key = zyxel_encrypt_cient_aes_key(
+                self.context, base64.b64encode(self.context.client_aes_key)
+            )
+            login_request_data["key"] = base64.b64encode(enc_aes_key).decode("ascii")
+
+            logger.debug("login/request-encrypted: %s", login_request_data)
+
         response_data, response_code = self.send_request(
-            data=data, path=login_path, method="POST"
+            data=login_request_data, path=login_path, method="POST"
         )
+
         logger.debug(
-            "login/response: response_code=%s, session_key=%s, response_data=%s",
+            "login/response: response_code=%s, context.session_key=%s, response_data=%s",
             response_code,
-            self._sessionkey,
+            self.context.sessionkey,
             response_data,
         )
 
     def logout(self):
         logger.debug(
-            "logout: _sessionkey=%s, connecion._auth=%s",
-            self._sessionkey,
+            "logout: context.sessionkey=%s, connecion._auth=%s",
+            self.context.sessionkey,
             self.connection._auth,
         )
 
-        if self._sessionkey:
+        if self.context.sessionkey:
             try:
                 self.send_request(
                     data=None,
-                    path="/cgi-bin/UserLogout?sessionkey=%s" % (self._sessionkey),
+                    path="/cgi-bin/UserLogout",
                     method="POST",
+                    sessionkey=self.context.sessionkey,
                 )
             except Exception as e:
                 logger.debug("logout error: %s", e)
 
-        self._sessionkey = None
+        self.context.sessionkey = None
         self.connection._auth = None
+
+    def detect_router_api_capabilities(self):
+
+        # In certain situations, Zyxel devices use encrypted payloads for some
+        # requests and responses. If encryption is used depends on firmware versions
+        # and response types (200 reponses might be encrypted while 401 are not).
+
+        # Sometimes it can be determined based on ansible config. E.g. when overriding automatic
+        # detection or when HTTP is used
+
+        if (
+            self.context.encrypted_payloads is None
+            or self.context.sessionkey_method is None
+        ):
+
+            # In all other cases, lets try some dynamic detection methods
+            info = self.get_device_info()
+
+            software_version = info["network_os_version"]
+            # Starting from an certain version (not sure which one), HTTPS requests and responses became encrypted.
+            # This was only required for HTTP plain text communication before
+
+            # HTTP  + unecrpyted msg  : Never supported by Zyxel
+            # HTTPS + unencrypted msg : Was working on V5.50(ABPY.1)b16_20210525
+            # HTTP  + encrpyted msg   : Supported by Zyxel but not by this library
+            # HTTPS + encrypted msg   : Required starting from V5.50(ABPY.1)b21_20230112
+            software_version_major = int(software_version[1:2])
+            software_version_minor = int(software_version[3:5])
+            software_build = int(software_version[14:16])
+
+            if software_version_major > 5 or (
+                software_version_major == 5
+                and software_version_minor >= 50
+                and software_build >= 21
+            ):
+                encrypted_payloads = True
+                sessionkey_method = ZyxelSessionContext.SESSIONKEY_METHOD_CSRF_TOKEN
+            else:
+                encrypted_payloads = False
+                sessionkey_method = ZyxelSessionContext.SESSIONKEY_METHOD_QUERY_PARAM
+
+            # respect overrides
+            if self.context.encrypted_payloads is None:
+                self.context.encrypted_payloads = encrypted_payloads
+
+            if self.context.sessionkey_method is None:
+                self.context.sessionkey_method = sessionkey_method
 
     def send_request(self, data, **message_kwargs):
         return self.requests.send_request(data, **message_kwargs)
@@ -166,9 +254,25 @@ class HttpApi(HttpApiBase):
         pass
         # self.connection.queue_message('vvvv', 'REST:%s:%s:%s\n%s' % (http_method, self.connection._url, title, msg))
 
+    def _load_public_key(self):
+
+        if not self.context.router_public_key:
+
+            response_data, response_code = self.send_request(
+                data=None, path="/getRSAPublickKey"
+            )
+
+            public_key_str = str(response_data["RSAPublicKey"])
+
+            # Not sure why but Zyxel is escaping some characters that should not be escaped
+            public_key_str = public_key_str.replace("\\/", "/")
+
+            load_rsa_public_key(self.context, public_key_str)
+
     def get_device_info(self):
-        # if self._device_info:
-        # return self._device_info
+
+        if self._device_info:
+            return self._device_info
 
         device_info = {}
 
@@ -178,17 +282,13 @@ class HttpApi(HttpApiBase):
         )
         # data = json.loads(reply)
 
-        # device_info["network_os_version"] = data["version"]
+        device_info["network_os_version"] = response_data["SoftwareVersion"]
         device_info["network_os_model"] = response_data["ModelName"]
-
-        return device_info
-        # data = self.send_request("show hostname", output="json")
-        # data = json.loads(reply)
 
         # device_info["network_os_hostname"] = data["hostname"]
 
-        # self._device_info = device_info
-        # return self._device_info
+        self._device_info = device_info
+        return self._device_info
 
     def dal_get(self, oid):
         return self.requests.dal_get(oid)

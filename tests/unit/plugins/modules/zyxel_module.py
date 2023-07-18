@@ -15,6 +15,9 @@ from ansible.module_utils import basic
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils import (
     zyxel_vmg8825_requests,
 )
+from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.zyxel_vmg8825_requests import (
+    ZyxelSessionContext,
+)
 
 import io
 import json
@@ -250,18 +253,28 @@ class TestZyxelModule(ModuleTestCase):
     #     self.run_commands.side_effect = load_from_file
 
 
-class FakeZyxelHttpApiPlugin(zyxel_vmg8825_requests.ZyxelHttpApiRequests):
+class FakeZyxelHttpApiPlugin(zyxel_vmg8825_requests.ZyxelRequests):
     def __init__(self, connection):
-        super().__init__(self)
-        self.hostvars = {"use_ssl": True, "host": "router.test"}
+
+        context = ZyxelSessionContext()
+        context.encrypted_payloads = False
+
+        super().__init__(self, context)
         self.connection = connection
-        self._sessionkey = None
+        self.hostvars = {"use_ssl": True, "host": "router.test"}
+        self._device_info = {"network_os": "zyxel"}
 
     def get_option(self, option):
         return self.hostvars.get(option)
 
     def set_option(self, option, value):
         self.hostvars[option] = value
+
+    def get_device_info(self):
+        return self._device_info
+
+    def detect_router_api_capabilities(self):
+        pass
 
     def _display(self, http_method, title, msg=""):
         pass

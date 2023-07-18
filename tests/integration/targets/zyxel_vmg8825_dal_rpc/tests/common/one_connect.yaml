@@ -1,0 +1,15 @@
+---
+- debug: msg="START common/one_connect on connection={{ ansible_connection }}"
+
+- name: test zyxel_vmg8825_dal_rpc - one_connect
+  zyxel_vmg8825_dal_rpc:
+    oid: one_connect
+    method: GET
+  register: result
+
+- assert:
+    that:
+      - "result.changed == false"
+      - "result.obj is defined"
+
+- debug: msg="END common/one_connect on connection={{ ansible_connection }}"
