@@ -4,6 +4,8 @@
     "github>jwnmulder/renovate-config"
   ],
 
+  "assignees": [ "jwnmulder" ],
+
   "ignorePaths": [
     "rm_builder/requirements.txt"
   ],
