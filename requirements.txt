@@ -1,7 +1,7 @@
 ansible-core==2.15.4
 # https://github.com/ansible/ansible/archive/devel.tar.gz
 
-ansible-lint==6.20.1
+ansible-lint==6.21.0
 antsibull-docs==2.3.1
 antsibull-changelog==0.23.0
 
