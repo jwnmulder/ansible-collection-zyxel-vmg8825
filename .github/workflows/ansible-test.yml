@@ -36,6 +36,7 @@ jobs:
           - stable-2.13
           - stable-2.14
           - stable-2.15
+          - stable-2.16
           - devel
 
     # Ansible-test on various stable branches does not yet work well with cgroups v2.
@@ -82,6 +83,7 @@ jobs:
           - stable-2.13
           - stable-2.14
           - stable-2.15
+          - stable-2.16
           - devel
 
     steps:
@@ -146,6 +148,12 @@ jobs:
           - ansible: stable-2.15
             python: '3.10'
           - ansible: stable-2.15
+            python: '3.11'
+          - ansible: stable-2.16
+            python: '3.9'
+          - ansible: stable-2.16
+            python: '3.10'
+          - ansible: stable-2.16
             python: '3.11'
 
     steps:
