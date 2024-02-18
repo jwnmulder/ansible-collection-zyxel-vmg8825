@@ -56,7 +56,7 @@ repos:
           - --ignore=E501,E402,W503
         files: ^(plugins|tests)/.+\.py$
 
-  - repo: https://github.com/ansible/ansible-lint.git
+  - repo: https://github.com/ansible/ansible-lint
     rev: v6.22.2
     hooks:
       - id: ansible-lint
@@ -82,4 +82,4 @@ repos:
         files: 'changelogs/.*'
         pass_filenames: false
         additional_dependencies:
-          - antsibull-changelog==0.23.0  # renovate: datasource=pypi
+          - antsibull-changelog==0.25.0  # renovate: datasource=pypi
