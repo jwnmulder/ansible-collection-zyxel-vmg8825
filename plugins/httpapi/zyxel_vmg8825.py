@@ -127,7 +127,6 @@ class HttpApi(HttpApiBase):
         return None
 
     def login(self, username, password):
-
         """Call a defined login endpoint to receive an authentication token."""
         if username is None or password is None:
             raise ValueError("Please provide username/password to login")

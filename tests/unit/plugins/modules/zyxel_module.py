@@ -302,7 +302,7 @@ class PropertyMock(mock.Mock):
 
 def mocked_response(response, status=200, raise_for_status=True, url=None):
 
-    response_text = json.dumps(response) if type(response) is dict else response
+    response_text = json.dumps(response) if isinstance(response, dict) else response
     response_bytes = response_text.encode() if response_text else "".encode()
 
     headers = {"Content-Type": "application/json"}

@@ -36,7 +36,7 @@ repos:
           - (\.eggs|\.git|\.hg|\.mypy_cache|__pycache__|\.nox|\.tox|\.venv|\.svn|buck-out|build|dist|output)/
 
   - repo: https://github.com/psf/black
-    rev: 22.12.0
+    rev: 24.2.0
     hooks:
       - id: black
         args:
@@ -55,6 +55,17 @@ repos:
           - --max-line-length=88
           - --ignore=E501,E402,W503
         files: ^(plugins|tests)/.+\.py$
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.2.2
+    hooks:
+      - id: ruff
+        args:
+          - --extend-select=E,W,F
+          - --ignore=E402,E501
+        files: ^(plugins|tests)/.+\.py$
+      # - id: ruff-format
+      #   files: ^(plugins|tests)/.+\.py$
 
   - repo: https://github.com/ansible/ansible-lint
     rev: v24.2.0
