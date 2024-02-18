@@ -1,0 +1,10 @@
+{
+    "result": "ZCFG_SUCCESS",
+    "ModelName": "VMG8825-T50",
+    "SoftwareVersion": "V5.50(ABPY.1)b21_20230112",
+    "CurrentLanguage": "en",
+    "AvailableLanguages": "nl,en",
+    "RememberPassword": 0,
+    "DebugMode": false,
+    "RemoAddr_Type": "WAN"
+}
