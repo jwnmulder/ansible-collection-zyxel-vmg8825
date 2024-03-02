@@ -19,22 +19,6 @@ repos:
     hooks:
       - id: shellcheck
 
-  # - repo: https://github.com/asottile/pyupgrade
-  #   rev: v2.15.0
-  #   hooks:
-  #     - id: pyupgrade
-  #       args: [--py38-plus]
-
-  - repo: https://github.com/hadialqattan/pycln
-    rev: v2.4.0
-    hooks:
-      - id: pycln
-        args:
-          - plugins
-          - tests
-          - --exclude
-          - (\.eggs|\.git|\.hg|\.mypy_cache|__pycache__|\.nox|\.tox|\.venv|\.svn|buck-out|build|dist|output)/
-
   - repo: https://github.com/psf/black
     rev: 24.2.0
     hooks:
@@ -42,18 +26,6 @@ repos:
         args:
           - --safe
           - --quiet
-        files: ^(plugins|tests)/.+\.py$
-
-  - repo: https://github.com/pycqa/flake8
-    rev: 7.0.0
-    hooks:
-      - id: flake8
-        additional_dependencies:
-          # - flake8-docstrings
-          - flake8-noqa
-        args:
-          - --max-line-length=88
-          - --ignore=E501,E402,W503
         files: ^(plugins|tests)/.+\.py$
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
