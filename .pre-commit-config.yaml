@@ -40,7 +40,7 @@ repos:
       #   files: ^(plugins|tests)/.+\.py$
 
   - repo: https://github.com/ansible/ansible-lint
-    rev: v24.2.3
+    rev: v24.5.0
     hooks:
       - id: ansible-lint
         files: tests/integration/.*\.(yaml|yml)$
