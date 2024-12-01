@@ -14,7 +14,7 @@ if [ "${collections_dir_name}" != "ansible_collections" ]; then
 fi
 
 # Set ANSIBLE_COLLECTIONS_PATHS to avoid some warnings
-export ANSIBLE_COLLECTIONS_PATHS="$collections_dir"
+export ANSIBLE_COLLECTIONS_PATH="$collections_dir"
 
 echo "Running ansible-galaxy collection install" 
 ansible-galaxy collection install --upgrade ansible.netcommon -p "$collections_dir"
