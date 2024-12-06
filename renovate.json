@@ -3,19 +3,25 @@
   "extends": [
     "github>jwnmulder/renovate-config"
   ],
-
-  "assignees": [ "jwnmulder" ],
-
+  "assignees": [
+    "jwnmulder"
+  ],
   "ignorePaths": [
     "rm_builder/requirements.txt"
   ],
-
   "packageRules": [
     {
-      "matchPaths": [".pre-commit-config.yaml"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchFileNames": [
+        ".pre-commit-config.yaml"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "automerge": true,
-      "addLabels": ["automerge"]
+      "addLabels": [
+        "automerge"
+      ]
     }
   ]
 }
