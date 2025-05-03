@@ -3,12 +3,6 @@ import json
 from ansible.module_utils import basic
 from ansible.module_utils._text import to_bytes
 
-from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
-    AnsibleExitJson,  # noqa: F401
-    AnsibleFailJson,  # noqa: F401
-    ModuleTestCase,  # noqa: F401
-)
-
 cur_context = None
 
 
@@ -39,3 +33,11 @@ def set_module_args(args):
         # Fall back to original behavior for older Ansible versions
         serialized_args = json.dumps({"ANSIBLE_MODULE_ARGS": args})
         basic._ANSIBLE_ARGS = to_bytes(serialized_args)
+
+
+class AnsibleExitJson(Exception):
+    pass
+
+
+class AnsibleFailJson(Exception):
+    pass

@@ -5,11 +5,12 @@ __metaclass__ = type
 
 from unittest import mock
 
-from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.modules.utils import (
+from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
     AnsibleExitJson,
     AnsibleFailJson,
     ModuleTestCase,
 )
+
 from ansible.module_utils import basic
 
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils import (
