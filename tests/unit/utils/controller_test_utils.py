@@ -4,7 +4,7 @@ __metaclass__ = type
 
 from unittest import mock
 
-from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
+from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.modules.utils import (
     AnsibleExitJson,
     ModuleTestCase,
     set_module_args,

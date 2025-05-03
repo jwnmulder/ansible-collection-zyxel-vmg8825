@@ -4,7 +4,7 @@ __metaclass__ = type
 
 import json
 
-from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
+from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.modules.utils import (
     set_module_args,
 )
 from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.modules import (

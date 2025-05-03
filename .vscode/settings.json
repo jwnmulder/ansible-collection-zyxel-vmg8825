@@ -15,5 +15,8 @@
     "python.terminal.activateEnvironment": false,
     "ansible.ansible.useFullyQualifiedCollectionNames": true,
     "ansible.python.activationScript": ".venv/bin/activate",
-    "testing.automaticallyOpenPeekView": "never"
+    "testing.automaticallyOpenPeekView": "never",
+    "python.analysis.extraPaths": [
+        "../../../"
+    ]
 }

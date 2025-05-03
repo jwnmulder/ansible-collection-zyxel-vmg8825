@@ -1,7 +1,7 @@
 # https://docs.ansible.com/ansible/latest/dev_guide/testing_units_modules.html
 
 from __future__ import absolute_import, division, print_function
-from ansible_collections.ansible.netcommon.tests.unit.modules.utils import (
+from ansible_collections.jwnmulder.zyxel_vmg8825.tests.unit.modules.utils import (
     set_module_args,
 )
 
