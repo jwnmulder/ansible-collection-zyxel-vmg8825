@@ -28,7 +28,14 @@ jobs:
           python-version: '3.13'
 
       - name: Install antsibull-docs
-        run: pip install antsibull-docs --disable-pip-version-check
+        run: pip install ansible-core antsibull-docs --disable-pip-version-check
+
+      # OPTIONAL If your collection depends on other collections, make sure to install them here
+      # - name: Install dependent collections
+      #   run: >
+      #     ansible-galaxy collection install
+      #     ansible.netcommon
+      #     ansible.utils
 
       - name: Run collection docs linter
-        run: antsibull-docs lint-collection-docs .
+        run: antsibull-docs lint-collection-docs . --plugin-docs --skip-rstcheck

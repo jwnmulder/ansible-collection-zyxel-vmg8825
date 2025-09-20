@@ -14,7 +14,7 @@ from ansible.module_utils.six.moves.urllib.error import HTTPError, URLError
 from ansible.module_utils.urls import open_url
 
 
-class Connection(object):
+class Connection:
     """Network API connection"""
 
     transport = "ansible.netcommon.httpapi"
@@ -76,7 +76,7 @@ class Connection(object):
                 response = is_handled
         except URLError as exc:
             raise AnsibleConnectionFailure(
-                "Could not connect to {0}: {1}".format(self._url + path, exc.reason)
+                f"Could not connect to {self._url + path}: {exc.reason}"
             )
 
         response_buffer = BytesIO()

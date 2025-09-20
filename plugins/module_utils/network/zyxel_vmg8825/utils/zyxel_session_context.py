@@ -1,11 +1,11 @@
-class ZyxelSessionContext(object):
+class ZyxelSessionContext:
 
     SESSIONKEY_METHOD_QUERY_PARAM = "query_param"
     SESSIONKEY_METHOD_CSRF_TOKEN = "CSRFToken"
 
     def __init__(self):
 
-        # sessionkey is reuired for CSRF checks done by the router
+        # sessionkey is required for CSRF checks done by the router
         self.sessionkey: str = None
 
         # router api capabilities

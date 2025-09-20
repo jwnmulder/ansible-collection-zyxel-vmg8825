@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-# Copyright 2021
-# GNU General Public License v3.0+
-# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
-
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
@@ -27,7 +22,7 @@ from ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zy
 )
 
 
-class Nat_port_forwardsFacts(object):
+class Nat_port_forwardsFacts:
     """The zyxel_vmg8825 nat_port_forwards facts class"""
 
     def __init__(self, module, subspec="config", options="options"):

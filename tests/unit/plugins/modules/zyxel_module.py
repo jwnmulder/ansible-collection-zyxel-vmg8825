@@ -81,19 +81,19 @@ class TestZyxelModule(ModuleTestCase):
             )
             self.connection.send_request = self.http_api.send_request
 
-            self.setUpGetConnectionMock(
+            self.setup_get_connection_mock(
                 self.connection,
                 "ansible_collections.jwnmulder.zyxel_vmg8825.plugins.module_utils.network.zyxel_vmg8825.utils.utils.get_connection",
             )
-            self.setUpGetConnectionMock(
+            self.setup_get_connection_mock(
                 self.connection,
                 "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.cfg.base.get_resource_connection",
             )
-            self.setUpGetConnectionMock(
+            self.setup_get_connection_mock(
                 self.connection,
                 "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.facts.facts.get_resource_connection",
             )
-            self.setUpGetConnectionMock(
+            self.setup_get_connection_mock(
                 self.connection,
                 "ansible_collections.ansible.netcommon.plugins.module_utils.network.common.rm_base.resource_module_base.get_resource_connection",
             )
@@ -109,7 +109,7 @@ class TestZyxelModule(ModuleTestCase):
             )
             self.mock_socket_path.start()
 
-    def setUpGetConnectionMock(self, connection_mock, target):
+    def setup_get_connection_mock(self, connection_mock, target):
         mock_get_connection = mock.patch(target)
         get_connection = mock_get_connection.start()
         get_connection.return_value = connection_mock
@@ -182,7 +182,7 @@ class TestZyxelModule(ModuleTestCase):
 
     def mock_dal_request(self, oid, method="GET", status=200, variant=None):
 
-        uri = "/cgi-bin/DAL?oid=%s" % (oid)
+        uri = f"/cgi-bin/DAL?oid={oid}"
         fixture_name = "%s_%s" % (oid.lower(), method.lower())
 
         if variant:

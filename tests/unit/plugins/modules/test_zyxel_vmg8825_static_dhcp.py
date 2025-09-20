@@ -481,7 +481,7 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertEqual(http_calls[2][1]["method"], "DELETE")
 
         # If deletes would start at index=1, index=2 will not exist anymore on the remote device.
-        # Assert that deletes happen form the higest index to the lowest
+        # Assert that deletes happen form the highest index to the lowest
         self.assertEqual(
             http_calls[0][1]["path"], "/cgi-bin/DAL?oid=static_dhcp&Index=4"
         )

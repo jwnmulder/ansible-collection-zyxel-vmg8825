@@ -1,8 +1,4 @@
 #
-# -*- coding: utf-8 -*-
-# Copyright 2021
-# GNU General Public License v3.0+
-# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 #
 
 from __future__ import absolute_import, division, print_function
@@ -155,7 +151,7 @@ class Nat_port_forwards(ResourceModule):
 
             if self.commands and method == "DELETE":
                 # deletes must happen first and in reverse orde
-                # higest indexes are to be deleted first as indexes
+                # highest indexes are to be deleted first as indexes
                 # keep changing while adding or deleting entries on a Zyxel device
                 closests_higher = None
                 for x in self.commands:

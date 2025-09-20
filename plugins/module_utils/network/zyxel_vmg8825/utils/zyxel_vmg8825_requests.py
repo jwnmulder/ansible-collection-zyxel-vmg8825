@@ -50,7 +50,7 @@ class RequestsHandler(logging.Handler):
 logger.addHandler(RequestsHandler())
 
 
-class ZyxelRequests(object):
+class ZyxelRequests:
     def __init__(self, httpapi, context: ZyxelSessionContext):
         self.httpapi = httpapi
         self.context = context
@@ -160,7 +160,7 @@ class ZyxelRequests(object):
 
         content_type = exc.headers.get("Content-Type")
         if content_type == "application/json":
-            # propogate exceptions to users as the response
+            # propagate exceptions to users as the response
             # body might contain useful information
             return exc
 
@@ -171,7 +171,7 @@ class ZyxelRequests(object):
     # from
     # def handle_httperror(self, exc):
     #     """
-    #     propogate exceptions to users
+    #     propagate exceptions to users
     #     :param exc: Exception
     #     """
     #     self.log('Exception thrown from handling http: ' + to_text(exc))
@@ -257,7 +257,7 @@ class ZyxelRequests(object):
             if response_data:
                 if "errors" in response_data:
                     errors = response_data["errors"]["error"]
-                    error_text = "\n".join((error["error-message"] for error in errors))
+                    error_text = "\n".join([error["error-message"] for error in errors])
                 else:
                     error_text = response_data
             else:

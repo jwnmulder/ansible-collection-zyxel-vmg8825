@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-# Copyright 2021
-# GNU General Public License v3.0+
-# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
-
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
@@ -27,7 +22,7 @@ The arg spec for the zyxel_vmg8825_static_dhcp module
 """
 
 
-class Static_dhcpArgs(object):  # pylint: disable=R0903
+class Static_dhcpArgs:  # pylint: disable=R0903
     """The arg spec for the zyxel_vmg8825_static_dhcp module"""
 
     argument_spec = {

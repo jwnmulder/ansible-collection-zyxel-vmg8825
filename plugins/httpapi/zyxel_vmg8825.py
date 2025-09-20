@@ -174,7 +174,7 @@ class HttpApi(HttpApiBase):
 
     def logout(self):
         logger.debug(
-            "logout: context.sessionkey=%s, connecion._auth=%s",
+            "logout: context.sessionkey=%s, connection._auth=%s",
             self.context.sessionkey,
             self.connection._auth,
         )
@@ -197,7 +197,7 @@ class HttpApi(HttpApiBase):
 
         # In certain situations, Zyxel devices use encrypted payloads for some
         # requests and responses. If encryption is used depends on firmware versions
-        # and response types (200 reponses might be encrypted while 401 are not).
+        # and response types (200 responses might be encrypted while 401 are not).
 
         # Sometimes it can be determined based on ansible config. E.g. when overriding automatic
         # detection or when HTTP is used
@@ -216,7 +216,7 @@ class HttpApi(HttpApiBase):
 
             # HTTP  + unecrpyted msg  : Never supported by Zyxel
             # HTTPS + unencrypted msg : Was working on V5.50(ABPY.1)b16_20210525
-            # HTTP  + encrpyted msg   : Supported by Zyxel but not by this library
+            # HTTP  + encrypted msg   : Supported by Zyxel but not by this library
             # HTTPS + encrypted msg   : Required starting from V5.50(ABPY.1)b21_20230112
             software_version_major = int(software_version[1:2])
             software_version_minor = int(software_version[3:5])

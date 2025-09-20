@@ -100,7 +100,7 @@ Parameters
                 <td>
                 </td>
                 <td>
-                        <div>End Port. If only ony port is to be opened, set this to the same value as Start Port</div>
+                        <div>End Port. If only one port is to be opened, set this to the same value as Start Port</div>
                 </td>
             </tr>
             <tr>

@@ -157,7 +157,7 @@ class TestZyxelHttpApi(unittest.TestCase):
 
         self.request_mock.side_effect = [
             mocked_response(
-                response={"result": "Maxium number of login account has reached"},
+                response={"result": "Maximum number of login account has reached"},
                 status=401,
                 # msg="Unauthorized",
                 # url="/UserLogin",
@@ -167,7 +167,7 @@ class TestZyxelHttpApi(unittest.TestCase):
         with self.assertRaises(ConnectionError) as res:
             self.zyxel_plugin.login("USERNAME", "PASSWORD")
 
-        assert "Maxium number of login account has reached" in str(res.exception)
+        assert "Maximum number of login account has reached" in str(res.exception)
 
     def test_login(self):
 
