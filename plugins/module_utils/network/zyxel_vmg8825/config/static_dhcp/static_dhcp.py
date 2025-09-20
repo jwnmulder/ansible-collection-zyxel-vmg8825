@@ -126,12 +126,10 @@ class Static_dhcp(ResourceModule):
             )
 
     def add_zyxel_dal_command(self, method, data=None, oid_index=None):
-
         if self.state == "rendered":
             self.commands.append(data)
 
         else:
-
             request = {
                 "oid": rm_templates.static_dhcp.oid(),
                 "method": method,

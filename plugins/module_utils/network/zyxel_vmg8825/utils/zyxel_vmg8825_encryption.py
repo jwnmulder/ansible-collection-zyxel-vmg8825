@@ -28,7 +28,6 @@ NEED_CRYPTO_LIBRARY = (
 
 
 def load_rsa_public_key(context: ZyxelSessionContext, public_key_str: str):
-
     if not HAS_CRYPTOGRAPHY:
         raise ModuleNotFoundError(NEED_CRYPTO_LIBRARY)
 
@@ -39,7 +38,6 @@ def load_rsa_public_key(context: ZyxelSessionContext, public_key_str: str):
 
 
 def zyxel_encrypt_cient_aes_key(context: ZyxelSessionContext, data: bytes) -> bytes:
-
     if not HAS_CRYPTOGRAPHY:
         raise ModuleNotFoundError(NEED_CRYPTO_LIBRARY)
 
@@ -52,7 +50,6 @@ def zyxel_encrypt_cient_aes_key(context: ZyxelSessionContext, data: bytes) -> by
 def zyxel_encrypt_request_dict(
     context: ZyxelSessionContext, request_data: dict
 ) -> dict:
-
     if not HAS_CRYPTOGRAPHY:
         raise ModuleNotFoundError(NEED_CRYPTO_LIBRARY)
 
@@ -83,7 +80,6 @@ def zyxel_encrypt_request_dict(
 
 
 def zyxel_decrypt_response_dict(context: ZyxelSessionContext, response_data) -> dict:
-
     if not HAS_CRYPTOGRAPHY:
         raise ModuleNotFoundError(NEED_CRYPTO_LIBRARY)
 
@@ -93,7 +89,6 @@ def zyxel_decrypt_response_dict(context: ZyxelSessionContext, response_data) -> 
         )
 
     if "iv" in response_data and "content" in response_data:
-
         iv = base64.b64decode(response_data["iv"])[:16]
 
         content = response_data["content"]

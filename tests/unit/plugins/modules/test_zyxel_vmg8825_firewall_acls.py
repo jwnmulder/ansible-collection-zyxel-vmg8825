@@ -16,11 +16,9 @@ from .zyxel_module import TestZyxelModule
 
 
 class TestZyxelModuleHttpApi(TestZyxelModule):
-
     module = zyxel_vmg8825_firewall_acls
 
     def test_firewall_acls_merged(self):
-
         self.mock_dal_request("firewall_acl", "GET")
         self.mock_dal_request("firewall_acl", "PUT")
         self.mock_dal_request("firewall_acl", "POST")
@@ -102,7 +100,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=True, commands=commands, sort=False)
 
     def test_firewall_acls_merged_idempotent(self):
-
         self.mock_dal_request("firewall_acl", "GET")
 
         # get current config
@@ -117,7 +114,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=False, commands=[])
 
     def test_firewall_acls_overridden(self):
-
         self.mock_dal_request("firewall_acl", "GET")
         self.mock_dal_request("firewall_acl", "PUT")
         self.mock_dal_request("firewall_acl", "DELETE")
@@ -162,7 +158,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=True, commands=commands, sort=False)
 
     def test_firewall_acls_overridden_idempotent(self):
-
         self.mock_dal_request("firewall_acl", "GET")
 
         # get current config
@@ -177,7 +172,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=False, commands=[])
 
     def test_firewall_acls_replaced(self):
-
         self.mock_dal_request("firewall_acl", "GET")
         self.mock_dal_request("firewall_acl", "PUT")
 
@@ -223,7 +217,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=True, commands=commands, sort=False)
 
     def test_firewall_acls_replaced_idempotent(self):
-
         self.mock_dal_request("firewall_acl", "GET")
 
         # get current config
@@ -242,7 +235,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=False, commands=[])
 
     def test_firewall_acls_deleted(self):
-
         self.mock_dal_request("firewall_acl", "GET")
         self.mock_dal_request("firewall_acl", "DELETE")
 
@@ -265,7 +257,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=True, commands=commands, sort=False)
 
     def test_firewall_acls_rendered(self):
-
         data = [
             {
                 "index": 1,
@@ -410,7 +401,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertEqual(parsed_list, result["parsed"])
 
     def test_firewall_acls_gathered(self):
-
         self.mock_dal_request("firewall_acl", "GET")
 
         # get current config
@@ -468,7 +458,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(failed=True)
 
     def test_403_failure(self):
-
         self.mock_http_request(
             method="GET", uri="/cgi-bin/DAL?oid=firewall_acl", status=403
         )
@@ -479,7 +468,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertIn("Server returned error response, code=403", result["msg"])
 
     def test_overridden_with_same_info_no_index_specified(self):
-
         self.mock_dal_request("firewall_acl", "GET")
 
         # get current config
@@ -506,7 +494,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertEqual(len(http_calls), 0)
 
     def test_add_entry(self):
-
         self.mock_dal_request("firewall_acl", "GET")
         self.mock_dal_request("firewall_acl", "POST")
 
@@ -549,7 +536,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertEqual(http_calls[0][1]["method"], "POST")
 
     def test_delete_entry(self):
-
         self.mock_dal_request("firewall_acl", "GET")
         self.mock_dal_request("firewall_acl", "DELETE")
 
@@ -580,7 +566,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertEqual(http_calls[0][1]["method"], "DELETE")
 
     def test_delete_multiple_entries_should_occur_backwards(self):
-
         self.mock_dal_request("firewall_acl", "GET", variant="deleteorder")
         self.mock_dal_request("firewall_acl", "DELETE")
 
@@ -627,7 +612,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         )
 
     def test_update_entry(self):
-
         self.mock_dal_request("firewall_acl", "GET")
         self.mock_dal_request("firewall_acl", "PUT")
 
@@ -689,7 +673,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         )
     )
     def test_update_with_incomplete_entry_in_response(self):
-
         self.mock_dal_request("firewall_acl", "GET", variant="incomplete_data")
 
         # get current config

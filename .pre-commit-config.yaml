@@ -24,37 +24,23 @@ repos:
     hooks:
       - id: codespell
 
-  - repo: https://github.com/psf/black
-    rev: 25.1.0
-    hooks:
-      - id: black
-        args:
-          - --safe
-          - --quiet
-        files: ^(plugins|tests)/.+\.py$
-
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.10
+    rev: v0.13.1
     hooks:
-      - id: ruff
-        args:
-          - --extend-select=E,W,F
-          - --ignore=E402,E501
-        files: ^(plugins|tests)/.+\.py$
-      # - id: ruff-format
-      #   files: ^(plugins|tests)/.+\.py$
+      - id: ruff-check
+      - id: ruff-format
 
-  # - repo: https://github.com/ansible/ansible-lint
-  #   rev: v25.8.2
-  #   hooks:
-  #     - id: ansible-lint
-  #       files: tests/integration/.*\.(yaml|yml)$
-  #       args:
-  #         - --force-color
-  #         - -v
-  #         - --warn-list=name[missing]
-  #         - tests/integration
-  #       always_run: false
+  - repo: https://github.com/ansible/ansible-lint
+    rev: v25.8.2
+    hooks:
+      - id: ansible-lint
+        files: tests/integration/.*\.(yaml|yml)$
+        args:
+          - --force-color
+          - -v
+          - --warn-list=name[missing]
+          - tests/integration
+        always_run: false
 
   # - repo: https://github.com/ansible-network/collection_prep
   #   rev: 1.1.1

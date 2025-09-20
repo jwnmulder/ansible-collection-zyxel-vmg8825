@@ -16,7 +16,6 @@ def get_connection(module):
 
 
 def ansible_zyxel_dal_request(module, oid, method, data=None, oid_index=None):
-
     connection = get_connection(module)
     try:
         response_data, response_code = connection.send_dal_request(

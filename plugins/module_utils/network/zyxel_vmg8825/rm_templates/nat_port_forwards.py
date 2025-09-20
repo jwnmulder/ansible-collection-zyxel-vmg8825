@@ -32,7 +32,6 @@ def oid():
 
 
 def field_map():
-
     return {
         "index": "Index",
         "enable": "Enable",

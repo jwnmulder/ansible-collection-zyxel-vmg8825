@@ -33,7 +33,6 @@ from ..module_utils.network.zyxel_vmg8825.utils.utils import (
 
 
 def main():
-
     argument_specs = {}
 
     module = AnsibleModule(argument_spec=argument_specs, supports_check_mode=False)

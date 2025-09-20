@@ -160,7 +160,6 @@ class TestZyxelModule(ModuleTestCase):
         fixture_name=None,
         content_type="application/json",
     ):
-
         if fixture_name:
             body = load_fixture(fixture_name)
         elif not isinstance(body, dict):
@@ -181,7 +180,6 @@ class TestZyxelModule(ModuleTestCase):
         #     }
 
     def mock_dal_request(self, oid, method="GET", status=200, variant=None):
-
         uri = f"/cgi-bin/DAL?oid={oid}"
         fixture_name = "%s_%s" % (oid.lower(), method.lower())
 
@@ -195,7 +193,6 @@ class TestZyxelModule(ModuleTestCase):
     def execute_module(
         self, failed=False, changed=False, commands=None, sort=True, defaults=False
     ):
-
         self.load_fixtures(commands)
 
         if failed:
@@ -256,7 +253,6 @@ class TestZyxelModule(ModuleTestCase):
 
 class FakeZyxelHttpApiPlugin(zyxel_vmg8825_requests.ZyxelRequests):
     def __init__(self, connection):
-
         context = ZyxelSessionContext()
         context.encrypted_payloads = False
 
@@ -302,14 +298,12 @@ class PropertyMock(mock.Mock):
 
 
 def mocked_response(response, status=200, raise_for_status=True, url=None):
-
     response_text = json.dumps(response) if isinstance(response, dict) else response
     response_bytes = response_text.encode() if response_text else "".encode()
 
     headers = {"Content-Type": "application/json"}
 
     if raise_for_status and status >= 300:
-
         response_buffer = io.BytesIO(response_bytes)
 
         return HTTPError(
@@ -317,7 +311,6 @@ def mocked_response(response, status=200, raise_for_status=True, url=None):
         )
 
     else:
-
         response_mock = mock.Mock()
         response_mock.code = status
         response_mock.status.return_value = status

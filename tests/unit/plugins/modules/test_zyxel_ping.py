@@ -15,11 +15,9 @@ from .zyxel_module import TestZyxelModule
 
 
 class TestZyxelModuleHttpApi(TestZyxelModule):
-
     module = zyxel_vmg8825_ping
 
     def test_ensure_command_called_httpapi(self):
-
         self.mock_dal_request("PINGTEST", "GET")
 
         set_module_args({})

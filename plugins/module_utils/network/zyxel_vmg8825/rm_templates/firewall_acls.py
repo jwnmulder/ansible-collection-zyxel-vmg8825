@@ -49,7 +49,6 @@ def from_dal_object(dal_object):
 
     ip_version = dal_object.get("IPVersion")
     if ip_version is not None:
-
         # Workaround for invalid Zyxel ACL router entries
         ip_version = ip_version if ip_version >= 0 else 4
 
@@ -91,7 +90,6 @@ def from_dal_object(dal_object):
 
 
 def to_dal_object(ansible_object):
-
     result = {
         "Index": ansible_object.get("index"),
         "Name": ansible_object.get("name"),

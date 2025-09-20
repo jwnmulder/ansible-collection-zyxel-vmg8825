@@ -56,7 +56,6 @@ class ZyxelRequests:
         self.context = context
 
     def _prepare_zyxel_request(self, data: dict):
-
         self.httpapi.detect_router_api_capabilities()
 
         if data is not None and self.context.encrypted_payloads:
@@ -67,7 +66,6 @@ class ZyxelRequests:
         return request
 
     def send_request(self, data, **message_kwargs):
-
         headers = {"Content-Type": "application/json"}
 
         path = message_kwargs.get("path", "/")
@@ -118,7 +116,6 @@ class ZyxelRequests:
         return self.handle_response(method, path, response, response_data)
 
     def send_dal_request(self, data: dict, **message_kwargs):
-
         oid = message_kwargs.get("oid")
         oid_index = message_kwargs.get("oid_index")
         method = message_kwargs.get("method")
@@ -155,7 +152,6 @@ class ZyxelRequests:
         return response_data, response_code
 
     def handle_httperror(self, exc):
-
         logger.warning("handle_httperror, exc=%s", exc)
 
         content_type = exc.headers.get("Content-Type")
@@ -230,7 +226,6 @@ class ZyxelRequests:
         # return [resp for resp in to_list(responses) if resp != "{}"]
 
     def handle_response(self, method, path, response, response_data):
-
         response_code = response.code
         content_type = response.headers.get("Content-Type")
         if content_type != "application/json":
@@ -253,7 +248,6 @@ class ZyxelRequests:
         )
 
         if isinstance(response, HTTPError):
-
             if response_data:
                 if "errors" in response_data:
                     errors = response_data["errors"]["error"]

@@ -15,11 +15,9 @@ from .zyxel_module import TestZyxelModule
 
 
 class TestZyxelModuleHttpApi(TestZyxelModule):
-
     module = zyxel_vmg8825_firewall
 
     def test_firewall_merged(self):
-
         self.mock_dal_request("firewall", "GET")
         self.mock_dal_request("firewall", "PUT")
 
@@ -52,7 +50,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=True, commands=commands, sort=False)
 
     def test_firewall_merged_idempotent(self):
-
         self.mock_dal_request("firewall", "GET")
 
         # get current config
@@ -103,7 +100,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=True, commands=commands, sort=False)
 
     def test_firewall_overridden_idempotent(self):
-
         self.mock_dal_request("firewall", "GET")
 
         # get current config
@@ -154,7 +150,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=True, commands=commands, sort=False)
 
     def test_firewall_replaced_idempotent(self):
-
         self.mock_dal_request("firewall", "GET")
 
         # get current config
@@ -169,7 +164,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=False, commands=[])
 
     def test_firewall_rendered(self):
-
         data = {
             "ipv4_enabled": True,
             "ipv6_enabled": True,
@@ -212,7 +206,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertEqual(parsed, result["parsed"])
 
     def test_firewall_gathered(self):
-
         self.mock_dal_request("firewall", "GET")
 
         # get current config
@@ -238,7 +231,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(failed=True)
 
     def test_403_failure(self):
-
         self.mock_http_request(
             method="GET", uri="/cgi-bin/DAL?oid=firewall", status=403
         )
@@ -249,7 +241,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertIn("Server returned error response, code=403", result["msg"])
 
     def test_update_entry(self):
-
         self.mock_dal_request("firewall", "GET")
         self.mock_dal_request("firewall", "PUT")
 

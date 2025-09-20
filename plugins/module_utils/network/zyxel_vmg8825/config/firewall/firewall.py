@@ -91,7 +91,6 @@ class Firewall(ResourceModule):
             self.add_zyxel_dal_command("PUT", rm_templates.firewall.to_dal_object(want))
 
     def add_zyxel_dal_command(self, method, data):
-
         request = {
             "oid": rm_templates.firewall.oid(),
             "method": method,

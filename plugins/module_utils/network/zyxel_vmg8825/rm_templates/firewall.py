@@ -29,7 +29,6 @@ def oid():
 
 
 def from_dal_object(dal_object):
-
     result = {}
 
     set_when_not_none(result, "ipv4_enabled", dal_object.get("IPv4_Enable"))
@@ -41,7 +40,6 @@ def from_dal_object(dal_object):
 
 
 def to_dal_object(ansible_object):
-
     result = {}
 
     set_when_not_none(result, "IPv4_Enable", ansible_object.get("ipv4_enabled"))
