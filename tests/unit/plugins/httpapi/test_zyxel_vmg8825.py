@@ -32,7 +32,7 @@ class FakeZyxelHttpApiPlugin(HttpApi):
         super().__init__(connection)
 
         self.context.encrypted_payloads = False
-        self._device_info = {
+        self._device_info: dict | None = {
             "network_os": "zyxel",
             "network_os_version": "V5.50(ABPY.1)b16_20210525",
         }

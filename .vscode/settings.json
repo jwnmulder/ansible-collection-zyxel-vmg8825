@@ -4,19 +4,5 @@
         "**/rm_builders/*.yaml": "ansible",
         "*.yaml": "yaml",
         "*.yml": "yaml"
-    },
-    "python.testing.pytestArgs": [
-        "-s",
-        "--log-cli-level=2",
-        "--log-cli-format=%(asctime)s %(levelname)s [%(filename)s:%(lineno)d]: %(message)s",
-        "./tests/unit"
-    ],
-    "python.testing.pytestEnabled": true,
-    "python.terminal.activateEnvironment": false,
-    "ansible.ansible.useFullyQualifiedCollectionNames": true,
-    "ansible.python.activationScript": ".venv/bin/activate",
-    "testing.automaticallyOpenPeekView": "never",
-    "python.analysis.extraPaths": [
-        "../../../"
-    ]
+    }
 }

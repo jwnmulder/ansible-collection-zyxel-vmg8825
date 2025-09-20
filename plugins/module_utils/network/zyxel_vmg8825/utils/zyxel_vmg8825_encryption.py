@@ -15,7 +15,6 @@ try:
         modes,
     )
 
-    from cryptography.hazmat.primitives.asymmetric.rsa import RSAPublicKey
     from cryptography.hazmat.primitives.asymmetric.padding import PKCS1v15
 
     CRYPTOGRAPHY_BACKEND = default_backend()
@@ -44,7 +43,7 @@ def zyxel_encrypt_cient_aes_key(context: ZyxelSessionContext, data: bytes) -> by
     if not HAS_CRYPTOGRAPHY:
         raise ModuleNotFoundError(NEED_CRYPTO_LIBRARY)
 
-    rsa_public_key: RSAPublicKey = context.router_public_key
+    rsa_public_key = context.router_public_key
     enc_data = rsa_public_key.encrypt(plaintext=data, padding=PKCS1v15())
 
     return enc_data

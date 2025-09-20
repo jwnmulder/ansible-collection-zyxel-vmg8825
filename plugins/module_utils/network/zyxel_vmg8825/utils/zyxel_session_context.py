@@ -6,11 +6,11 @@ class ZyxelSessionContext:
     def __init__(self):
 
         # sessionkey is required for CSRF checks done by the router
-        self.sessionkey: str = None
+        self.sessionkey: str | None = None
 
         # router api capabilities
         self.sessionkey_method = None
-        self.encrypted_payloads = None
+        self.encrypted_payloads: bool | None = None
 
         # crypto related keys for the current session
         self.client_aes_key = None
