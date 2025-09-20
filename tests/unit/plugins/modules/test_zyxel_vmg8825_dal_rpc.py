@@ -15,7 +15,6 @@ from .zyxel_module import TestZyxelModule
 
 
 class TestZyxelModuleHttpApi(TestZyxelModule):
-
     module = zyxel_vmg8825_dal_rpc
 
     def test_module_fail_when_required_args_missing(self):
@@ -23,7 +22,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(failed=True)
 
     def test_ensure_command_called_httpapi(self):
-
         self.mock_dal_request("static_dhcp", "GET")
 
         set_module_args(
@@ -43,7 +41,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertEqual(kwargs.get("path"), "/cgi-bin/DAL?oid=static_dhcp")
 
     def test_403_error(self):
-
         self.mock_http_request(
             method="POST", uri="/cgi-bin/DAL?oid=PINGTEST", body={}, status=403
         )

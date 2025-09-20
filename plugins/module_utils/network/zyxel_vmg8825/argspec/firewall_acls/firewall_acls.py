@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-# Copyright 2022
-# GNU General Public License v3.0+
-# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
-
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
@@ -27,7 +22,7 @@ The arg spec for the zyxel_vmg8825_firewall_acls module
 """
 
 
-class Firewall_aclsArgs(object):  # pylint: disable=R0903
+class Firewall_aclsArgs:  # pylint: disable=R0903
     """The arg spec for the zyxel_vmg8825_firewall_acls module"""
 
     argument_spec = {

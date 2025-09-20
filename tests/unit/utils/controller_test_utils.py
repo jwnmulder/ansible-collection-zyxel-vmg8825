@@ -85,7 +85,6 @@ class ZyxelModuleTestCase(ModuleTestCase):
         body=None,
         content_type="application/json",
     ):
-
         if isinstance(body, dict):
             body = json.dumps(body)
 
@@ -138,14 +137,12 @@ class PropertyMock(mock.Mock):
 
 
 def mocked_response(response, status=200, raise_for_status=True, url=None):
-
     response_text = json.dumps(response) if isinstance(response, dict) else response
     response_bytes = response_text.encode() if response_text else "".encode()
 
     headers = {"Content-Type": "application/json"}
 
     if raise_for_status and status >= 400:
-
         response_buffer = io.BytesIO(response_bytes)
 
         return HTTPError(
@@ -153,7 +150,6 @@ def mocked_response(response, status=200, raise_for_status=True, url=None):
         )
 
     else:
-
         response_mock = mock.Mock()
         response_mock.code = status
         response_mock.status.return_value = status

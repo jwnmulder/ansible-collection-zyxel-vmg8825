@@ -1,0 +1,70 @@
+[tool.setuptools]
+packages = []
+
+[project]
+name = "zyxel_vmg8825"
+dynamic = ["version"]
+
+requires-python = ">=3.10"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+]
+
+[tool.pytest.ini_options]
+addopts = [
+    "-s",
+    "--log-cli-level=2",
+    "--log-cli-format=%(asctime)s %(levelname)s [%(filename)s:%(lineno)d]: %(message)s",
+]
+testpaths = [
+    "tests/unit",
+]
+filterwarnings = [
+    'ignore:AnsibleCollectionFinder has already been configured',
+]  
+
+[tool.ruff.lint]
+extend-select = [
+
+    # pycodestyle Error, Warnings
+    "E",
+    "W",
+    "F",
+
+    # isort
+    "I",
+
+    # pep8-naming
+    "N",
+
+    # pyupgrade
+    "UP"
+]
+ignore = [
+    "E402",
+    "E501",
+    "I001",
+    "UP001",
+    "UP010",
+    "N801",
+    "UP008",
+    "UP031",
+    "UP012",
+    "N818"
+]
+
+# [tool.ruff.lint.isort]
+# lines-between-types = 1
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+extraPaths = ["../../../"]
+
+typeCheckingMode = "basic"
+reportIncompatibleMethodOverride = "none"
+reportArgumentType = "none"
+reportAttributeAccessIssue = "none"
+reportCallIssue = "none"

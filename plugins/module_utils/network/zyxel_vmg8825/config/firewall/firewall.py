@@ -1,10 +1,3 @@
-#
-# -*- coding: utf-8 -*-
-# Copyright 2022
-# GNU General Public License v3.0+
-# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
-#
-
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
@@ -98,7 +91,6 @@ class Firewall(ResourceModule):
             self.add_zyxel_dal_command("PUT", rm_templates.firewall.to_dal_object(want))
 
     def add_zyxel_dal_command(self, method, data):
-
         request = {
             "oid": rm_templates.firewall.oid(),
             "method": method,

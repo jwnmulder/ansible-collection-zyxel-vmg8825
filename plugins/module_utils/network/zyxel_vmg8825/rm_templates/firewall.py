@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-# Copyright 2022
-# GNU General Public License v3.0+
-# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
-
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
@@ -34,7 +29,6 @@ def oid():
 
 
 def from_dal_object(dal_object):
-
     result = {}
 
     set_when_not_none(result, "ipv4_enabled", dal_object.get("IPv4_Enable"))
@@ -46,7 +40,6 @@ def from_dal_object(dal_object):
 
 
 def to_dal_object(ansible_object):
-
     result = {}
 
     set_when_not_none(result, "IPv4_Enable", ansible_object.get("ipv4_enabled"))

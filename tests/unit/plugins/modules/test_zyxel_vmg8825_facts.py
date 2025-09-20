@@ -13,11 +13,9 @@ from .zyxel_module import TestZyxelModule
 
 
 class TestZyxelModuleHttpApi(TestZyxelModule):
-
     module = zyxel_vmg8825_facts
 
     def test_static_dhcp_facts(self):
-
         self.mock_dal_request("static_dhcp", "GET")
 
         set_module_args({"gather_network_resources": ["static_dhcp"]})
@@ -33,7 +31,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertEqual(kwargs.get("path"), "/cgi-bin/DAL?oid=static_dhcp")
 
     def test_nat_port_forwards(self):
-
         self.mock_dal_request("nat", "GET")
 
         set_module_args({"gather_network_resources": ["nat_port_forwards"]})

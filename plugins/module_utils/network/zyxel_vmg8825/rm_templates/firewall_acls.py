@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-# Copyright 2022
-# GNU General Public License v3.0+
-# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
-
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
@@ -54,7 +49,6 @@ def from_dal_object(dal_object):
 
     ip_version = dal_object.get("IPVersion")
     if ip_version is not None:
-
         # Workaround for invalid Zyxel ACL router entries
         ip_version = ip_version if ip_version >= 0 else 4
 
@@ -96,7 +90,6 @@ def from_dal_object(dal_object):
 
 
 def to_dal_object(ansible_object):
-
     result = {
         "Index": ansible_object.get("index"),
         "Name": ansible_object.get("name"),

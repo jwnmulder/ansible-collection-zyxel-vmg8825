@@ -16,11 +16,9 @@ from .zyxel_module import TestZyxelModule
 
 
 class TestZyxelModuleHttpApi(TestZyxelModule):
-
     module = zyxel_vmg8825_nat_port_forwards
 
     def test_nat_port_forwards_merged(self):
-
         self.mock_dal_request("nat", "GET")
         self.mock_dal_request("nat", "PUT")
         self.mock_dal_request("nat", "POST")
@@ -94,7 +92,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=True, commands=commands, sort=False)
 
     def test_nat_port_forwards_merged_idempotent(self):
-
         self.mock_dal_request("nat", "GET")
 
         # get current config
@@ -109,7 +106,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=False, commands=[])
 
     def test_nat_port_forwards_overridden(self):
-
         self.mock_dal_request("nat", "GET")
         self.mock_dal_request("nat", "PUT")
         self.mock_dal_request("nat", "DELETE")
@@ -155,7 +151,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=True, commands=commands, sort=False)
 
     def test_nat_port_forwards_overridden_idempotent(self):
-
         self.mock_dal_request("nat", "GET")
 
         # get current config
@@ -170,7 +165,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=False, commands=[])
 
     def test_nat_port_forwards_replaced(self):
-
         self.mock_dal_request("nat", "GET")
         self.mock_dal_request("nat", "PUT")
 
@@ -216,7 +210,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=True, commands=commands, sort=False)
 
     def test_nat_port_forwards_replaced_idempotent(self):
-
         self.mock_dal_request("nat", "GET")
 
         # get current config
@@ -235,7 +228,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=False, commands=[])
 
     def test_nat_port_forwards_deleted(self):
-
         self.mock_dal_request("nat", "GET")
         self.mock_dal_request("nat", "DELETE")
 
@@ -258,7 +250,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(changed=True, commands=commands, sort=False)
 
     def test_nat_port_forwards_rendered(self):
-
         data = [
             {
                 "index": 1,
@@ -380,7 +371,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertEqual(parsed_list, result["parsed"])
 
     def test_nat_port_forwards_gathered(self):
-
         self.mock_dal_request("nat", "GET")
 
         # get current config
@@ -427,7 +417,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.execute_module(failed=True)
 
     def test_403_failure(self):
-
         self.mock_http_request(method="GET", uri="/cgi-bin/DAL?oid=nat", status=403)
 
         set_module_args({"state": "gathered"})
@@ -436,7 +425,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertIn("Server returned error response, code=403", result["msg"])
 
     def test_overridden_with_same_info_no_index_specified(self):
-
         self.mock_dal_request("nat", "GET")
 
         # get current config
@@ -463,7 +451,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertEqual(len(http_calls), 0)
 
     def test_add_entry(self):
-
         self.mock_dal_request("nat", "GET")
         self.mock_dal_request("nat", "POST")
 
@@ -505,7 +492,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertEqual(http_calls[0][1]["method"], "POST")
 
     def test_delete_entry(self):
-
         self.mock_dal_request("nat", "GET")
         self.mock_dal_request("nat", "DELETE")
 
@@ -536,7 +522,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertEqual(http_calls[0][1]["method"], "DELETE")
 
     def test_delete_multiple_entries_should_occur_backwards(self):
-
         self.mock_dal_request("nat", "GET", variant="deleteorder")
         self.mock_dal_request("nat", "DELETE")
 
@@ -571,13 +556,12 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         self.assertEqual(http_calls[2][1]["method"], "DELETE")
 
         # If deletes would start at index=1, index=2 will not exist anymore on the remote device.
-        # Assert that deletes happen form the higest index to the lowest
+        # Assert that deletes happen form the highest index to the lowest
         self.assertEqual(http_calls[0][1]["path"], "/cgi-bin/DAL?oid=nat&Index=4")
         self.assertEqual(http_calls[1][1]["path"], "/cgi-bin/DAL?oid=nat&Index=2")
         self.assertEqual(http_calls[2][1]["path"], "/cgi-bin/DAL?oid=nat&Index=1")
 
     def test_update_entry(self):
-
         self.mock_dal_request("nat", "GET")
         self.mock_dal_request("nat", "PUT")
 
@@ -620,7 +604,6 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         )
     )
     def test_update_with_incomplete_entry_in_response(self):
-
         self.mock_dal_request("nat", "GET", variant="incomplete_data")
 
         # get current config

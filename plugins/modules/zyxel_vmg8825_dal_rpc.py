@@ -1,6 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
 # Copyright: (c) 2021, Jan-Willem Mulder (@jwnmulder)
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -66,7 +63,6 @@ from ..module_utils.network.zyxel_vmg8825.utils.utils import (
 
 
 def main():
-
     argument_specs = dict(
         oid=dict(type="str", required=True),
         method=dict(

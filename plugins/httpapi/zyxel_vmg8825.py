@@ -80,7 +80,6 @@ class HttpApi(HttpApiBase):
         self._device_info = None
 
     def update_auth(self, response, response_text):
-
         response_code = response.code
 
         # update_auth is invoked
@@ -98,7 +97,6 @@ class HttpApi(HttpApiBase):
 
         sessionkey = None
         if content_type == "application/json":
-
             response_data = json.loads(response_text.getvalue())
 
             # data here is not yet decrypted
@@ -145,7 +143,6 @@ class HttpApi(HttpApiBase):
 
         self.detect_router_api_capabilities()
         if self.context.encrypted_payloads:
-
             self._load_public_key()
             self.context.client_aes_key = os.urandom(32)
 
@@ -174,7 +171,7 @@ class HttpApi(HttpApiBase):
 
     def logout(self):
         logger.debug(
-            "logout: context.sessionkey=%s, connecion._auth=%s",
+            "logout: context.sessionkey=%s, connection._auth=%s",
             self.context.sessionkey,
             self.connection._auth,
         )
@@ -194,10 +191,9 @@ class HttpApi(HttpApiBase):
         self.connection._auth = None
 
     def detect_router_api_capabilities(self):
-
         # In certain situations, Zyxel devices use encrypted payloads for some
         # requests and responses. If encryption is used depends on firmware versions
-        # and response types (200 reponses might be encrypted while 401 are not).
+        # and response types (200 responses might be encrypted while 401 are not).
 
         # Sometimes it can be determined based on ansible config. E.g. when overriding automatic
         # detection or when HTTP is used
@@ -206,7 +202,6 @@ class HttpApi(HttpApiBase):
             self.context.encrypted_payloads is None
             or self.context.sessionkey_method is None
         ):
-
             # In all other cases, lets try some dynamic detection methods
             info = self.get_device_info()
 
@@ -216,7 +211,7 @@ class HttpApi(HttpApiBase):
 
             # HTTP  + unecrpyted msg  : Never supported by Zyxel
             # HTTPS + unencrypted msg : Was working on V5.50(ABPY.1)b16_20210525
-            # HTTP  + encrpyted msg   : Supported by Zyxel but not by this library
+            # HTTP  + encrypted msg   : Supported by Zyxel but not by this library
             # HTTPS + encrypted msg   : Required starting from V5.50(ABPY.1)b21_20230112
             software_version_major = int(software_version[1:2])
             software_version_minor = int(software_version[3:5])
@@ -254,9 +249,7 @@ class HttpApi(HttpApiBase):
         # self.connection.queue_message('vvvv', 'REST:%s:%s:%s\n%s' % (http_method, self.connection._url, title, msg))
 
     def _load_public_key(self):
-
         if not self.context.router_public_key:
-
             response_data, response_code = self.send_request(
                 data=None, path="/getRSAPublickKey"
             )
@@ -269,7 +262,6 @@ class HttpApi(HttpApiBase):
             load_rsa_public_key(self.context, public_key_str)
 
     def get_device_info(self):
-
         if self._device_info:
             return self._device_info
 

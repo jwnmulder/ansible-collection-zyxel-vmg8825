@@ -1,10 +1,3 @@
-#
-# -*- coding: utf-8 -*-
-# Copyright 2021
-# GNU General Public License v3.0+
-# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
-#
-
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
@@ -19,7 +12,6 @@ created.
 
 import logging
 
-from ansible.module_utils.six import iteritems
 from ansible_collections.ansible.netcommon.plugins.module_utils.network.common.utils import (
     dict_merge,
 )
@@ -98,16 +90,16 @@ class Nat_port_forwards(ResourceModule):
 
         # if state is deleted, empty out wantd and set haved to wantd
         if self.state == "deleted":
-            haved = {k: v for k, v in iteritems(haved) if k in wantd or not wantd}
+            haved = {k: v for k, v in haved.items() if k in wantd or not wantd}
             wantd = {}
 
         # remove superfluous config for overridden and deleted
         if self.state in ["overridden", "deleted"]:
-            for k, have in iteritems(haved):
+            for k, have in haved.items():
                 if k not in wantd:
                     self._compare(want={}, have=have)
 
-        for k, want in iteritems(wantd):
+        for k, want in wantd.items():
             self._compare(want=want, have=haved.pop(k, {}))
 
     def _compare(self, want, have):
@@ -136,12 +128,10 @@ class Nat_port_forwards(ResourceModule):
             )
 
     def add_zyxel_dal_command(self, method, data=None, oid_index=None):
-
         if self.state == "rendered":
             self.commands.append(data)
 
         else:
-
             request = {
                 "oid": rm_templates.nat_port_forwards.oid(),
                 "method": method,
@@ -155,7 +145,7 @@ class Nat_port_forwards(ResourceModule):
 
             if self.commands and method == "DELETE":
                 # deletes must happen first and in reverse orde
-                # higest indexes are to be deleted first as indexes
+                # highest indexes are to be deleted first as indexes
                 # keep changing while adding or deleting entries on a Zyxel device
                 closests_higher = None
                 for x in self.commands:

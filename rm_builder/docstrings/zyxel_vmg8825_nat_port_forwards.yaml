@@ -51,7 +51,7 @@ options:
         required: true
       external_port_end:
         description:
-        - End Port. If only ony port is to be opened, set this to the same value as Start Port
+        - End Port. If only one port is to be opened, set this to the same value as Start Port
         type: int
         required: true
       internal_port_start:

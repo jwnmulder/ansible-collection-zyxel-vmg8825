@@ -1,8 +1,5 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-# Copyright 2021
-# GNU General Public License v3.0+
-# (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# Copyright: (c) 2021, Jan-Willem Mulder (@jwnmulder)
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 """
 The module file for zyxel_vmg8825_nat_port_forwards
@@ -66,7 +63,7 @@ options:
         required: true
       external_port_end:
         description:
-        - End Port. If only ony port is to be opened, set this to the same value as Start Port
+        - End Port. If only one port is to be opened, set this to the same value as Start Port
         type: int
         required: true
       internal_port_start:

@@ -27,12 +27,11 @@ logger = logging.getLogger(__name__)
 
 class FakeZyxelHttpApiPlugin(HttpApi):
     def __init__(self, connection):
-
         self.hostvars = {"use_ssl": True, "host": "router.test"}
         super().__init__(connection)
 
         self.context.encrypted_payloads = False
-        self._device_info = {
+        self._device_info: dict | None = {
             "network_os": "zyxel",
             "network_os_version": "V5.50(ABPY.1)b16_20210525",
         }
@@ -62,7 +61,6 @@ class TestZyxelHttpApi(unittest.TestCase):
         self.request_patch.stop()
 
     def test_login_raises_exception_when_username_and_password_are_not_provided(self):
-
         with self.assertRaises(ValueError) as res:
             self.zyxel_plugin.login(None, None)
 
@@ -70,7 +68,6 @@ class TestZyxelHttpApi(unittest.TestCase):
 
     @pytest.mark.skip(reason="not working yet")
     def test_login_raises_exception_when_invalid_response(self):
-
         self.request_mock.side_effect = [
             mocked_response(response={"invalid": "data"}, status=500)
         ]
@@ -84,7 +81,6 @@ class TestZyxelHttpApi(unittest.TestCase):
         )
 
     def test_detect_encryption_mode_enabled(self):
-
         self.request_mock.side_effect = [
             mocked_response(
                 response={
@@ -111,7 +107,6 @@ class TestZyxelHttpApi(unittest.TestCase):
         assert self.zyxel_plugin.context.encrypted_payloads is True
 
     def test_detect_encryption_mode_disabled(self):
-
         self.request_mock.side_effect = [
             mocked_response(
                 response={
@@ -144,7 +139,6 @@ class TestZyxelHttpApi(unittest.TestCase):
         )
     )
     def test_send_request_should_return_error_info_when_http_error_raises(self):
-
         self.request_mock.side_effect = [
             mocked_response(response={"errorMessage": "ERROR"}, status=500)
         ]
@@ -154,10 +148,9 @@ class TestZyxelHttpApi(unittest.TestCase):
         assert response_data[0] == {"errorMessage": "ERROR"}
 
     def test_login_max_nr_reached_error(self):
-
         self.request_mock.side_effect = [
             mocked_response(
-                response={"result": "Maxium number of login account has reached"},
+                response={"result": "Maximum number of login account has reached"},
                 status=401,
                 # msg="Unauthorized",
                 # url="/UserLogin",
@@ -167,10 +160,9 @@ class TestZyxelHttpApi(unittest.TestCase):
         with self.assertRaises(ConnectionError) as res:
             self.zyxel_plugin.login("USERNAME", "PASSWORD")
 
-        assert "Maxium number of login account has reached" in str(res.exception)
+        assert "Maximum number of login account has reached" in str(res.exception)
 
     def test_login(self):
-
         username = "admin"
         sessionkey = "358987652"
 
@@ -210,7 +202,6 @@ class TestZyxelHttpApi(unittest.TestCase):
         )
 
     def test_login_with_encryption(self):
-
         username = "admin"
         sessionkey = "358987652"
 
@@ -269,7 +260,6 @@ class TestZyxelHttpApi(unittest.TestCase):
         )
 
     def test_logout_after_successful_login(self):
-
         username = "admin"
         sessionkey = "358987652"
 
@@ -316,7 +306,6 @@ class TestZyxelHttpApi(unittest.TestCase):
         self.assertRegex(args[1], "sessionkey=%s" % (sessionkey))
 
     def test_logout_without_login(self):
-
         self.assertIsNone(self.zyxel_plugin.connection._auth)
         self.assertIsNone(self.zyxel_plugin.context.sessionkey)
 
@@ -326,7 +315,6 @@ class TestZyxelHttpApi(unittest.TestCase):
         self.assertEqual(len(self.request_mock.mock_calls), 0)
 
     def test_dal_non_success_should_raise_error(self):
-
         self.request_mock.side_effect = [
             mocked_response(
                 {
@@ -353,7 +341,6 @@ class TestZyxelHttpApi(unittest.TestCase):
         )
 
     def test_resource_forbidden_should_raise_error(self):
-
         self.request_mock.side_effect = [
             mocked_response(
                 {},
