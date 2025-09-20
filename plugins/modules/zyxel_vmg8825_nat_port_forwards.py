@@ -1,4 +1,6 @@
-#!/usr/bin/python
+# Copyright: (c) 2021, Jan-Willem Mulder (@jwnmulder)
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
 """
 The module file for zyxel_vmg8825_nat_port_forwards
 """
