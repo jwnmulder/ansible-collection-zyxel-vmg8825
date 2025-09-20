@@ -4,6 +4,14 @@ Zyxel VMG8825 Release Notes
 
 .. contents:: Topics
 
+v0.4.1
+======
+
+Minor Changes
+-------------
+
+- Github workflow and linting fixes for ansible-core 2.20
+
 v0.4.0
 ======
 

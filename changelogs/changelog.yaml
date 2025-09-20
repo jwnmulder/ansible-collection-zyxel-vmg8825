@@ -58,3 +58,8 @@ releases:
     fragments:
     - crypto_csrf_capabilities.yaml
     release_date: '2023-07-18'
+  0.4.1:
+    changes:
+      minor_changes:
+      - Github workflow and linting fixes for ansible-core 2.20
+    release_date: '2025-09-20'
