@@ -67,6 +67,7 @@ jobs:
           - stable-2.16
           - stable-2.17
           - stable-2.18
+          - stable-2.19
           - devel
 
     steps:
@@ -114,28 +115,12 @@ jobs:
           # consider dropping testing against EOL versions and versions you don't support.
           # ansible-core 2.16
           - ansible: stable-2.16
-            python: '2.7'
-          - ansible: stable-2.16
-            python: '3.6'
-          - ansible: stable-2.16
-            python: '3.7'
-          - ansible: stable-2.16
-            python: '3.8'
-          - ansible: stable-2.16
-            python: '3.9'
-          - ansible: stable-2.16
             python: '3.10'
           - ansible: stable-2.16
             python: '3.11'
           - ansible: stable-2.16
             python: '3.12'
           # ansible-core 2.17
-          - ansible: stable-2.17
-            python: '3.7'
-          - ansible: stable-2.17
-            python: '3.8'
-          - ansible: stable-2.17
-            python: '3.9'
           - ansible: stable-2.17
             python: '3.10'
           - ansible: stable-2.17
@@ -144,18 +129,18 @@ jobs:
             python: '3.12'
           # ansible-core 2.18
           - ansible: stable-2.18
-            python: '3.8'
-          - ansible: stable-2.18
-            python: '3.9'
-          - ansible: stable-2.18
-            python: '3.10'
-          - ansible: stable-2.18
             python: '3.11'
           - ansible: stable-2.18
             python: '3.12'
           - ansible: stable-2.18
             python: '3.13'
-
+          # ansible-core 2.19
+          - ansible: stable-2.19
+            python: '3.11'
+          - ansible: stable-2.19
+            python: '3.12'
+          - ansible: stable-2.19
+            python: '3.13'
 
     steps:
       - name: >-
