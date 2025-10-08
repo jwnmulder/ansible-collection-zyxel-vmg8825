@@ -22,6 +22,16 @@
       "addLabels": [
         "automerge"
       ]
+    },
+    {
+      "description": "Disable Renovate for .python-version",
+      "matchFileNames": [".python-version"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": "python",
+      "matchUpdateTypes": ["major", "minor"],
+      "dependencyDashboardApproval": true
     }
   ]
 }
