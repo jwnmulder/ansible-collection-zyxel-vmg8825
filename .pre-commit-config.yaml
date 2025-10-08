@@ -31,7 +31,7 @@ repos:
       - id: ruff-format
 
   - repo: https://github.com/ansible/ansible-lint
-    rev: v25.9.1
+    rev: v25.9.2
     hooks:
       - id: ansible-lint
         files: tests/integration/.*\.(yaml|yml)$
