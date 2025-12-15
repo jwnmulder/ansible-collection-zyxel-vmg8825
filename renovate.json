@@ -11,22 +11,19 @@
   ],
   "packageRules": [
     {
-      "matchFileNames": [
-        ".pre-commit-config.yaml"
-      ],
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
+      "matchFileNames": [".pre-commit-config.yaml"],
+      "matchUpdateTypes": ["minor", "patch"],
       "automerge": true,
-      "addLabels": [
-        "automerge"
-      ]
+      "addLabels": ["automerge"]
     },
     {
       "description": "Disable Renovate for .python-version",
       "matchFileNames": [".python-version"],
       "enabled": false
+    },
+    {
+      "matchPackageNames": ["python"],
+      "separateMinorPatch": true
     },
     {
       "matchPackageNames": "python",
