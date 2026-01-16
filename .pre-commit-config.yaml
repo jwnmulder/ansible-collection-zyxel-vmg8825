@@ -56,4 +56,4 @@ repos:
         files: 'changelogs/.*'
         pass_filenames: false
         additional_dependencies:
-          - antsibull-changelog==0.34.0  # renovate: datasource=pypi
+          - antsibull-changelog==0.35.0  # renovate: datasource=pypi
