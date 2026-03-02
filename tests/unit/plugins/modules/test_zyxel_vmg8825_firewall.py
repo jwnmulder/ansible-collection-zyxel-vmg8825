@@ -261,8 +261,10 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         # check requests that have been sent
         http_calls = list(
             filter(
-                lambda x: x[1]["method"] != "GET"
-                and (x[1]["path"].find("/cgi-bin/DAL?oid=firewall") >= 0),
+                lambda x: (
+                    x[1]["method"] != "GET"
+                    and (x[1]["path"].find("/cgi-bin/DAL?oid=firewall") >= 0)
+                ),
                 self.connection.send_request.call_args_list,
             )
         )
