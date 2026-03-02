@@ -3,7 +3,7 @@
 set -euf -o pipefail
 
 echo "Running pre-commit"
-pre-commit run --all-files
+prek run --all-files
 
 # Check that ../../ is named 'ansible_collections'.
 collections_dir=$(readlink -f "$(pwd)/../../")

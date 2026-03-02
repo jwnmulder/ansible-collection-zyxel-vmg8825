@@ -80,7 +80,7 @@ The following example task replaces configuration changes in the existing config
 
 If you want to clone this repository (or a fork of it) to improve it, you can proceed as follows:
 
-1. Strongly recommended, ensure `pre-commit` and `direnv` are installed
+1. Strongly recommended, ensure `prek` and `direnv` are installed
 2. Create a directory `ansible_collections/jwnmulder`
 3. In there, checkout this repository (or a fork) as `zyxel_vmg8825`
 4. In the zyxel_vmg8825 dir, run the following commands to setup a python venv
@@ -91,7 +91,7 @@ If you want to clone this repository (or a fork of it) to improve it, you can pr
     ```
 
 5. In the zyxel_vmg8825 dir, run the following command 'ansible-galaxy collection install ansible.netcommon'
-6. Setup pre-commit by running `pre-commit install` in the zyxel_vmg8825 dir
+6. Setup pre-commit by running `prek install` in the zyxel_vmg8825 dir
 7. To ensure vscode can run pytest, add the following to your .env file
 
     ```text

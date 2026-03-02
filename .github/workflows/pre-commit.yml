@@ -18,6 +18,4 @@ jobs:
         with:
           python-version: "3.13"
 
-      - uses: pre-commit/action@v3.0.1
-        with:
-          extra_args: --all-files
+      - uses: j178/prek-action@v1
