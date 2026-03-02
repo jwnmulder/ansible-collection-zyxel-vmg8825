@@ -392,8 +392,10 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         # check requests that have been sent
         http_calls = list(
             filter(
-                lambda x: x[1]["method"] != "GET"
-                and (x[1]["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
+                lambda x: (
+                    x[1]["method"] != "GET"
+                    and (x[1]["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0)
+                ),
                 self.connection.send_request.call_args_list,
             )
         )
@@ -422,8 +424,10 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         # check requests that have been sent
         http_calls = list(
             filter(
-                lambda x: x[1]["method"] != "GET"
-                and (x[1]["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
+                lambda x: (
+                    x[1]["method"] != "GET"
+                    and (x[1]["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0)
+                ),
                 self.connection.send_request.call_args_list,
             )
         )
@@ -454,8 +458,10 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         # check requests that have been sent
         http_calls = list(
             filter(
-                lambda x: x[1]["method"] != "GET"
-                and (x[1]["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
+                lambda x: (
+                    x[1]["method"] != "GET"
+                    and (x[1]["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0)
+                ),
                 self.connection.send_request.call_args_list,
             )
         )
@@ -501,8 +507,10 @@ class TestZyxelModuleHttpApi(TestZyxelModule):
         # check requests that have been sent
         http_calls = list(
             filter(
-                lambda x: x[1]["method"] != "GET"
-                and (x[1]["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0),
+                lambda x: (
+                    x[1]["method"] != "GET"
+                    and (x[1]["path"].find("/cgi-bin/DAL?oid=static_dhcp") >= 0)
+                ),
                 self.connection.send_request.call_args_list,
             )
         )
