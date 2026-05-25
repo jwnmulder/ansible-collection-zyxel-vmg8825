@@ -3,7 +3,7 @@ ansible-core==2.20.3
 
 ansible-lint==26.3.0
 antsibull-docs==2.24.0
-antsibull-changelog==0.35.0
+antsibull-changelog==0.35.1
 
 # For unit testing in vscode
 pytest
